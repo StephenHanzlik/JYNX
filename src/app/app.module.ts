@@ -5,7 +5,6 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { ChartsComponent } from './charts/charts.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
