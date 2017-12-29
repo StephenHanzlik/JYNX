@@ -10,6 +10,7 @@
         </select>
         <label for="coinAmtInput">Enter The Amount:</label>
         <input type="text" id="coinAmtInput" [formControl]="chartForm.controls['coinAmt']"/>
+        <!--<div *ngIf="!chartForm.valid" >Form is invalid</div>-->
         <button type="submit">Submit</button>
 
     </form>

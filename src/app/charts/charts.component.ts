@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 // import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import * as D3 from "d3";
 import 'd3pie';
 
@@ -13,16 +13,20 @@ import 'd3pie';
 export class ChartsComponent implements OnInit {
 
   chartForm: FormGroup;
+  coinName: AbstractControl;
+  coinAmt: AbstractControl;
 
   private pieChartData: any = {};
   private pieChartContent: Array<any>;
 
-
   constructor(fb: FormBuilder) {
     this.chartForm = fb.group({
-        "coinName": ['BTC'],
-        "coinAmt": ['']
+        "coinName": ['BTC', Validators.required],
+        "coinAmt": ['', Validators.required]
     });
+
+    this.coinName = this.chartForm.controls['coinName'];
+    this.coinAmt = this.chartForm.controls['coinAmt'];
   }
 
   ngOnInit() {
