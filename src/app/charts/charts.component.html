@@ -2,22 +2,17 @@
 <div>
   <h1>JYNX</h1>
 		<p>Create a customized, sharable portfolio of your favorite cryptos</p>
-    <form #cf="ngForm" (ngSubmit)="addCoin(cf.value)">
-        <select name="coinName" ngModel>
+    <form [formGroup]="chartForm" (ngSubmit)="addCoin(chartForm.value)">
+        <select name="coinName" [formControl]="chartForm.controls['coinName']">
           <option value="Bitcoin">BTC</option>
           <option value="Litecoin">LTC</option>
           <option value="Tronix">TRX</option>
         </select>
         <label for="coinAmtInput">Enter The Amount:</label>
-        <input type="text" id="coinAmtInput" name="coinAmt" ngModel/>
+        <input type="text" id="coinAmtInput" [formControl]="chartForm.controls['coinAmt']"/>
         <button type="submit">Submit</button>
 
     </form>
-
-
-		<!-- <div id="ammountDiv">
-				<input type="text" name="mytext" id="coinAmt" placeholder="Enter Amount">
-		</div> -->
 
 </div>
 <div id="pieContainer">

@@ -13,7 +13,8 @@ import { ChartsComponent } from './charts/charts.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
