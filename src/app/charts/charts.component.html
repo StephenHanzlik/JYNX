@@ -2,14 +2,26 @@
 <div>
   <h1>JYNX</h1>
 		<p>Create a customized, sharable portfolio of your favorite cryptos</p>
-    <form [formGroup]="chartForm" (ngSubmit)="addCoin(chartForm.value)">
+    <form class="ui form" [formGroup]="chartForm" (ngSubmit)="addCoin(chartForm.value)">
         <select name="coinName" [formControl]="chartForm.controls['coinName']">
           <option value="Bitcoin">BTC</option>
           <option value="Litecoin">LTC</option>
           <option value="Tronix">TRX</option>
         </select>
+        <sui-select class="floating labeled icon button"
+                    icon="filter"
+                    [options]="filters"
+                    [isSearchable]="true"
+                    placeholder="Select a Coin"
+                    #filterSelect>
+            <div class="header">
+                <i class="tags icon"></i>
+                Type to Search
+            </div>
+            <sui-select-option *ngFor="let coin of selectCoinOptions" [value]="coin.symbol"> { coin.name }</sui-select-option>
+        </sui-select>
         <label for="coinAmtInput">Enter The Amount:</label>
-        <input type="text" id="coinAmtInput" [formControl]="chartForm.controls['coinAmt']"/>
+        <input class="field" type="text" id="coinAmtInput" [formControl]="chartForm.controls['coinAmt']"/>
         <!--<div *ngIf="!chartForm.valid" >Form is invalid</div>-->
         <button type="submit">Submit</button>
 
