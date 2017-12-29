@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import * as D3 from "d3";
 import 'd3pie';
 
@@ -100,10 +101,16 @@ export class ChartsComponent implements OnInit {
 
   public updatePieChart(newPieChartContent): void {
     this.pieChartContent = newPieChartContent;
-    var pie = new d3pie("myPie", this.pieChartData);  
+    var pie = new d3pie("myPie", this.pieChartData);
   }
 
   // private createPieChart (pieChartData): void {
   //
   // }
+
+  private addCoin(form: any): void {
+    console.log('you submitted value: ', form);
+
+
+  }
 }
