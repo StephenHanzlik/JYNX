@@ -18,7 +18,7 @@
                 <i class="tags icon"></i>
                 Type to Search
             </div>
-            <sui-select-option *ngFor="let coin of selectCoinOptions" [value]="coin.symbol"> { coin.name }</sui-select-option>
+            <sui-select-option *ngFor="let coin of cryptoDropDownList" [value]="coin.symbol"> {{ coin.name }} </sui-select-option>
         </sui-select>
         <label for="coinAmtInput">Enter The Amount:</label>
         <input class="field" type="text" id="coinAmtInput" [formControl]="chartForm.controls['coinAmt']"/>

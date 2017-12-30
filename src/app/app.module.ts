@@ -2,10 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SuiModule } from 'ng2-semantic-ui';
+import { HttpModule } from '@angular/http';
 
 
 import { AppComponent } from './app.component';
 import { ChartsComponent } from './charts/charts.component';
+import { CryptoCompareService } from './crypto-compare.service';
 
 @NgModule({
   declarations: [
@@ -16,9 +18,10 @@ import { ChartsComponent } from './charts/charts.component';
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    SuiModule
+    SuiModule,
+    HttpModule
   ],
-  providers: [],
+  providers: [CryptoCompareService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

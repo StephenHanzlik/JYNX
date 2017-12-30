@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-// import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { CryptoCompareService } from "../crypto-compare.service";
 import * as D3 from "d3";
 import 'd3pie';
 
@@ -18,8 +18,10 @@ export class ChartsComponent implements OnInit {
 
   private pieChartData: any = {};
   private pieChartContent: Array<any>;
+  private cryptoDropDownList: Array<any>;
 
-  constructor(fb: FormBuilder) {
+  constructor(fb: FormBuilder,
+  private cryptoCompareService: CryptoCompareService) {
     this.chartForm = fb.group({
         "coinName": ['BTC', Validators.required],
         "coinAmt": ['', Validators.required]
@@ -30,7 +32,26 @@ export class ChartsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initCryptoList();
     this.initPieChart();
+  }
+
+  private initCryptoList(): void {
+    let coinData = <any>{};
+    let coinDataKeys = [];
+    this.cryptoCompareService.getCryptoList().subscribe((result => {
+    coinData = JSON.parse(result._body);
+    coinData = coinData.Data;
+    console.log("coinData: " + JSON.stringify(coinData));
+    coinDataKeys = Object.keys(coinData);
+
+    for (let i = 0; i < coinDataKeys.length; i++){
+        //console.log(coinData[coinDataKeys[i]]);
+        //this.cryptoDropDownList.push(coinData[coinDataKeys[i]]);
+    }
+      //console.log(this.cryptoDropDownList);
+    }));
+    //return coinData;
   }
 
   private addCoin(form: any): void {
