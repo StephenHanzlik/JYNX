@@ -11,8 +11,8 @@ export class CryptoCompareService {
      return this.http.get(`https://min-api.cryptocompare.com/data/all/coinlist`);
   }
 
-  public getPriceMulti(coinQueryString: string): Observable<any>{
-    return this.http.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${coinQueryString}&tsyms=USD`);
+  public getPrice(coinQueryString: string): Observable<any>{
+    return this.http.get(`https://min-api.cryptocompare.com/data/price?fsym=${coinQueryString}&tsyms=USD`);
   }
 
 }

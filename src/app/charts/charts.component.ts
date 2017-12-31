@@ -19,10 +19,10 @@ export class ChartsComponent implements OnInit {
   coinAmt: AbstractControl;
 
   private pieChartData: any = {};
-  private pieChartContent: Array<any>;
+  private pieChartContent: any = [];
 
-  public cryptoDropDownList: Array<any>;
-  public tableContent: Array<any>;
+  public cryptoDropDownList: any = [];
+  public tableContent: any = [];
   public coinsToQuery: any = [];
   public pie: any;
 
@@ -154,9 +154,12 @@ export class ChartsComponent implements OnInit {
       newTableData.qty = Number.parseInt(newCoin.coinAmt);
       newTableData.asset = allCoinData[0][newCoin.coinName].FullName;
 
-      this.cryptoCompareService.getPriceMulti().subscribe(result=>{
-        console.log("subscribe result: " + result._body);
+      this.cryptoCompareService.getPrice(newCoin.coinName).subscribe(result=>{
+        newTableData.lastPrice = result._body.USD;
+        newTableData.usdValue = newTableData.lastPrice * newTableData.qty
+        this.tableContent.push(newTableData);
       });
+
   }
 
   private getDropDownList(): void {

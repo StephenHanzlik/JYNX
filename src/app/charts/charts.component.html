@@ -32,3 +32,17 @@
 <div id="pieContainer">
     <div id="myPie"></div>
 </div>
+<table>
+  <tr>
+    <th>Asset</th>
+    <th>Last Price</th>
+    <th>QTY</th>
+    <th>$ Value</th>
+  </tr>
+  <tr *ngFor="let coin of tableContent">
+    <td>{{coin.asset}}</td>
+    <td>{{coin.lastPrice}}</td>
+    <td>{{coin.qty}}</td>
+    <td>{{coin.usdValue}}</td>
+  </tr>
+</table>
