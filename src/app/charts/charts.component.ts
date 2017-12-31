@@ -21,7 +21,7 @@ export class ChartsComponent implements OnInit {
   private pieChartContent: Array<any>;
 
   public cryptoDropDownList: Array<any>;
-  //public listForDOM: any;
+  public tableContent: any;
   public pie: any;
 
   constructor(fb: FormBuilder,
@@ -65,8 +65,8 @@ export class ChartsComponent implements OnInit {
   }
 
   private addCoin(form: any): void {
-    console.log("addCoin Called");
     this.updatePieChart(form);
+    this.updateTableList(form);
   }
 
   private initPieChart (): void {
@@ -144,7 +144,6 @@ export class ChartsComponent implements OnInit {
           }
         }
       }
-      // var pie = new d3pie("myPie", this.pieChartData);
        this.pie = new d3pie("myPie", this.pieChartData);
   }
 
@@ -154,23 +153,25 @@ export class ChartsComponent implements OnInit {
     if (this.pieChartContent[0].label === "Select a coin to get started") {
       this.pieChartContent = [];
     }
+
     this.pie.destroy();
-    //this.pieChartContent[0].label = newCoin.coinName;
-    //this.pieChartContent[0].value = Number.parseInt(newCoin.coinAmt);
+
     newCoinData.label = newCoin.coinName;
     newCoinData.value = Number.parseInt(newCoin.coinAmt);
-    newCoinData.color = "#CEE9F9";
+    newCoinData.color = "#CEE9F9"
+
     this.pieChartContent.push(newCoinData);
-    console.log("this.pieChartContent: " + JSON.stringify(this.pieChartContent));
+
     this.pieChartData.data.content = this.pieChartContent;
 
     this.pie = new d3pie("myPie", this.pieChartData);
   }
 
-  // private createPieChart (pieChartData): void {
-  //
-  // }
-  private getDropDownList(): any {
+  private updateTableList(form: any): void {
+
+  }
+
+  private getDropDownList(): void {
     this.cryptoDropDownList = COINOBJECTS;
   }
 
