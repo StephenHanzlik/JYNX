@@ -45,8 +45,16 @@ export class ChartsComponent implements OnInit {
   }
 
   private addCoin(form: any): void {
-    this.updatePieChart(form);
-    this.updateTableList(form);
+    let apiData: any = {};
+    let usdAmt = 0;
+
+    this.cryptoCompareService.getPrice(form.coinName).subscribe(result=>{
+        apiData = JSON.parse(result._body);
+        usdAmt = apiData.USD;
+
+        this.updatePieChart(form, usdAmt);
+        this.updateTableList(form, usdAmt);
+    })
   }
 
   private initPieChart (): void {
@@ -127,7 +135,7 @@ export class ChartsComponent implements OnInit {
        this.pie = new d3pie("myPie", this.pieChartData);
   }
 
-  public updatePieChart(newCoin: any): void {
+  public updatePieChart(newCoin: any , usdAmt: number): void {
     let newCoinData = <any>{};
 
     if (this.pieChartContent[0].label === "Select a coin to get started") {
@@ -138,6 +146,7 @@ export class ChartsComponent implements OnInit {
 
     newCoinData.label = newCoin.coinName;
     newCoinData.value = Number.parseInt(newCoin.coinAmt);
+    newCoinData.value = newCoinData.value * usdAmt;
     newCoinData.color = "#CEE9F9"
 
     this.pieChartContent.push(newCoinData);
@@ -147,21 +156,22 @@ export class ChartsComponent implements OnInit {
     this.pie = new d3pie("myPie", this.pieChartData);
   }
 
-  private updateTableList(newCoin: any): void {
+  private updateTableList(newCoin: any, usdAmt: number): void {
       let allCoinData = ALLCOINDATA;
       let newTableData: any = {};
       let apiData: any = {};
       newTableData.qty = Number.parseInt(newCoin.coinAmt);
       newTableData.asset = allCoinData[0][newCoin.coinName].FullName;
-
-      this.cryptoCompareService.getPrice(newCoin.coinName).subscribe(result=>{
-        apiData = JSON.parse(result._body);
-        newTableData.lastPrice = apiData.USD;
-        console.log("newTableData.lastPrice: " + newTableData.lastPrice);
-        newTableData.usdValue = newTableData.lastPrice * newTableData.qty
-        this.tableContent.push(newTableData);
-      });
-
+      newTableData.lastPrice = usdAmt;
+      newTableData.usdValue = newTableData.lastPrice * newTableData.qty
+      this.tableContent.push(newTableData);
+      // this.cryptoCompareService.getPrice(newCoin.coinName).subscribe(result=>{
+      //   apiData = JSON.parse(result._body);
+      //   newTableData.lastPrice = apiData.USD;
+      //   console.log("newTableData.lastPrice: " + newTableData.lastPrice);
+      //   newTableData.usdValue = newTableData.lastPrice * newTableData.qty
+      //   this.tableContent.push(newTableData);
+      // });
   }
 
   private getDropDownList(): void {
