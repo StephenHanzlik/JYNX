@@ -2,6 +2,9 @@
 
 Create a customized, sharable portfolio of your favorite cryptos
 
+#
+
+Checkout https://waffle.io/StephenHanzlik/JYNX for up to date project management
 
 ## Development server
 
