@@ -8,11 +8,13 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { ChartsComponent } from './charts/charts.component';
 import { CryptoCompareService } from './crypto-compare.service';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ChartsComponent
+    ChartsComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

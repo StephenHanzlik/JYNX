@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { CryptoCompareService } from "../crypto-compare.service";
+import { COINOBJECTS } from "../static-data/coin-objects";
 import * as D3 from "d3";
 import 'd3pie';
 
@@ -18,7 +19,8 @@ export class ChartsComponent implements OnInit {
 
   private pieChartData: any = {};
   private pieChartContent: Array<any>;
-  private cryptoDropDownList: Array<any>;
+  public cryptoDropDownList: Array<any>;
+  //public listForDOM: any;
 
   constructor(fb: FormBuilder,
   private cryptoCompareService: CryptoCompareService) {
@@ -32,30 +34,36 @@ export class ChartsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initCryptoList();
+  //this.initCryptoList();//cointains call to API
+    this.getDropDownList();
     this.initPieChart();
   }
 
-  private initCryptoList(): void {
+  private initCryptoList(): any {
     let coinData = <any>{};
     let coinDataKeys = [];
+    let cryptoDropDownList = <any>[];
     this.cryptoCompareService.getCryptoList().subscribe((result => {
     coinData = JSON.parse(result._body);
     coinData = coinData.Data;
-    console.log("coinData: " + JSON.stringify(coinData));
     coinDataKeys = Object.keys(coinData);
-
+    let fullNameList = [];
+    console.log("coinDataKeys : " + coinDataKeys);
     for (let i = 0; i < coinDataKeys.length; i++){
-        //console.log(coinData[coinDataKeys[i]]);
-        //this.cryptoDropDownList.push(coinData[coinDataKeys[i]]);
+        let websiteUrl = "https://www.cryptocompare.com/";
+        coinData[coinDataKeys[i]].Url = websiteUrl.concat(coinData[coinDataKeys[i]].Url);
+        fullNameList.push(coinData[coinDataKeys[i]]);
+        cryptoDropDownList.push(coinData[coinDataKeys[i]]);
     }
-      //console.log(this.cryptoDropDownList);
+      console.log(JSON.stringify(fullNameList));
+      return cryptoDropDownList;
     }));
-    //return coinData;
+    return cryptoDropDownList
   }
 
   private addCoin(form: any): void {
-    console.log('you submitted value: ', form);
+    console.log("form: " + JSON.stringify(form));
+    this.initPieChart();
 
 
   }
@@ -146,6 +154,9 @@ export class ChartsComponent implements OnInit {
   // private createPieChart (pieChartData): void {
   //
   // }
+  private getDropDownList(): any {
+    this.cryptoDropDownList = COINOBJECTS;
+  }
 
 
 }

@@ -1,32 +1,33 @@
 <!doctype html>
-<div>
-  <h1>JYNX</h1>
+<div class="ui four column grid">
+  <div class="row">
+    <h1>JYNX</h1>
 		<p>Create a customized, sharable portfolio of your favorite cryptos</p>
+  </div>
+  <div class="row">
     <form class="ui form" [formGroup]="chartForm" (ngSubmit)="addCoin(chartForm.value)">
         <select name="coinName" [formControl]="chartForm.controls['coinName']">
-          <option value="Bitcoin">BTC</option>
-          <option value="Litecoin">LTC</option>
-          <option value="Tronix">TRX</option>
+          <option *ngFor="let coin of cryptoDropDownList" [value]="coin.Name">{{ coin.FullName }}</option>
         </select>
-        <sui-select class="floating labeled icon button"
-                    icon="filter"
+        <!-- <sui-select class="floating labeled icon button"
+                    icon="bitcoin icon"
                     [options]="filters"
                     [isSearchable]="true"
                     placeholder="Select a Coin"
-                    #filterSelect>
+                    #options>
             <div class="header">
-                <i class="tags icon"></i>
+                <i class="search icon"></i>
                 Type to Search
             </div>
-            <sui-select-option *ngFor="let coin of cryptoDropDownList" [value]="coin.symbol"> {{ coin.name }} </sui-select-option>
-        </sui-select>
+            <sui-select-option *ngFor="let coin of listForDOM" [value]="coin.Name"> {{ coin.Name }} </sui-select-option>
+            <!--<img [src]="coin.Url">-->
+        <!-- </sui-select> -->
         <label for="coinAmtInput">Enter The Amount:</label>
         <input class="field" type="text" id="coinAmtInput" [formControl]="chartForm.controls['coinAmt']"/>
         <!--<div *ngIf="!chartForm.valid" >Form is invalid</div>-->
         <button type="submit">Submit</button>
-
     </form>
-
+  </div>
 </div>
 <div id="pieContainer">
     <div id="myPie"></div>
