@@ -149,7 +149,7 @@ export class ChartsComponent implements OnInit {
 
   public updatePieChart(newPieChartContent): void {
     this.pieChartContent = newPieChartContent;
-    var pie = new d3pie("myPie", this.pieChartData);
+    new d3pie("myPie", this.pieChartData);
   }
 
   // private createPieChart (pieChartData): void {
