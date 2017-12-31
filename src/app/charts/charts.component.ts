@@ -148,13 +148,15 @@ export class ChartsComponent implements OnInit {
   }
 
   private updateTableList(newCoin: any): void {
-      //console.log("form: " + JSON.stringify(newCoin));//coinName
       let allCoinData = ALLCOINDATA;
-
       let newTableData: any = {};
+
       newTableData.qty = Number.parseInt(newCoin.coinAmt);
       newTableData.asset = allCoinData[0][newCoin.coinName].FullName;
-      console.log("newTableData: " + JSON.stringify(newTableData));
+
+      this.cryptoCompareService.getPriceMulti().subscribe(result=>{
+        console.log("subscribe result: " + result._body);
+      });
   }
 
   private getDropDownList(): void {
