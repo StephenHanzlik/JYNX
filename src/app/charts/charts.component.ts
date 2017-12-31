@@ -35,6 +35,7 @@ export class ChartsComponent implements OnInit {
 
   ngOnInit() {
   //this.initCryptoList();//cointains call to API
+  //sample API call for images https://www.cryptocompare.com/media/12318089/trx.png
     this.getDropDownList();
     this.initPieChart();
   }
