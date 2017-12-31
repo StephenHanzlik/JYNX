@@ -19,8 +19,10 @@ export class ChartsComponent implements OnInit {
 
   private pieChartData: any = {};
   private pieChartContent: Array<any>;
+
   public cryptoDropDownList: Array<any>;
   //public listForDOM: any;
+  public pie: any;
 
   constructor(fb: FormBuilder,
   private cryptoCompareService: CryptoCompareService) {
@@ -63,10 +65,8 @@ export class ChartsComponent implements OnInit {
   }
 
   private addCoin(form: any): void {
-    console.log("form: " + JSON.stringify(form));
-    this.initPieChart();
-
-
+    console.log("addCoin Called");
+    this.updatePieChart(form);
   }
 
   private initPieChart (): void {
@@ -144,12 +144,27 @@ export class ChartsComponent implements OnInit {
           }
         }
       }
-      var pie = new d3pie("myPie", this.pieChartData);
+      // var pie = new d3pie("myPie", this.pieChartData);
+       this.pie = new d3pie("myPie", this.pieChartData);
   }
 
-  public updatePieChart(newPieChartContent): void {
-    this.pieChartContent = newPieChartContent;
-    new d3pie("myPie", this.pieChartData);
+  public updatePieChart(newCoin: any): void {
+    let newCoinData = <any>{};
+
+    if (this.pieChartContent[0].label === "Select a coin to get started") {
+      this.pieChartContent = [];
+    }
+    this.pie.destroy();
+    //this.pieChartContent[0].label = newCoin.coinName;
+    //this.pieChartContent[0].value = Number.parseInt(newCoin.coinAmt);
+    newCoinData.label = newCoin.coinName;
+    newCoinData.value = Number.parseInt(newCoin.coinAmt);
+    newCoinData.color = "#CEE9F9";
+    this.pieChartContent.push(newCoinData);
+    console.log("this.pieChartContent: " + JSON.stringify(this.pieChartContent));
+    this.pieChartData.data.content = this.pieChartContent;
+
+    this.pie = new d3pie("myPie", this.pieChartData);
   }
 
   // private createPieChart (pieChartData): void {
