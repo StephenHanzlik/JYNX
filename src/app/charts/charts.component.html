@@ -1,10 +1,8 @@
 <!doctype html>
-<div class="ui four column grid">
-  <div class="row">
+<div class="ui middle aligned center aligned grid">
+  <div class="column">
     <h1>JYNX</h1>
 		<p>Create a customized, sharable portfolio of your favorite cryptos</p>
-  </div>
-  <div class="row">
     <form class="ui form" [formGroup]="chartForm" (ngSubmit)="addCoin(chartForm.value)">
         <select name="coinName" [formControl]="chartForm.controls['coinName']">
           <option *ngFor="let coin of cryptoDropDownList" [value]="coin.Name">{{ coin.FullName }}</option>
@@ -27,22 +25,23 @@
         <!--<div *ngIf="!chartForm.valid" >Form is invalid</div>-->
         <button type="submit">Submit</button>
     </form>
+
+  <div id="pieContainer">
+      <div id="myPie"></div>
+  </div>
+  <table>
+    <tr>
+      <th>Asset</th>
+      <th>Last Price</th>
+      <th>QTY</th>
+      <th>$ Value</th>
+    </tr>
+    <tr *ngFor="let coin of tableContent">
+      <td>{{coin.asset}}</td>
+      <td>{{coin.lastPrice}}</td>
+      <td>{{coin.qty}}</td>
+      <td>{{coin.usdValue}}</td>
+    </tr>
+  </table>
   </div>
 </div>
-<div id="pieContainer">
-    <div id="myPie"></div>
-</div>
-<table>
-  <tr>
-    <th>Asset</th>
-    <th>Last Price</th>
-    <th>QTY</th>
-    <th>$ Value</th>
-  </tr>
-  <tr *ngFor="let coin of tableContent">
-    <td>{{coin.asset}}</td>
-    <td>{{coin.lastPrice}}</td>
-    <td>{{coin.qty}}</td>
-    <td>{{coin.usdValue}}</td>
-  </tr>
-</table>
