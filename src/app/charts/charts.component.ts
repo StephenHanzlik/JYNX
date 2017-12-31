@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { CryptoCompareService } from "../crypto-compare.service";
 import { COINOBJECTS } from "../static-data/coin-objects";
+import { ALLCOINDATA } from "../static-data/all-coin-data";
 import * as D3 from "d3";
 import 'd3pie';
 
@@ -21,7 +22,8 @@ export class ChartsComponent implements OnInit {
   private pieChartContent: Array<any>;
 
   public cryptoDropDownList: Array<any>;
-  public tableContent: any;
+  public tableContent: Array<any>;
+  public coinsToQuery: any = [];
   public pie: any;
 
   constructor(fb: FormBuilder,
@@ -40,28 +42,6 @@ export class ChartsComponent implements OnInit {
   //sample API call for images https://www.cryptocompare.com/media/12318089/trx.png
     this.getDropDownList();
     this.initPieChart();
-  }
-
-  private initCryptoList(): any {
-    let coinData = <any>{};
-    let coinDataKeys = [];
-    let cryptoDropDownList = <any>[];
-    this.cryptoCompareService.getCryptoList().subscribe((result => {
-    coinData = JSON.parse(result._body);
-    coinData = coinData.Data;
-    coinDataKeys = Object.keys(coinData);
-    let fullNameList = [];
-    console.log("coinDataKeys : " + coinDataKeys);
-    for (let i = 0; i < coinDataKeys.length; i++){
-        let websiteUrl = "https://www.cryptocompare.com/";
-        coinData[coinDataKeys[i]].Url = websiteUrl.concat(coinData[coinDataKeys[i]].Url);
-        fullNameList.push(coinData[coinDataKeys[i]]);
-        cryptoDropDownList.push(coinData[coinDataKeys[i]]);
-    }
-      console.log(JSON.stringify(fullNameList));
-      return cryptoDropDownList;
-    }));
-    return cryptoDropDownList
   }
 
   private addCoin(form: any): void {
@@ -167,13 +147,39 @@ export class ChartsComponent implements OnInit {
     this.pie = new d3pie("myPie", this.pieChartData);
   }
 
-  private updateTableList(form: any): void {
+  private updateTableList(newCoin: any): void {
+      //console.log("form: " + JSON.stringify(newCoin));//coinName
+      let allCoinData = ALLCOINDATA;
 
+      let newTableData: any = {};
+      newTableData.qty = Number.parseInt(newCoin.coinAmt);
+      newTableData.asset = allCoinData[0][newCoin.coinName].FullName;
+      console.log("newTableData: " + JSON.stringify(newTableData));
   }
 
   private getDropDownList(): void {
     this.cryptoDropDownList = COINOBJECTS;
   }
 
-
+  // private initCryptoList(): any {
+  //   let coinData = <any>{};
+  //   let coinDataKeys = [];
+  //   let cryptoDropDownList = <any>[];
+  //   this.cryptoCompareService.getCryptoList().subscribe((result => {
+  //   coinData = JSON.parse(result._body);
+  //   coinData = coinData.Data;
+  //   coinDataKeys = Object.keys(coinData);
+  //   let fullNameList = [];
+  //   console.log("coinDataKeys : " + coinDataKeys);
+  //   for (let i = 0; i < coinDataKeys.length; i++){
+  //       let websiteUrl = "https://www.cryptocompare.com/";
+  //       coinData[coinDataKeys[i]].Url = websiteUrl.concat(coinData[coinDataKeys[i]].Url);
+  //       fullNameList.push(coinData[coinDataKeys[i]]);
+  //       cryptoDropDownList.push(coinData[coinDataKeys[i]]);
+  //   }
+  //     console.log(JSON.stringify(fullNameList));
+  //     return cryptoDropDownList;
+  //   }));
+  //   return cryptoDropDownList
+  // }
 }
