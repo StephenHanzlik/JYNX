@@ -1,6 +1,10 @@
 <!doctype html>
-<div class="ui middle aligned center aligned grid">
-  <div class="column">
+<div class="ui center aligned doubling grid ">
+  <!--ui middle aligned center aligned grid
+ui middle aligned center aligned two column grid"-->
+  <!--<div class="column">-->
+  <div class="row">
+    <div class="sixteen wide mobile eight wide tablet four wide computer column">
     <h1>JYNX</h1>
 		<p>Create a customized, sharable portfolio of your favorite cryptos</p>
     <form class="ui form" [formGroup]="chartForm" (ngSubmit)="addCoin(chartForm.value)">
@@ -21,15 +25,20 @@
             <!--<img [src]="coin.Url">-->
         <!-- </sui-select> -->
         <label for="coinAmtInput">Enter The Amount:</label>
-        <input class="field" type="text" id="coinAmtInput" [formControl]="chartForm.controls['coinAmt']"/>
+        <input class="field ui input" type="text" id="coinAmtInput" [formControl]="chartForm.controls['coinAmt']"/>
         <!--<div *ngIf="!chartForm.valid" >Form is invalid</div>-->
         <button type="submit">Submit</button>
     </form>
-
+  </div>
+</div>
+<div class="row">
   <div id="pieContainer">
       <div id="myPie"></div>
   </div>
-  <table>
+</div>
+  <div class="row">
+  <div class="sixteen wide mobile eight wide tablet eight wide computer column">
+  <table class="ui unstackable table">
     <tr>
       <th>Asset</th>
       <th>Last Price</th>
@@ -43,5 +52,6 @@
       <td>{{coin.usdValue}}</td>
     </tr>
   </table>
-  </div>
+</div>
+</div>
 </div>
