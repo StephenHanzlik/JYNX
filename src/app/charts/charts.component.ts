@@ -45,6 +45,7 @@ export class ChartsComponent implements OnInit {
   }
 
   public addCoin(form: any): void {
+    console.log("form in addCoin: " + JSON.stringify(form))
     let apiData: any = {};
     let usdAmt = 0;
 
