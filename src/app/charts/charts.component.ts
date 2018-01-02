@@ -44,7 +44,7 @@ export class ChartsComponent implements OnInit {
     this.initPieChart();
   }
 
-  private addCoin(form: any): void {
+  public addCoin(form: any): void {
     let apiData: any = {};
     let usdAmt = 0;
 

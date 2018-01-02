@@ -27,7 +27,7 @@ ui middle aligned center aligned two column grid"-->
         <label for="coinAmtInput">Enter The Amount:</label>
         <input class="field ui input" type="text" id="coinAmtInput" [formControl]="chartForm.controls['coinAmt']"/>
         <!--<div *ngIf="!chartForm.valid" >Form is invalid</div>-->
-        <button type="submit">Submit</button>
+        <button type="button" (click)="addCoin(chartForm.value)">Submit</button>
     </form>
   </div>
 </div>
