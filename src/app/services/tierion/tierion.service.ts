@@ -11,7 +11,12 @@ export class TierionService {
 
   getUsers() {
     return this._http.get("/api/users")
-      .map(result => this.result = result.json().data);
+    .map(result => this.result = result.json().data);
+  }
+
+  signUpUser(req) {
+    return this._http.post("/api/sign-up", req)
+    .map(result => this.result = result.json().data);
   }
 
 }
