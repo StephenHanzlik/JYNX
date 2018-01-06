@@ -1,18 +1,28 @@
 'use strict';
-
 const express = require('express');
 const router = express.Router();
-//const MongoClient = require('mongodb').MongoClient;
-//const ObjectID = require('mongodb').ObjectID;
 
-// Connect -- connect to Tierion here
-// const connection = (closure) => {
-//   return MongoClient.connect('mongodb://localhost:27017/mean', (err, db) => {
-//     if (err) return console.log(err);
-//
-//     closure(db);
-//   });
-// };
+const crypto = require('crypto');
+const sha256Hash = crypto.createHash('sha256');
+
+
+//TierionService
+const hashclient = require('hashapi-lib-node');
+const username = 'stephenhanzlik@gmail.com';
+const password = 'OQJgbTvXMZbPyy5Dkjs2KYd8IvxDCUwUCstXqbRQron1JkKHDKX0MxQxyP3Xqth9G3dcPc5DZP3T6jiTrgVpXegUUKAI';
+const hashClient = new hashclient();
+
+hashClient.authenticate(username, password, function(err, authToken) {
+  if (err) {
+    // handle the error
+    console.log("auth error: " + err);
+  } else {
+    // authentication was successful
+    // access_token, refresh_token are returned in authToken
+    // authToken values are saved internally and managed autmatically for the life of the HashClient
+    console.log("auth successful: " + authToken);
+  }
+});
 
 // Error handling
 const sendError = (err, res) => {
@@ -30,7 +40,9 @@ let response = {
 
 // Get users
 router.get('/sign-up', (req, res) => {
-  console.log("new user signed up");
+  sha256Hash.update(req);
+  var result = sha256Hash.digest("base64");
+  console.log(result);
   // connection((db) => {
   //   db.collection('users')
   //     .find()
@@ -44,5 +56,17 @@ router.get('/sign-up', (req, res) => {
   //     });
   // });
 });
+
+//const MongoClient = require('mongodb').MongoClient;
+//const ObjectID = require('mongodb').ObjectID;
+
+// Connect -- connect to Tierion here
+// const connection = (closure) => {
+//   return MongoClient.connect('mongodb://localhost:27017/mean', (err, db) => {
+//     if (err) return console.log(err);
+//
+//     closure(db);
+//   });
+// };
 
 module.exports = router;
