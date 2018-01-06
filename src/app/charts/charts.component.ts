@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { CryptoCompareService } from "../crypto-compare.service";
+import { CryptoCompareService } from "../services/crypto-compare/crypto-compare.service";
 import { COINOBJECTS } from "../static-data/coin-objects";
 import { ALLCOINDATA } from "../static-data/all-coin-data";
 import * as D3 from "d3";
