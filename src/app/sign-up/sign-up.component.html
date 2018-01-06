@@ -5,30 +5,28 @@
         Create your account
       </div>
     </h2>
-    <!--action="https://tierion.com/form/submit" method="post"-->
-    <form  class="ui large form">
-    <!--  <input name="_key" type="hidden" value="QXmIWyWqO0SAIQI7ZgnxRg">-->
+    <form class="ui large form" [formGroup]="signUpForm" (ngSubmit)="addUser(signUpForm.value)">
       <div class="ui stacked secondary  segment">
         <div class="field">
           <div class="ui left icon input">
             <i class="user icon"></i>
-            <input type="text" name="userName" placeholder="User Name">
+            <input [formControl]="signUpForm.controls['userName']" type="text" name="userName" placeholder="User Name">
           </div>
         </div>
         <div class="field">
           <div class="ui left icon input">
             <i class="mail icon"></i>
-            <input type="text" name="email" placeholder="E-mail address">
+            <input [formControl]="signUpForm.controls['email']" type="text" name="email" placeholder="E-mail address">
           </div>
         </div>
         <div class="field">
           <div class="ui left icon input">
             <i class="lock icon"></i>
-            <input type="password" name="password" placeholder="Password">
+            <input [formControl]="signUpForm.controls['password']" type="password" name="password" placeholder="Password">
           </div>
         </div>
-      <!--<div class="ui fluid large blue submit button">Login</div>-->
-        <button class="ui fluid large blue submit button" type="submit">Submit</button>
+        <button class="ui fluid large blue submit button"
+        (click)="addUser(signUpForm.value)" type="button">Submit</button>
       </div>
 
       <div class="ui error message"></div>

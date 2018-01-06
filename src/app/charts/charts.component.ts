@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+
 import { CryptoCompareService } from "../services/crypto-compare/crypto-compare.service";
+
 import { COINOBJECTS } from "../static-data/coin-objects";
 import { ALLCOINDATA } from "../static-data/all-coin-data";
+
 import * as D3 from "d3";
 import 'd3pie';
 
@@ -45,7 +48,6 @@ export class ChartsComponent implements OnInit {
   }
 
   public addCoin(form: any): void {
-    console.log("form in addCoin: " + JSON.stringify(form))
     let apiData: any = {};
     let usdAmt = 0;
 
