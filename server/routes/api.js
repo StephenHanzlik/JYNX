@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const crypto = require('crypto');
-const sha256Hash = crypto.createHash('sha256');
+const sha256 = crypto.createHash('sha256');
 
 
 //TierionService
@@ -39,12 +39,11 @@ let response = {
 };
 
 router.post('/sign-up', (req, res) => {
-  //console.log('typeof req: ' + typeof req);
   console.log(req.body);
-  //console.log("req.body: " + JSON.parse(req));
-  //sha256Hash.update(req._body);
-  //var result = sha256Hash.digest("base64");
-  //console.log("hash result: " + result);
+  let hashTarget = JSON.stringify(req.body);
+  sha256.update(hashTarget);
+  let result = sha256.digest("base64");
+  console.log("hash result: " + result);
   // connection((db) => {
   //   db.collection('users')
   //     .find()
