@@ -21,17 +21,8 @@ export class TierionService {
   //   .map(result => this.result = result.json().data);
   // }
   public signUpUser(form: any): Observable <any>{
-  console.log("sign up user called")
-  let body = {
-  "datastoreId": 5526,
-  "firstname": "test",
-  "lastname": "a dog named dinky",
-  "emailaddress": "mwaddams@initech.net",
-  "companyname": "Initech",
-  "employment status": "Not Found",
-  "department": "Basement",
-  "likes": "Red Swingline Staplers"
-  }
+
+  form.datastoreId = 5526;
 
   let headers = new Headers();
   headers.append("X-Username", "stephenhanzlik@gmail.com");
@@ -40,7 +31,7 @@ export class TierionService {
 
   let options = new RequestOptions({ headers: headers });
 
-  return this._http.post("https://api.tierion.com/v1/records", body, options);
+  return this._http.post("https://api.tierion.com/v1/records", form, options);
 
   }
 }

@@ -32,8 +32,6 @@ export class SignUpComponent implements OnInit {
   }
 
   public addUser(form: any){
-    console.log("addUser called");
-    console.log("form : " + JSON.stringify(form));
     this.tierionService.signUpUser(form).subscribe( res => {
     })
   }
