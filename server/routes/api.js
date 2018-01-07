@@ -2,8 +2,8 @@
 const express = require('express');
 const router = express.Router();
 
-const crypto = require('crypto');
-const sha256 = crypto.createHash('sha256');
+// const crypto = require('crypto');
+// const sha256 = crypto.createHash('sha256');
 
 
 //TierionService

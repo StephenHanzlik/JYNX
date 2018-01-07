@@ -25,7 +25,7 @@ import { UserProfileComponent } from '../user-profile/user-profile.component';
             component: SignUpComponent,
        },
        {
-            path: 'user-profile',
+            path: 'settings',
             component: UserProfileComponent,
        }
    ];
