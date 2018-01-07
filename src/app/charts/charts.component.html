@@ -1,4 +1,13 @@
 <!doctype html>
+<!--<div class="ui container">-->
+  <div class="ui large secondary pointing menu">
+  <a class="item">Home</a><a class="active item">Portfolio</a><a class="item">Share</a><a class="item">Settings</a>
+    <div class="right item">
+      <a routerLink="/log-in" class="ui button">Log Out</a>
+      <h2>JYNX</h2>
+    </div>
+  </div>
+<!--</div>-->
 <div class="ui center aligned doubling grid ">
   <!--ui middle aligned center aligned grid
 ui middle aligned center aligned two column grid"-->
@@ -6,7 +15,7 @@ ui middle aligned center aligned two column grid"-->
   <div class="row">
     <div class="sixteen wide mobile eight wide tablet four wide computer column">
     <h1>JYNX</h1>
-		<p>Create a customized, sharable portfolio of your favorite cryptos</p>
+		<p>Create your customized, sharable portfolio</p>
     <form class="ui form" [formGroup]="chartForm" (ngSubmit)="addCoin(chartForm.value)">
         <select name="coinName" [formControl]="chartForm.controls['coinName']">
           <option *ngFor="let coin of cryptoDropDownList" [value]="coin.Name">{{ coin.FullName }}</option>
