@@ -15,12 +15,12 @@ const hashClient = new hashclient();
 hashClient.authenticate(username, password, function(err, authToken) {
   if (err) {
     // handle the error
-    console.log("auth error: " + err);
+    console.log("auth error");
   } else {
     // authentication was successful
     // access_token, refresh_token are returned in authToken
     // authToken values are saved internally and managed autmatically for the life of the HashClient
-    console.log("auth successful: " + authToken);
+    console.log("auth successful");
   }
 });
 
@@ -38,11 +38,12 @@ let response = {
   message: null
 };
 
-// Get users
-router.get('/sign-up', (req, res) => {
-  sha256Hash.update(req);
-  var result = sha256Hash.digest("base64");
-  console.log(result);
+router.post('/sign-up', (req, res) => {
+  //console.log("req: " + JSON.stringify(req));
+  console.log("req.body: " + JSON.stringify(req._body));
+  //sha256Hash.update(req._body);
+  //var result = sha256Hash.digest("base64");
+  //console.log("hash result: " + result);
   // connection((db) => {
   //   db.collection('users')
   //     .find()

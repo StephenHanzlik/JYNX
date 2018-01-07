@@ -15,7 +15,7 @@ export class SignUpComponent implements OnInit {
   password: AbstractControl;
 
   constructor(fb: FormBuilder,
-    private TierionService: TierionService) {
+    private tierionService: TierionService) {
       this.signUpForm = fb.group({
           "userName": ['', Validators.required],
           "email": ['', Validators.required],
@@ -32,7 +32,12 @@ export class SignUpComponent implements OnInit {
   }
 
   public addUser(form: any){
-    console.log('sign up form: ' + JSON.stringify(form));
+    console.log("addUser called");
+    console.log("form : " + JSON.stringify(form));
+    form = JSON.stringify(form);
+    this.tierionService.signUpUser(form).subscribe( res => {
+
+    })
   }
 
 }

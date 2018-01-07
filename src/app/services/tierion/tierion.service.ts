@@ -15,6 +15,7 @@ export class TierionService {
   }
 
   signUpUser(req) {
+    console.log("tierionService called : " + req);
     return this._http.post("/api/sign-up", req)
     .map(result => this.result = result.json().data);
   }
