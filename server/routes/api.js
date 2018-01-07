@@ -39,8 +39,9 @@ let response = {
 };
 
 router.post('/sign-up', (req, res) => {
-  //console.log("req: " + JSON.stringify(req));
-  console.log("req.body: " + JSON.stringify(req._body));
+  //console.log('typeof req: ' + typeof req);
+  console.log(req.body);
+  //console.log("req.body: " + JSON.parse(req));
   //sha256Hash.update(req._body);
   //var result = sha256Hash.digest("base64");
   //console.log("hash result: " + result);
