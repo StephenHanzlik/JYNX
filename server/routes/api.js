@@ -3,17 +3,25 @@ const express = require('express');
 const router = express.Router();
 
 const MongoClient = require('mongodb').MongoClient;
-let db;
+const mongoose = require('mongoose');
+//let db;
 //const boom = require('boom');
 const bcrypt = require('bcrypt');
 //const jwt = require('jsonwebtoken');
 //const privateKey = 'my_awesome_cookie_signing_key';
 
-MongoClient.connect('mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx', (err, database) => {
-  if (err) return console.log(err);
-  db = database.db("jynx");
-
+const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
+mongoose.connect(mongoDB, {
+  useMongoClient: true
 });
+mongoose.Promise = global.Promise;
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+// MongoClient.connect('mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx', (err, database) => {
+//   if (err) return console.log(err);
+//   db = database.db("jynx");
+//
+// });
 
 
 router.post('/sign-up', function(req, res) {
