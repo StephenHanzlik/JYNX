@@ -2,8 +2,6 @@
 const express = require('express');
 const router = express.Router();
 
-//const crypto = require('crypto');
-// const sha256 = crypto.createHash('sha256');
 const MongoClient = require('mongodb').MongoClient;
 let db;
 //const boom = require('boom');
@@ -19,12 +17,10 @@ MongoClient.connect('mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jy
 
 
 router.post('/sign-up', function(req, res) {
-  console.log("req: " + JSON.stringify(req.body));
   var hash = bcrypt.hashSync(req.body.password, 8);
   req.body.password = hash;
   db.collection('users').save(req.body, (err, result) => {
     if (err) return console.log(err);
-    console.log('saved to database');
     res.redirect('/charts');
   })
 });
