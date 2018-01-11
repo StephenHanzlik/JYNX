@@ -5,23 +5,33 @@ const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
 //let db;
-//const boom = require('boom');
+const boom = require('boom');
 const bcrypt = require('bcrypt');
 //const jwt = require('jsonwebtoken');
 //const privateKey = 'my_awesome_cookie_signing_key';
+//Define a schema
+const Schema = mongoose.Schema;
 
 const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
 mongoose.connect(mongoDB, {
   useMongoClient: true
 });
 mongoose.Promise = global.Promise;
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-// MongoClient.connect('mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx', (err, database) => {
-//   if (err) return console.log(err);
-//   db = database.db("jynx");
-//
-// });
+
+const userSchema = new Schema({
+  userName: { type: String, required: true },
+  email: { type: String, required: true },
+  password: { type: String, required: true },
+  portfolio: Schema.Types.ObjectId,
+  privacySettings: Schema.Types.ObjectId
+});
+
+const SomeModel = mongoose.model('SomeModel', userSchema);
+
+
+
 
 
 router.post('/sign-up', function(req, res) {
@@ -33,9 +43,17 @@ router.post('/sign-up', function(req, res) {
   })
 });
 
+router.post('/log-in', function(req, res) {
+
+});
 
 
 
+//Mongo Client w/o mongoose MongoClient.connect('mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx', (err, database) => {
+//   if (err) return console.log(err);
+//   db = database.db("jynx");
+//
+// });
 
 //TierionService
 // const hashclient = require('hashapi-lib-node');
