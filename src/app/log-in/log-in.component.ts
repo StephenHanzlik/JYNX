@@ -14,7 +14,6 @@ export class LogInComponent implements OnInit {
 
   constructor(fb: FormBuilder, private http: Http) {
     this.logInForm = fb.group({
-        "userName": ['', Validators.required],
         "email": ['', Validators.required],
         "password": ['', Validators.required],
     });
@@ -25,7 +24,10 @@ export class LogInComponent implements OnInit {
   ngOnInit() {
 
   }
-
+  public showClick(){
+    alert("I was clicked");
+  }
+  
   public logInUser(form: any){
     console.log("log in user in component");
     this.http.post('/api/log-in', form).subscribe( res => {

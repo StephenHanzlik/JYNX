@@ -14,7 +14,7 @@ export class SignUpComponent implements OnInit {
   email: AbstractControl;
   password: AbstractControl;
 
-  constructor(fb: FormBuilder, private tierionService: TierionService, private http: Http) {
+  constructor(fb: FormBuilder, private http: Http) {
       this.signUpForm = fb.group({
           "username": ['', Validators.required],
           "email": ['', Validators.required],
