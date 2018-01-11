@@ -2,19 +2,31 @@
 const express = require('express');
 const router = express.Router();
 
-
 //const crypto = require('crypto');
 // const sha256 = crypto.createHash('sha256');
-
+const MongoClient = require('mongodb').MongoClient;
+let db;
 //const boom = require('boom');
 const bcrypt = require('bcrypt');
 //const jwt = require('jsonwebtoken');
 //const privateKey = 'my_awesome_cookie_signing_key';
 
+MongoClient.connect('mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx', (err, database) => {
+  if (err) return console.log(err);
+  db = database.db("jynx");
+
+});
+
+
 router.post('/sign-up', function(req, res) {
   console.log("req: " + JSON.stringify(req.body));
   var hash = bcrypt.hashSync(req.body.password, 8);
-
+  req.body.password = hash;
+  db.collection('users').save(req.body, (err, result) => {
+    if (err) return console.log(err);
+    console.log('saved to database');
+    res.redirect('/charts');
+  })
 });
 
 
