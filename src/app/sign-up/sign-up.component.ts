@@ -33,7 +33,6 @@ export class SignUpComponent implements OnInit {
   }
 
   public addUser(form: any){
-    console.log("add user Run");
     //post to our node api
     this.http.post('/api/sign-up', form).subscribe( res => {
       console.log("res " + res);

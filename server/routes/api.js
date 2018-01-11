@@ -2,17 +2,23 @@
 const express = require('express');
 const router = express.Router();
 
+const MongoClient = require('mongodb').MongoClient
+
 //const crypto = require('crypto');
 // const sha256 = crypto.createHash('sha256');
 
 //const boom = require('boom');
-//const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 //const jwt = require('jsonwebtoken');
 //const privateKey = 'my_awesome_cookie_signing_key';
+MongoClient.connect('mongodb://jynx:y6t5w8M21@ds151207.mlab.com:51207/jynx', (err, database) => {
+  console.log("MongoClient connected!!!");
+})
 
 router.post('/sign-up', function(req, res) {
-  console.log("post to sign up:");
   console.log("req: " + JSON.stringify(req.body));
+  var hash = bcrypt.hashSync(req.body.password, 8);
+
 });
 
 
