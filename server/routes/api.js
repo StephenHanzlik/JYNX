@@ -7,8 +7,8 @@ const mongoose = require('mongoose');
 //let db;
 const boom = require('boom');
 const bcrypt = require('bcrypt');
-//const jwt = require('jsonwebtoken');
-//const privateKey = 'my_awesome_cookie_signing_key';
+const jwt = require('jsonwebtoken');
+const privateKey = '_cookie_signing_key_';
 //Define a schema
 const Schema = mongoose.Schema;
 
@@ -32,11 +32,9 @@ const UserModel = mongoose.model('userModel', userSchema);
 
 
 router.post('/sign-up', function(req, res) {
-
   const hash = bcrypt.hashSync(req.body.password, 8);
-  req.body.password = hash;
   const bodyObj = {
-    username: req.body.userName,
+    username: req.body.username,
     email: req.body.email,
     password: hash,
   };
@@ -50,11 +48,32 @@ router.post('/sign-up', function(req, res) {
 });
 
 router.post('/log-in', function(req, res) {
-  console.log("log in post route hit")
-  UserModel.find({ 'username': 'testingBodyObj' }, 'password email', function(err, userRes) {
+  const hash = bcrypt.hashSync(req.body.password, 8);
+  const reqBody = {
+    email: req.body.email,
+    password: hash,
+  };
+
+  UserModel.
+  find().
+  where('email').
+  equals(reqBody.email).
+  limit(1).
+  select('password email').
+  exec(function(err, dbUser) {
     if (err) return console.log(err);
-    console.log(JSON.stringify(userRes));
-  })
+
+    if (bcrypt.compareSync(reqBody.password, dbUser[0].password)) {
+      delete dbUser[0].password;
+      var token = jwt.sign(reqBody.email, privateKey);
+      res.cookie('token', token, { httpOnly: true }).
+      send({ 'token': token, 'id': dbUser[0]._id, 'username': dbUser[0].username, email: dbUser[0].email });
+    } else {
+      // bad password but next is not defined
+      //next(boom.create(400, 'Bad password'));
+    }
+
+  });
 });
 
 

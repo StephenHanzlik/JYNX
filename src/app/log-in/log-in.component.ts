@@ -27,9 +27,8 @@ export class LogInComponent implements OnInit {
   public showClick(){
     alert("I was clicked");
   }
-  
+
   public logInUser(form: any){
-    console.log("log in user in component");
     this.http.post('/api/log-in', form).subscribe( res => {
       console.log("res " + res);
     });
