@@ -32,6 +32,7 @@ export class SignUpComponent implements OnInit {
   }
 
   public addUser(form: any){
+  //  this.http.post('/api/')
     this.tierionService.signUpUser(form).subscribe( res => {
     })
   }
