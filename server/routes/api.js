@@ -20,27 +20,45 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-const userSchema = new Schema({
-  userame: { type: String, required: [true, "A username is required"], min: [2, 'Username too short'], max: [20, 'Username too long'] },
-  email: { type: String, required: [true, "An email is required"], min: [5, 'Email too short'], max: [30, 'Email too long'] },
-  password: { type: String, required: [true, "A password is required"], min: [2, 'Password too short'], max: [20, 'Password too long'] },
-  portfolio: Schema.Types.ObjectId,
-  privacySettings: Schema.Types.ObjectId
-});
 
-const SomeModel = mongoose.model('SomeModel', userSchema);
-
-
-
-
+//Line 39 is more elegent why to define model instance and save
+// var newInstance = new UserModel({ username: "test", email: "myEmail", password: "askfajsdfklasjd" });
+//
+// newInstance.save(function(err) {
+//   if (err) return console.log(err);
+// });
 
 router.post('/sign-up', function(req, res) {
-  var hash = bcrypt.hashSync(req.body.password, 8);
+  const hash = bcrypt.hashSync(req.body.password, 8);
   req.body.password = hash;
-  db.collection('users').save(req.body, (err, result) => {
+  const bodyObj = {
+    username: req.body.userName,
+    email: req.body.email,
+    password: hash,
+  };
+
+  // db.collection('users').save(req.body, (err, result) => {
+  //   if (err) return console.log(err);
+  //   res.redirect('/charts');
+  // })
+
+
+  const userSchema = new Schema({
+    username: { type: String, required: [true, "A username is required"], min: [2, 'Username too short'], max: [20, 'Username too long'] },
+    email: { type: String, required: [true, "An email is required"], min: [5, 'Email too short'], max: [30, 'Email too long'] },
+    password: { type: String, required: [true, "A password is required"], min: [2, 'Password too short'], max: [20, 'Password too long'] },
+    portfolio: Schema.Types.ObjectId,
+    privacySettings: Schema.Types.ObjectId
+  });
+
+  const UserModel = mongoose.model('userModel', userSchema);
+
+  UserModel.create(bodyObj, function(err, newInstance) {
     if (err) return console.log(err);
+    // saved!
     res.redirect('/charts');
-  })
+  });
+
 });
 
 router.post('/log-in', function(req, res) {
