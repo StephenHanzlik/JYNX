@@ -21,9 +21,9 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 const userSchema = new Schema({
-  userName: { type: String, required: true },
-  email: { type: String, required: true },
-  password: { type: String, required: true },
+  userame: { type: String, required: [true, "A username is required"], min: [2, 'Username too short'], max: [20, 'Username too long'] },
+  email: { type: String, required: [true, "An email is required"], min: [5, 'Email too short'], max: [30, 'Email too long'] },
+  password: { type: String, required: [true, "A password is required"], min: [2, 'Password too short'], max: [20, 'Password too long'] },
   portfolio: Schema.Types.ObjectId,
   privacySettings: Schema.Types.ObjectId
 });
