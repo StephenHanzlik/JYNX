@@ -5,21 +5,22 @@
         Log-in to your account
       </div>
     </h2>
-    <form action="https://s.codepen.io/voltron2112/debug/PqrEPM?" method="get" class="ui large form">
+    <form class="ui large form" [formGroup]="logInForm" (ngSubmit)="logInUser(logInForm.value)">
       <div class="ui stacked secondary  segment">
         <div class="field">
           <div class="ui left icon input">
-            <i class="user icon"></i>
-            <input type="text" name="userName" placeholder="User Name">
+            <i class="mail icon"></i>
+            <input [formControl]="logInForm.controls['email']" type="text" name="email" placeholder="E-mail address">
           </div>
         </div>
         <div class="field">
           <div class="ui left icon input">
             <i class="lock icon"></i>
-            <input type="password" name="password" placeholder="Password">
+            <input [formControl]="logInForm.controls['password']" type="password" name="password" placeholder="Password">
           </div>
         </div>
-        <div class="ui fluid large blue submit button">Login</div>
+        <button class="ui fluid large blue submit button"
+        (click)="logInUser(logInForm.value)" type="button">Submit</button>
       </div>
 
       <div class="ui error message"></div>

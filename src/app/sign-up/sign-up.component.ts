@@ -10,20 +10,17 @@ import { TierionService } from '../services/tierion/tierion.service';
 })
 export class SignUpComponent implements OnInit {
   signUpForm: FormGroup;
-  userName: AbstractControl;
+  username: AbstractControl;
   email: AbstractControl;
   password: AbstractControl;
 
-  constructor(fb: FormBuilder,
-    private tierionService: TierionService,
-    private http: Http) {
+  constructor(fb: FormBuilder, private tierionService: TierionService, private http: Http) {
       this.signUpForm = fb.group({
-          "userName": ['', Validators.required],
+          "username": ['', Validators.required],
           "email": ['', Validators.required],
           "password": ['', Validators.required],
       });
-
-      this.userName = this.signUpForm.controls['userName'];
+      this.username = this.signUpForm.controls['username'];
       this.email = this.signUpForm.controls['email'];
       this.password = this.signUpForm.controls['password'];
     }
@@ -38,8 +35,8 @@ export class SignUpComponent implements OnInit {
       console.log("res " + res);
     })
     //post directly to tierion DB.   My be deppricated after node route is finsihed
-    this.tierionService.signUpUser(form).subscribe( res => {
-    })
+    //this.tierionService.signUpUser(form).subscribe( res => {
+    //})
   }
 
 }
