@@ -83,13 +83,12 @@
             <ng-template let-context let-modal="modal" #modalTemplate>
               <div class="header">Add a coin:</div>
               <div class="content">
-                <form class="ui form" [formGroup]="newCoinForm" (ngSubmit)="addCoin(chartForm.value)">
+                <form class="ui form" [formGroup]="newCoinForm" >
                     <select name="coinName" [formControl]="newCoinForm.controls['coinName']">
                       <option *ngFor="let coin of cryptoDropDownList" [value]="coin.Name">{{ coin.FullName }}</option>
                     </select>
                     <label for="coinAmtInput">Enter The Amount:</label>
                     <input class="field ui input" type="text" id="coinAmtInput" [formControl]="newCoinForm.controls['coinAmt']"/>
-                    <button type="button">Submit</button>
                 </form>
               </div>
               <div class="actions">
