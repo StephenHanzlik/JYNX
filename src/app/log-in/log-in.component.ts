@@ -31,8 +31,10 @@ export class LogInComponent implements OnInit {
   }
 
   public logInUser(form: any){
-    this.http.post('/api/log-in', form).subscribe( res => {
-        this.router.navigateByUrl('/settings');
-    });
+    if(form.email && form.password){
+      this.http.post('/api/log-in', form).subscribe( res => {
+          this.router.navigateByUrl('/settings');
+      });
+    }    
   }
 }

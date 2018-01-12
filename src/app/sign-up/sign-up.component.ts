@@ -35,10 +35,11 @@ export class SignUpComponent implements OnInit {
   }
 
   public addUser(form: any){
-    //post to our node api
-    this.http.post('/api/sign-up', form).subscribe( res => {
-      this.router.navigateByUrl('/log-in');
-    })
+    if(form.email && form.password && form.username){
+      this.http.post('/api/sign-up', form).subscribe( res => {
+        this.router.navigateByUrl('/log-in');
+      })
+    }
     //post directly to tierion DB.   My be deppricated after node route is finsihed
     //this.tierionService.signUpUser(form).subscribe( res => {
     //})
