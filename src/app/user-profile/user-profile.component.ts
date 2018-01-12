@@ -3,6 +3,7 @@ import {SuiModalService, TemplateModalConfig, ModalTemplate} from 'ng2-semantic-
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { CryptoCompareService } from "../services/crypto-compare/crypto-compare.service";
 import { ALLCOINDATA } from "../static-data/all-coin-data";
+import { COINOBJECTS } from "../static-data/coin-objects";
 
 
 export interface IContext {
@@ -39,6 +40,7 @@ export class UserProfileComponent implements OnInit {
       }
 
       ngOnInit() {
+        this.getDropDownList();
       }
 
       public openModal(dynamicContent:string = "Example") {
@@ -49,11 +51,12 @@ export class UserProfileComponent implements OnInit {
 
         this.modalService
             .open(config)
-            .onApprove(result => { /* approve callback */ })
+            .onApprove(result => {this.addCoin(result)})
             .onDeny(result => { /* deny callback */});
       }
 
       public addCoin(form: any): void {
+        console.log("add coind triggered");
         let apiData: any = {};
         let usdAmt = 0;
 
@@ -76,6 +79,10 @@ export class UserProfileComponent implements OnInit {
           newTableData.usdValue = newTableData.lastPrice * newTableData.qty
           this.tableContent.push(newTableData);
 
+      }
+
+      private getDropDownList(): void {
+        this.cryptoDropDownList = COINOBJECTS;
       }
 
 }

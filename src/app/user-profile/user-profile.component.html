@@ -83,18 +83,18 @@
             <ng-template let-context let-modal="modal" #modalTemplate>
               <div class="header">Add a coin:</div>
               <div class="content">
-                <form class="ui form" [formGroup]="chartForm" (ngSubmit)="addCoin(chartForm.value)">
-                    <select name="coinName" [formControl]="chartForm.controls['coinName']">
+                <form class="ui form" [formGroup]="newCoinForm" (ngSubmit)="addCoin(chartForm.value)">
+                    <select name="coinName" [formControl]="newCoinForm.controls['coinName']">
                       <option *ngFor="let coin of cryptoDropDownList" [value]="coin.Name">{{ coin.FullName }}</option>
                     </select>
                     <label for="coinAmtInput">Enter The Amount:</label>
-                    <input class="field ui input" type="text" id="coinAmtInput" [formControl]="chartForm.controls['coinAmt']"/>
-                    <button type="button" (click)="addCoin(chartForm.value)">Submit</button>
+                    <input class="field ui input" type="text" id="coinAmtInput" [formControl]="newCoinForm.controls['coinAmt']"/>
+                    <button type="button">Submit</button>
                 </form>
               </div>
               <div class="actions">
                   <button class="ui red button" (click)="modal.deny('denied')">Cancel</button>
-                  <button class="ui green button" (click)="modal.approve('approved')" autofocus>OK</button>
+                  <button class="ui green button" (click)="modal.approve(newCoinForm.value)" autofocus>OK</button>
               </div>
             </ng-template>
             <div class="ui divider"></div>
