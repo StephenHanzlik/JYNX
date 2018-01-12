@@ -13,6 +13,7 @@ import { LogInComponent } from './log-in/log-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { TierionService } from './services/tierion/tierion.service';
 import { HomeComponent } from './home/home.component';
+import { AuthService } from './services/auth/auth.service';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { HomeComponent } from './home/home.component';
     HttpModule,
     AppRoutingModule,
   ],
-  providers: [CryptoCompareService, TierionService],
+  providers: [CryptoCompareService, TierionService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

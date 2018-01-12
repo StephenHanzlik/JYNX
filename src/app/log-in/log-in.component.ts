@@ -32,9 +32,9 @@ export class LogInComponent implements OnInit {
 
   public logInUser(form: any){
     if(form.email && form.password){
-      this.http.post('/api/log-in', form).subscribe( res => {
+      this.authService.login(form).subscribe( res => {
           this.router.navigateByUrl('/settings');
       });
-    }    
+    }
   }
 }
