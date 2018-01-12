@@ -81,9 +81,16 @@
                 </button>
             </div>
             <ng-template let-context let-modal="modal" #modalTemplate>
-              <div class="header">Example</div>
+              <div class="header">Add a coin:</div>
               <div class="content">
-                <p>{{ context.data }}</p>
+                <form class="ui form" [formGroup]="chartForm" (ngSubmit)="addCoin(chartForm.value)">
+                    <select name="coinName" [formControl]="chartForm.controls['coinName']">
+                      <option *ngFor="let coin of cryptoDropDownList" [value]="coin.Name">{{ coin.FullName }}</option>
+                    </select>
+                    <label for="coinAmtInput">Enter The Amount:</label>
+                    <input class="field ui input" type="text" id="coinAmtInput" [formControl]="chartForm.controls['coinAmt']"/>
+                    <button type="button" (click)="addCoin(chartForm.value)">Submit</button>
+                </form>
               </div>
               <div class="actions">
                   <button class="ui red button" (click)="modal.deny('denied')">Cancel</button>
@@ -113,7 +120,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr *ngFor="let coin of tableContent">
+                    <td>#</td>
+                    <td>{{coin.asset}}</td>
+                    <td>{{coin.lastPrice}}</td>
+                    <td>{{coin.qty}}</td>
+                    <td>{{coin.usdValue}}</td>
+                  <!-- <tr>
                     <td>
                       1
                     </td>
@@ -384,7 +397,7 @@
                     <td>
                       libero
                     </td>
-                  </tr>
+                  </tr> -->
                 </tbody>
               </table>
             </div>

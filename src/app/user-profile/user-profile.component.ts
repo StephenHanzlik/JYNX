@@ -1,5 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {SuiModalService, TemplateModalConfig, ModalTemplate} from 'ng2-semantic-ui';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { CryptoCompareService } from "../services/crypto-compare/crypto-compare.service";
+import { ALLCOINDATA } from "../static-data/all-coin-data";
+
 
 export interface IContext {
     data:string;
@@ -14,7 +18,25 @@ export class UserProfileComponent implements OnInit {
       @ViewChild('modalTemplate')
       public modalTemplate:ModalTemplate<IContext, string, string>
 
-      constructor(public modalService:SuiModalService) { }
+      newCoinForm: FormGroup;
+      coinName: AbstractControl;
+      coinAmt: AbstractControl;
+
+      public cryptoDropDownList: any = [];
+      public tableContent: any = [];
+      public coinsToQuery: any = [];
+
+      constructor(private fb: FormBuilder,
+                  private modalService:SuiModalService,
+                  private cryptoCompareService: CryptoCompareService) {
+        this.newCoinForm = fb.group({
+            "coinName": ['BTC', Validators.required],
+            "coinAmt": ['', Validators.required]
+        });
+
+        this.coinName = this.newCoinForm.controls['coinName'];
+        this.coinAmt = this.newCoinForm.controls['coinAmt'];
+      }
 
       ngOnInit() {
       }
@@ -29,6 +51,31 @@ export class UserProfileComponent implements OnInit {
             .open(config)
             .onApprove(result => { /* approve callback */ })
             .onDeny(result => { /* deny callback */});
+      }
+
+      public addCoin(form: any): void {
+        let apiData: any = {};
+        let usdAmt = 0;
+
+        this.cryptoCompareService.getPrice(form.coinName).subscribe(result=>{
+            apiData = JSON.parse(result._body);
+            usdAmt = apiData.USD;
+
+            //this.updatePieChart(form, usdAmt);
+            this.updateTableList(form, usdAmt);
+        })
+      }
+
+      private updateTableList(newCoin: any, usdAmt: number): void {
+          let allCoinData = ALLCOINDATA;
+          let newTableData: any = {};
+          let apiData: any = {};
+          newTableData.qty = Number.parseInt(newCoin.coinAmt);
+          newTableData.asset = allCoinData[0][newCoin.coinName].FullName;
+          newTableData.lastPrice = usdAmt;
+          newTableData.usdValue = newTableData.lastPrice * newTableData.qty
+          this.tableContent.push(newTableData);
+
       }
 
 }

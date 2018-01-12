@@ -29,8 +29,8 @@ export class ChartsComponent implements OnInit {
   public coinsToQuery: any = [];
   public pie: any;
 
-  constructor(fb: FormBuilder,
-  private cryptoCompareService: CryptoCompareService) {
+  constructor(private fb: FormBuilder,
+              private cryptoCompareService: CryptoCompareService) {
     this.chartForm = fb.group({
         "coinName": ['BTC', Validators.required],
         "coinAmt": ['', Validators.required]
