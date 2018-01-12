@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 
-const MongoClient = require('mongodb').MongoClient;
+//const MongoClient = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
 
 const bcrypt = require('bcrypt');
@@ -50,6 +50,7 @@ const userSchema = new Schema({
 const UserModel = mongoose.model('userModel', userSchema);
 
 
+
 router.post('/sign-up', function(req, res) {
   const hash = bcrypt.hashSync(req.body.password, 8);
   const bodyObj = {
@@ -93,7 +94,7 @@ router.post('/log-in', function(req, res) {
       var token = jwt.sign(reqBody.email, privateKey);
       res.cookie('token', token, { httpOnly: true }).
       send({ 'token': token, 'id': dbUser[0]._id, 'username': dbUser[0].username, email: dbUser[0].email });
-
+      // return res.json({ token: jwt.sign({ email: dbUser.email, fullName: dbUser.fullName, _id: dbUser._id }, privateKey) });
     } else {
       res.status(401).json({ message: 'Authentication failed. Wrong password.' });
     }
