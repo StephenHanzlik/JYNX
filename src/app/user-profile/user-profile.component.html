@@ -6,7 +6,7 @@
             <input placeholder="Search..." />
           </div> -->
         </div>
-        <a routerLink="/" class="item">Home</a><a class="item">Portfolio</a><a class="item">Share</a><a routerLink="/settings" class="item">Settings</a>
+        <a routerLink="/" class="item">Home</a><a routerLink="/dashboard" class="item">Dashboard</a><a class="item">Share</a><a routerLink="/settings" class="item">Settings</a>
       </div>
     </div>
     <div class="ui grid">
@@ -73,7 +73,23 @@
               <h1 class="ui huge header">
                 All Coins
               </h1>
+                <button (click)="openModal()" class="circular ui icon button">
+                  <i class="icon plus"></i>
+                </button>
+                <button class="circular ui icon button">
+                  <i class="icon minus"></i>
+                </button>
             </div>
+            <ng-template let-context let-modal="modal" #modalTemplate>
+              <div class="header">Example</div>
+              <div class="content">
+                <p>{{ context.data }}</p>
+              </div>
+              <div class="actions">
+                  <button class="ui red button" (click)="modal.deny('denied')">Cancel</button>
+                  <button class="ui green button" (click)="modal.approve('approved')" autofocus>OK</button>
+              </div>
+            </ng-template>
             <div class="ui divider"></div>
             <div class="row">
               <table class="ui single line striped selectable table">

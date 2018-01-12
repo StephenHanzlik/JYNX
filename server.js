@@ -38,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/api', api);
 
 // Send all other requests to the Angular app
-app.get('*', authorize, (req, res) => {
+app.get('*', (req, res) => {
   if (req.token) {
     console.log("we have a token");
     res.sendFile(path.join(__dirname, 'dist/index.html'));
