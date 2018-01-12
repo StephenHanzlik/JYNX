@@ -6,10 +6,12 @@ export class AuthService {
 
   constructor(private http: Http) { }
 
-  private logIn(form: any) {
+  public logIn(form: any){
     return this.http.post('/api/log-in', form)
+  }
 
-
+  public signUp(form: any){
+    return this.http.post('/api/sign-up', form);
   }
 
 }

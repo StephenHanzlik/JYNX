@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators, AbstractControl,  } from '@angular/
 import { Response, Http } from '@angular/http';
 import {Routes, Router } from '@angular/router';
 
+import { AuthService } from '../services/auth/auth.service';
+
 
 @Component({
   selector: 'app-log-in',
@@ -15,6 +17,7 @@ export class LogInComponent implements OnInit {
   password: AbstractControl;
 
   constructor(private fb: FormBuilder,
+              private authService: AuthService,
               private http: Http,
               private router: Router) {
 
@@ -32,7 +35,7 @@ export class LogInComponent implements OnInit {
 
   public logInUser(form: any){
     if(form.email && form.password){
-      this.authService.login(form).subscribe( res => {
+      this.authService.logIn(form).subscribe( res => {
           this.router.navigateByUrl('/settings');
       });
     }

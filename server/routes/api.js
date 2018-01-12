@@ -4,26 +4,45 @@ const router = express.Router();
 
 const MongoClient = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
-//let db;
-const boom = require('boom');
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const privateKey = '_cookie_signing_key_';
-//Define a schema
+const privateKey = 'xt67rhdk30_cookie_signing_key_1las01103ksd';
+
 const Schema = mongoose.Schema;
 
 const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
 mongoose.connect(mongoDB, {
   useMongoClient: true
 });
+
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 const userSchema = new Schema({
-  username: { type: String, required: [true, "A username is required"], min: [2, 'Username too short'], max: [20, 'Username too long'] },
-  email: { type: String, required: [true, "An email is required"], min: [5, 'Email too short'], max: [30, 'Email too long'] },
-  password: { type: String, required: [true, "A password is required"], min: [2, 'Password too short'], max: [20, 'Password too long'] },
+  username: {
+    type: String,
+    required: [true, "A username is required"],
+    min: [2, 'Username too short'],
+    max: [20, 'Username too long']
+  },
+  email: {
+    type: String,
+    required: [true, "An email is required"],
+    min: [5, 'Email too short'],
+    max: [30, 'Email too long']
+  },
+  password: {
+    type: String,
+    required: [true, "A password is required"],
+    min: [2, 'Password too short'],
+    max: [20, 'Password too long']
+  },
+  created: {
+    type: Date,
+    default: Date.now
+  },
   portfolio: Schema.Types.ObjectId,
   privacySettings: Schema.Types.ObjectId
 });
@@ -48,9 +67,9 @@ router.post('/sign-up', function(req, res) {
 });
 
 router.post('/log-in', function(req, res) {
-  console.log("log in works");
   const hash = bcrypt.hashSync(req.body.password, 8);
   const reqBody = {
+    username: req.body.username,
     email: req.body.email,
     password: hash,
   };
@@ -58,11 +77,15 @@ router.post('/log-in', function(req, res) {
   UserModel.
   find().
   where('email').
-  equals(req.body.email).
+  equals(reqBody.email).
   limit(1).
   select('password email').
   exec(function(err, dbUser) {
-    if (err) return console.log(err);
+    if (err) throw err;
+
+    if (!dbUser) {
+      res.status(401).json({ message: 'Authentication failed. User not found.' });
+    }
 
     if (bcrypt.compareSync(req.body.password, dbUser[0].password)) {
       console.log("bcrypt works");
@@ -72,14 +95,46 @@ router.post('/log-in', function(req, res) {
       send({ 'token': token, 'id': dbUser[0]._id, 'username': dbUser[0].username, email: dbUser[0].email });
 
     } else {
-      // bad password but next is not defined
-      //next(boom.create(400, 'Bad password'));
-      res.send("error")
+      res.status(401).json({ message: 'Authentication failed. Wrong password.' });
     }
 
   });
+
+
+  //function(err, dbUser) {
+  //   if (err) throw err;
+  //
+  //   if (!dbUser) {
+  //     res.status(401).json({ message: 'Authentication failed. User not found.' });
+  //   }
+  //
+  //   if (bcrypt.compareSync(req.body.password, dbUser[0].password)) {
+  //     console.log("bcrypt works");
+  //     delete dbUser[0].password;
+  //     var token = jwt.sign(reqBody.email, privateKey);
+  //     res.cookie('token', token, { httpOnly: true }).
+  //     send({ 'token': token, 'id': dbUser[0]._id, 'username': dbUser[0].username, email: dbUser[0].email });
+  //
+  //   } else {
+  //     res.status(401).json({ message: 'Authentication failed. Wrong password.' });
+  //   }
+  //
+  // });
+  //);
 });
 
+// {
+//   if (err) throw err;
+//   if (!user[0]) {
+//     res.status(401).json({ message: 'Authentication failed. User not found.' });
+//   } else if (user[0]) {
+//     if (!bcrypt.compareSync(bodyObj.password, user[0].password)) {
+//       res.status(401).json({ message: 'Authentication failed. Wrong password.' });
+//     } else {
+//       return res.json({ token: jwt.sign({ email: user.email, username: user.username, _id: user._id }, privateKey) });
+//     }
+//   }
+// }
 
 
 //Mongo Client w/o mongoose MongoClient.connect('mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx', (err, database) => {

@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl,  } from '@angular/forms';
 import { Response, Http } from '@angular/http';
-import { TierionService } from '../services/tierion/tierion.service';
 import {Routes, Router } from '@angular/router';
+
+import { TierionService } from '../services/tierion/tierion.service';
+import { AuthService } from '../services/auth/auth.service';
+
 
 
 @Component({
@@ -18,7 +21,8 @@ export class SignUpComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private http: Http,
-              private router: Router) {
+              private router: Router,
+              private authService: AuthService) {
 
       this.signUpForm = fb.group({
           "username": ['', Validators.required],
@@ -36,13 +40,10 @@ export class SignUpComponent implements OnInit {
 
   public addUser(form: any){
     if(form.email && form.password && form.username){
-      this.http.post('/api/sign-up', form).subscribe( res => {
+      this.authService.signUp(form).subscribe( res => {
         this.router.navigateByUrl('/log-in');
       })
     }
-    //post directly to tierion DB.   My be deppricated after node route is finsihed
-    //this.tierionService.signUpUser(form).subscribe( res => {
-    //})
   }
 
 }
