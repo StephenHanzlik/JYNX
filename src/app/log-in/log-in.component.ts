@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl,  } from '@angular/forms';
 import { Response, Http } from '@angular/http';
+import {Routes, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-log-in',
@@ -12,7 +14,10 @@ export class LogInComponent implements OnInit {
   email: AbstractControl;
   password: AbstractControl;
 
-  constructor(fb: FormBuilder, private http: Http) {
+  constructor(private fb: FormBuilder,
+              private http: Http,
+              private router: Router) {
+
     this.logInForm = fb.group({
         "email": ['', Validators.required],
         "password": ['', Validators.required],
@@ -24,13 +29,10 @@ export class LogInComponent implements OnInit {
   ngOnInit() {
 
   }
-  public showClick(){
-    alert("I was clicked");
-  }
 
   public logInUser(form: any){
     this.http.post('/api/log-in', form).subscribe( res => {
-      console.log("res " + res);
+        this.router.navigateByUrl('/settings');
     });
   }
 }

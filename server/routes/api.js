@@ -48,6 +48,7 @@ router.post('/sign-up', function(req, res) {
 });
 
 router.post('/log-in', function(req, res) {
+  console.log("log in works");
   const hash = bcrypt.hashSync(req.body.password, 8);
   const reqBody = {
     email: req.body.email,
@@ -57,20 +58,23 @@ router.post('/log-in', function(req, res) {
   UserModel.
   find().
   where('email').
-  equals(reqBody.email).
+  equals(req.body.email).
   limit(1).
   select('password email').
   exec(function(err, dbUser) {
     if (err) return console.log(err);
 
-    if (bcrypt.compareSync(reqBody.password, dbUser[0].password)) {
+    if (bcrypt.compareSync(req.body.password, dbUser[0].password)) {
+      console.log("bcrypt works");
       delete dbUser[0].password;
       var token = jwt.sign(reqBody.email, privateKey);
       res.cookie('token', token, { httpOnly: true }).
       send({ 'token': token, 'id': dbUser[0]._id, 'username': dbUser[0].username, email: dbUser[0].email });
+
     } else {
       // bad password but next is not defined
       //next(boom.create(400, 'Bad password'));
+      res.send("error")
     }
 
   });
