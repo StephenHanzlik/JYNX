@@ -66,6 +66,7 @@ export class UserProfileComponent implements OnInit {
 
             //this.updatePieChart(form, usdAmt);
             this.updateTableList(form, usdAmt);
+            
         })
       }
 

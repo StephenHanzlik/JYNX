@@ -20,7 +20,7 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-const userSchema = new Schema({
+const UserSchema = new Schema({
   username: {
     type: String,
     required: [true, "A username is required"],
@@ -43,13 +43,34 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  portfolio: Schema.Types.ObjectId,
-  privacySettings: Schema.Types.ObjectId
+  portfolio: [{ type: Schema.Types.ObjectId, ref: 'PortfolioSchema' }],
+  privacySettings: [{ type: Schema.Types.ObjectId, ref: 'SettingsSchema' }]
 });
 
-const UserModel = mongoose.model('userModel', userSchema);
+const PortfolioSchema = new Schema({
+  hodler: [{ type: Schema.Types.ObjectId, ref: 'UserSchema' }],
+  coins: [String],
+  coinAmts: [Number]
+});
+
+const SettingsSchema = new Schema({
+  hodler: [{ type: Schema.Types.ObjectId, ref: 'UserSchema' }],
+  setting1: [], //filler setting for later
+  setting2: [] //filler setting for later
+});
+
+const UserModel = mongoose.model('UserModel', UserSchema);
+const PortfolioModel = mongoose.model('PortfolioModel', PortfolioSchema);
+const SettingsModel = mongoose.model('SettingsModel', SettingsSchema);
+
+router.post('/add-coin', function(req, res) {
+  const bodyObj = {
+    coinName: req.body.coinName,
+    coinAmt: req.body.coinAmt
+  };
 
 
+});
 
 router.post('/sign-up', function(req, res) {
   const hash = bcrypt.hashSync(req.body.password, 8);
@@ -58,12 +79,42 @@ router.post('/sign-up', function(req, res) {
     email: req.body.email,
     password: hash,
   };
+  const newUser = new UserModel(bodyObj);
 
-  UserModel.create(bodyObj, function(err, newInstance) {
-    if (err) return console.log(err);
-    // saved!
-    res.redirect('/charts');
+  newUser.save(function(err) {
+
+    const newPortfolio = new PortfolioModel({
+      hodler: newUser._id,
+      coins: [],
+      coinAmts: []
+    });
+
+    newPortfolio.save(function(err) {
+      if (err) return console.log(err);
+
+    });
+
+    const newSettings = new SettingsModel({
+      hodler: newUser._id,
+      setting1: [],
+      setting2: []
+    });
+
+    newSettings.save(function(err) {
+      if (err) return console.log(err);
+
+    });
+
+
   });
+
+
+
+  // UserModel.create(bodyObj, function(err, newInstance) {
+  //   if (err) return console.log(err);
+  //   // saved!
+  //   res.redirect('/charts');
+  // });
 
 });
 
