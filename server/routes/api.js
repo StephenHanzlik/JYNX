@@ -68,7 +68,16 @@ router.post('/add-coin', function(req, res) {
     coinName: req.body.coinName,
     coinAmt: req.body.coinAmt
   };
-
+  //*** our next step here.   we need to figure out how to pass the user in to look up their portfolio.   May need to finish JWT. ***
+  UserModel.
+  find().
+  where('email').
+  equals(reqBody.email).
+  limit(1).
+  select('password email').
+  exec(function(err, dbUser) {
+    if (err) throw err;
+  });
 
 });
 
@@ -91,7 +100,6 @@ router.post('/sign-up', function(req, res) {
 
     newPortfolio.save(function(err) {
       if (err) return console.log(err);
-
     });
 
     const newSettings = new SettingsModel({
@@ -102,7 +110,6 @@ router.post('/sign-up', function(req, res) {
 
     newSettings.save(function(err) {
       if (err) return console.log(err);
-
     });
 
 
