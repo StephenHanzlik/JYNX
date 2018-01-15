@@ -61,19 +61,28 @@ const SettingsModel = mongoose.model('SettingsModel', SettingsSchema);
 
 router.post('/add-coin', function(req, res) {
   console.log("post route on server triggered");
+  console.log("req.token  in route" + JSON.stringify(req.token));
+
   const bodyObj = {
     coinName: req.body.coinName,
     coinAmt: req.body.coinAmt
   };
-  //*** our next step here.   we need to figure out how to pass the user in to look up their portfolio.   May need to finish JWT. ***
-  UserModel.
-  find().
-  where('email').
-  equals(bodyObj.email).
-  limit(1).
-  select('password email').
-  exec(function(err, dbUser) {
+
+  UserModel.find().where('email').equals(req.token).limit(1).select('portfolio password _id').exec(function(err, dbUser) {
     if (err) throw err;
+    console.log("dbuser: " + dbUser);
+    //**** working here trying to update portfolio
+    //dbUser.portfolio.coins.push(bodyObj.coinName);
+    //dbUser.portfolio.coinAmts.push(bodyObj.coinAmt);
+    const newPortfolio = new PortfolioModel({
+      hodler: dbUser._id,
+      // coins: [bodyObj.coinName],
+      // coinAmts: [bodyObj.coinName]
+    });
+
+    newPortfolio.save(function(err) {
+      if (err) return console.log(err);
+    });
   });
 
   console.log("no error thrown");

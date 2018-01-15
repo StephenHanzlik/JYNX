@@ -15,10 +15,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const authorize = function(req, res, next) {
-  console.log("req.cookies: " + JSON.stringify(req.cookies));
   if (req.cookies) {
     const token = req.cookies.token;
     jwt.verify(token, privateKey, (err, decoded) => {
+      console.log("decoded: " + JSON.stringify(decoded));
       if (err) {
         console.log(err);
         res.status(400).json({ message: 'You need a cookie' });
