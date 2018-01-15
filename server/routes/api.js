@@ -19,8 +19,8 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
-router.post('/add-coin', function(req, res) {
-  console.log("post route on server triggered");
+router.put('/add-coin', function(req, res) {
+  console.log("put route on server triggered");
   console.log("req.token  in route" + JSON.stringify(req.token));
 
   const bodyObj = {
@@ -28,7 +28,13 @@ router.post('/add-coin', function(req, res) {
     coinAmt: req.body.coinAmt
   };
 
-  UserModel.find().where('email').equals(req.token).limit(1).select('portfolio password _id').exec(function(err, dbUser) {
+  UserModel.
+  find().
+  where('email').
+  equals(req.token).
+  limit(1).
+  select('portfolio password _id').
+  exec(function(err, dbUser) {
     if (err) throw err;
     console.log("dbuser: " + dbUser);
     //**** working here trying to update portfolio

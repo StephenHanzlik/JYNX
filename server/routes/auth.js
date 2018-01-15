@@ -67,8 +67,9 @@ router.post('/log-in', function(req, res) {
   limit(1).
   select('password email').
   exec(function(err, dbUser) {
-    if (err) throw err;
-
+    if (err) {
+      res.status(500).send(err);
+    }
     if (!dbUser) {
       res.status(401).json({ message: 'Authentication failed. User not found.' });
     }

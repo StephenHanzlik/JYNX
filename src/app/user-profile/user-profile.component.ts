@@ -67,28 +67,11 @@ export class UserProfileComponent implements OnInit {
 
             //this.updatePieChart(form, usdAmt);
             this.updateTableList(form, usdAmt);
-            this.postWithHeaders(form);
-            // this.mongoDbService.addCoin(form).subscribe(result=>{
-            //   console.log("result of add coin from mongo db service");
-            // });
+            this.mongoDbService.addCoin(form).subscribe(result=>{
+              console.log("result of add coin from mongo db service");
+            });
         })
       }
-
-
-        public postWithHeaders(form: any){
-          var headers = new Headers();
-            headers.append('Content-Type', 'application/json');
-            headers.append('Accept', 'application/json');
-
-            return fetch('/api/add-coin', {
-                method: 'POST',
-                mode: 'same-origin',
-                redirect: 'follow',
-                credentials: 'include', // Don't forget to specify this if you need cookies
-                headers: headers,
-                body: JSON.stringify(form)
-                })
-        }
 
       private updateTableList(newCoin: any, usdAmt: number): void {
           let allCoinData = ALLCOINDATA;
