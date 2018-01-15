@@ -60,6 +60,7 @@ const PortfolioModel = mongoose.model('PortfolioModel', PortfolioSchema);
 const SettingsModel = mongoose.model('SettingsModel', SettingsSchema);
 
 router.post('/add-coin', function(req, res) {
+  console.log("post route on server triggered");
   console.log("req.body.coinName: " + req.body.coinName);
   const bodyObj = {
     coinName: req.body.coinName,

@@ -6,10 +6,16 @@ const http = require('http');
 const app = express();
 const jwt = require('jsonwebtoken');
 const privateKey = 'xt67rhdk30_cookie_signing_key_1las01103ksd';
+const cookieParser = require('cookie-parser');
 const api = require('./server/routes/api');
+// Parsers
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 const authorize = function(req, res, next) {
-  console.log(req.cookie);
+  console.log("req.body: " + JSON.stringify(req.body));
+  console.log("req.headers: " + JSON.stringify(req.headers));
   if (req.cookies) {
     console.log('you have a cookie');
     const token = req.cookies.token;
@@ -39,14 +45,7 @@ app.use('/api', authorize, api);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
-  if (req.token) {
-    console.log("we have a token");
-    res.sendFile(path.join(__dirname, 'dist/index.html'));
-
-  } else {
-    res.sendFile(path.join(__dirname, 'dist/index.html'));
-  }
-
+  res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
 

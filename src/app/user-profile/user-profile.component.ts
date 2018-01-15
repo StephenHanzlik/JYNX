@@ -30,6 +30,7 @@ export class UserProfileComponent implements OnInit {
 
       constructor(private fb: FormBuilder,
                   private modalService:SuiModalService,
+                  private mongoDbService:MongoDbService,
                   private cryptoCompareService: CryptoCompareService) {
         this.newCoinForm = fb.group({
             "coinName": ['BTC', Validators.required],
@@ -67,7 +68,9 @@ export class UserProfileComponent implements OnInit {
 
             //this.updatePieChart(form, usdAmt);
             this.updateTableList(form, usdAmt);
-
+            this.mongoDbService.addCoin(form).subscribe(result=>{
+              console.log("result of add coin from mongo db service");
+            });
         })
       }
 
