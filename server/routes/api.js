@@ -61,7 +61,6 @@ const SettingsModel = mongoose.model('SettingsModel', SettingsSchema);
 
 router.post('/add-coin', function(req, res) {
   console.log("post route on server triggered");
-  console.log("req.body.coinName: " + req.body.coinName);
   const bodyObj = {
     coinName: req.body.coinName,
     coinAmt: req.body.coinAmt
@@ -148,7 +147,7 @@ router.post('/log-in', function(req, res) {
       console.log("bcrypt works");
       delete dbUser[0].password;
       var token = jwt.sign(reqBody.email, privateKey);
-      res.cookie('token', token, { httpOnly: true }).
+      res.cookie('token', token, { httpOnly: false }).
       send({ 'token': token, 'id': dbUser[0]._id, 'username': dbUser[0].username, email: dbUser[0].email });
       // return res.json({ token: jwt.sign({ email: dbUser.email, fullName: dbUser.fullName, _id: dbUser._id }, privateKey) });
     } else {

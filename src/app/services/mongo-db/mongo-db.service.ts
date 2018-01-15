@@ -8,8 +8,8 @@ export class MongoDbService {
 
 
   public addCoin(form: any){
-    console.log("service triggered");
     return this.http.post('/api/add-coin', form);
   }
+
 
 }
