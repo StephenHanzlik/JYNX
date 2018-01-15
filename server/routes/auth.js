@@ -72,14 +72,20 @@ router.post('/log-in', function(req, res) {
     }
     if (!dbUser) {
       res.status(401).json({ message: 'Authentication failed. User not found.' });
+      throw err;
     }
-    if (bcrypt.compareSync(req.body.password, dbUser[0].password)) {
-      console.log("dbUser[0]._id: " + dbUser[0]._id);
-      let idString = dbUser[0]._id.toString();
-      delete dbUser[0].password;
-      var token = jwt.sign(idString, privateKey);
-      res.cookie('token', token, { httpOnly: false }).
-      send({ 'token': token, 'id': dbUser[0]._id, 'username': dbUser[0].username, email: dbUser[0].email });
+
+    if (req.body.password && dbUser[0]) {
+      if (bcrypt.compareSync(req.body.password, dbUser[0].password)) {
+        console.log("dbUser[0]._id: " + dbUser[0]._id);
+        let idString = dbUser[0]._id.toString();
+        delete dbUser[0].password;
+        var token = jwt.sign(idString, privateKey);
+        res.cookie('token', token, { httpOnly: false }).
+        send({ 'token': token, 'id': dbUser[0]._id, 'username': dbUser[0].username, email: dbUser[0].email });
+      } else {
+        res.status(401).json({ message: 'Authentication failed. Wrong password.' });
+      }
     } else {
       res.status(401).json({ message: 'Authentication failed. Wrong password.' });
     }

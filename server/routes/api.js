@@ -25,10 +25,6 @@ router.put('/add-coin', function(req, res) {
     coinAmt: req.body.coinAmt
   };
 
-
-
-
-
   PortfolioModel.
   find().
   where('hodler').
@@ -49,7 +45,7 @@ router.put('/add-coin', function(req, res) {
       // we have the updated user returned to us
       console.log("updated port: " + user);
     });
-    // 
+    //
     // dbPortfolio[0].coins.push(bodyObj.coinName);
     // dbPortfolio[0].coinAmts.push(bodyObj.coinAmt);
     //
