@@ -20,38 +20,49 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
 router.put('/add-coin', function(req, res) {
-  console.log("put route on server triggered");
-  console.log("req.token  in route" + JSON.stringify(req.token));
-
   const bodyObj = {
     coinName: req.body.coinName,
     coinAmt: req.body.coinAmt
   };
 
-  UserModel.
+
+
+
+
+  PortfolioModel.
   find().
-  where('email').
+  where('hodler').
   equals(req.token).
   limit(1).
-  select('portfolio password _id').
-  exec(function(err, dbUser) {
-    if (err) throw err;
-    console.log("dbuser: " + dbUser);
-    //**** working here trying to update portfolio
-    //dbUser.portfolio.coins.push(bodyObj.coinName);
-    //dbUser.portfolio.coinAmts.push(bodyObj.coinAmt);
-    const newPortfolio = new PortfolioModel({
-      hodler: dbUser._id,
-      // coins: [bodyObj.coinName],
-      // coinAmts: [bodyObj.coinName]
-    });
+  select('coins coinAmts _id').
+  exec(function(err, dbPortfolio) {
+    if (err) {
+      res.status(500).send(err);
+    }
+    let newCoinsArr = dbPortfolio[0].coins
+    newCoinsArr.push(bodyObj.coinName);
+    let newAmountsArr = dbPortfolio[0].coinAmts
+    newAmountsArr.push(bodyObj.coinAmt);
 
-    newPortfolio.save(function(err) {
-      if (err) return console.log(err);
+    PortfolioModel.findOneAndUpdate({ hodler: req.token }, { coinAmts: newAmountsArr, coins: newCoinsArr }, function(err, user) {
+      if (err) throw err;
+      // we have the updated user returned to us
+      console.log("updated port: " + user);
     });
+    // 
+    // dbPortfolio[0].coins.push(bodyObj.coinName);
+    // dbPortfolio[0].coinAmts.push(bodyObj.coinAmt);
+    //
+    // dbPortfolio.save((err, dbUser) => {
+    //   if (err) {
+    //     res.status(500).send(err)
+    //   }
+    //   res.status(200).send(dbUser);
+    // })
+
+
+
   });
-
-  console.log("no error thrown");
 });
 
 // router.post('/sign-up', function(req, res) {

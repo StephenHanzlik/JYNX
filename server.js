@@ -18,9 +18,7 @@ const authorize = function(req, res, next) {
   if (req.cookies) {
     const token = req.cookies.token;
     jwt.verify(token, privateKey, (err, decoded) => {
-      console.log("decoded token: " + JSON.stringify(decoded));
       if (err) {
-        console.log(err);
         res.status(400).json({ message: 'You need a cookie' });
         return;
       } else {

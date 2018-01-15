@@ -74,8 +74,10 @@ router.post('/log-in', function(req, res) {
       res.status(401).json({ message: 'Authentication failed. User not found.' });
     }
     if (bcrypt.compareSync(req.body.password, dbUser[0].password)) {
+      console.log("dbUser[0]._id: " + dbUser[0]._id);
+      let idString = dbUser[0]._id.toString();
       delete dbUser[0].password;
-      var token = jwt.sign(reqBody.email, privateKey);
+      var token = jwt.sign(idString, privateKey);
       res.cookie('token', token, { httpOnly: false }).
       send({ 'token': token, 'id': dbUser[0]._id, 'username': dbUser[0].username, email: dbUser[0].email });
     } else {
