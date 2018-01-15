@@ -1,17 +1,13 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-
-//const MongoClient = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const privateKey = 'xt67rhdk30_cookie_signing_key_1las01103ksd';
-
 const Schema = mongoose.Schema;
-
 const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
+
 mongoose.connect(mongoDB, {
   useMongoClient: true
 });
@@ -64,6 +60,7 @@ const PortfolioModel = mongoose.model('PortfolioModel', PortfolioSchema);
 const SettingsModel = mongoose.model('SettingsModel', SettingsSchema);
 
 router.post('/add-coin', function(req, res) {
+  console.log("req.body.coinName: " + req.body.coinName);
   const bodyObj = {
     coinName: req.body.coinName,
     coinAmt: req.body.coinAmt
@@ -72,7 +69,7 @@ router.post('/add-coin', function(req, res) {
   UserModel.
   find().
   where('email').
-  equals(reqBody.email).
+  equals(bodyObj.email).
   limit(1).
   select('password email').
   exec(function(err, dbUser) {

@@ -14,6 +14,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { TierionService } from './services/tierion/tierion.service';
 import { HomeComponent } from './home/home.component';
 import { AuthService } from './services/auth/auth.service';
+import { MongoDbService } from './services/mongo-db/mongo-db.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { AuthService } from './services/auth/auth.service';
     HttpModule,
     AppRoutingModule,
   ],
-  providers: [CryptoCompareService, TierionService, AuthService],
+  providers: [CryptoCompareService, TierionService, AuthService, MongoDbService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

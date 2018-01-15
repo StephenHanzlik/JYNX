@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {SuiModalService, TemplateModalConfig, ModalTemplate} from 'ng2-semantic-ui';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { CryptoCompareService } from "../services/crypto-compare/crypto-compare.service";
+import { MongoDbService } from "../services/mongo-db/mongo-db.service";
 import { ALLCOINDATA } from "../static-data/all-coin-data";
 import { COINOBJECTS } from "../static-data/coin-objects";
 
@@ -66,7 +67,7 @@ export class UserProfileComponent implements OnInit {
 
             //this.updatePieChart(form, usdAmt);
             this.updateTableList(form, usdAmt);
-            
+
         })
       }
 
