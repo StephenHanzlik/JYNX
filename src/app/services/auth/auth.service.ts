@@ -7,11 +7,11 @@ export class AuthService {
   constructor(private http: Http) { }
 
   public logIn(form: any){
-    return this.http.post('/auth/log-in', form)
+    return this.http.post('/api/log-in', form)
   }
 
   public signUp(form: any){
-    return this.http.post('/auth/sign-up', form);
+    return this.http.post('/api/sign-up', form);
   }
 
 }
