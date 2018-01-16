@@ -44,12 +44,13 @@ router.put('/add-coin', function(req, res) {
     const updateDbObject = {
       coinAmts: newAmountsArr,
       coins: newCoinsArr,
-      datastoreId: 5526
+      datastoreId: 5840
     };
 
     PortfolioModel.findOneAndUpdate({ hodler: req.token }, updateDbObject, function(err, user) {
       if (err) throw err;
 
+      //Tierion Data API
       const options = {
         method: 'POST',
         uri: 'https://api.tierion.com/v1/records',

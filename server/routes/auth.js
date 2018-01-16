@@ -9,6 +9,8 @@ const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
 const UserModel = require('../models/userModel');
 const PortfolioModel = require('../models/portfolioModel');
 const SettingsModel = require('../models/settingsModel');
+const request = require('request-promise');
+
 
 mongoose.connect(mongoDB, {
   useMongoClient: true
@@ -21,7 +23,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 router.post('/sign-up', function(req, res) {
   const hash = bcrypt.hashSync(req.body.password, 8);
-  const bodyObj = {
+  let bodyObj = {
     username: req.body.username,
     email: req.body.email,
     password: hash,
@@ -49,6 +51,31 @@ router.post('/sign-up', function(req, res) {
     newSettings.save(function(err) {
       if (err) return console.log(err);
     });
+
+    bodyObj.datastoreId = 5841;
+
+    //Tierion Data API
+    const options = {
+      method: 'POST',
+      uri: 'https://api.tierion.com/v1/records',
+      body: bodyObj,
+      headers: {
+        'X-Username': 'stephenhanzlik@gmail.com',
+        'X-Api-Key': '/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=',
+        'Content-Type': 'application/json'
+      },
+      json: true
+    };
+
+    request(options)
+      .then(function(response) {
+        // Handle the response
+      })
+      .catch(function(err) {
+        // Deal with the error
+      })
+
+
   });
 });
 
