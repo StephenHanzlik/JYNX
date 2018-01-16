@@ -42,22 +42,11 @@ router.put('/add-coin', function(req, res) {
 
     PortfolioModel.findOneAndUpdate({ hodler: req.token }, { coinAmts: newAmountsArr, coins: newCoinsArr }, function(err, user) {
       if (err) throw err;
-      // we have the updated user returned to us
-      console.log("updated port: " + user);
+
+      req.headers['X-Username'] = "stephenhanzlik@gmail.com";
+      req.headers['X-Api-Key'] = "/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=";
+      req.headers['Content-Type'] = "Content-Type: application/json";
     });
-    //
-    // dbPortfolio[0].coins.push(bodyObj.coinName);
-    // dbPortfolio[0].coinAmts.push(bodyObj.coinAmt);
-    //
-    // dbPortfolio.save((err, dbUser) => {
-    //   if (err) {
-    //     res.status(500).send(err)
-    //   }
-    //   res.status(200).send(dbUser);
-    // })
-
-
-
   });
 });
 
@@ -175,18 +164,9 @@ router.put('/add-coin', function(req, res) {
 // const password = 'OQJgbTvXMZbPyy5Dkjs2KYd8IvxDCUwUCstXqbRQron1JkKHDKX0MxQxyP3Xqth9G3dcPc5DZP3T6jiTrgVpXegUUKAI';
 // const hashClient = new hashclient();
 
-// router.post('/sign-up', (req, res) => {
-//
-//
-//   var hash = bcrypt.hashSync(req.body.password, 8);
-//
-//
-// });
-// req.headers['X-Username'] = "stephenhanzlik@gmail.com";
-// req.headers['X-Api-Key'] = "/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=";
-// req.headers['Content-Type'] = "Content-Type: application/json";
 
-//Tierion Hash API node interface
+
+// //Tierion Hash API node interface
 // let hashTarget = JSON.stringify(req.body);
 // sha256.update(hashTarget);
 // //let hashResult = sha256.digest("base64");
@@ -200,7 +180,7 @@ router.put('/add-coin', function(req, res) {
 //     // process result
 //     console.log("Succes!!! result: " + JSON.stringify(result));
 //   }
-// });
+// });//
 
 // connection((db) => {
 //   db.collection('users')
