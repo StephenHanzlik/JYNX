@@ -9,6 +9,7 @@ const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
 const UserModel = require('../models/userModel');
 const PortfolioModel = require('../models/portfolioModel');
 const SettingsModel = require('../models/settingsModel');
+const request = require('request-promise');
 
 mongoose.connect(mongoDB, {
   useMongoClient: true
@@ -40,12 +41,35 @@ router.put('/add-coin', function(req, res) {
     let newAmountsArr = dbPortfolio[0].coinAmts
     newAmountsArr.push(bodyObj.coinAmt);
 
-    PortfolioModel.findOneAndUpdate({ hodler: req.token }, { coinAmts: newAmountsArr, coins: newCoinsArr }, function(err, user) {
+    const updateDbObject = {
+      coinAmts: newAmountsArr,
+      coins: newCoinsArr,
+      datastoreId: 5526
+    };
+
+    PortfolioModel.findOneAndUpdate({ hodler: req.token }, updateDbObject, function(err, user) {
       if (err) throw err;
 
-      req.headers['X-Username'] = "stephenhanzlik@gmail.com";
-      req.headers['X-Api-Key'] = "/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=";
-      req.headers['Content-Type'] = "Content-Type: application/json";
+      const options = {
+        method: 'POST',
+        uri: 'https://api.tierion.com/v1/records',
+        body: updateDbObject,
+        headers: {
+          'X-Username': 'stephenhanzlik@gmail.com',
+          'X-Api-Key': '/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=',
+          'Content-Type': 'application/json'
+        },
+        json: true
+      };
+
+      request(options)
+        .then(function(response) {
+          // Handle the response
+        })
+        .catch(function(err) {
+          // Deal with the error
+        })
+
     });
   });
 });

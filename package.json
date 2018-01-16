@@ -36,6 +36,8 @@
     "mongodb": "^3.0.1",
     "mongoose": "^4.13.9",
     "ng2-semantic-ui": "^0.9.6",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.14"
   },
