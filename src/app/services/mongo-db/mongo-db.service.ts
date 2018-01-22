@@ -8,8 +8,11 @@ export class MongoDbService {
 
 
   public addCoin(form: any){
-    return this.http.put('/api/add-coin', form);
+    return this.http.put('/api/portfolio', form);
   }
 
+  public getUserPortfolio(){
+    return this.http.get('/api/portfolio');
+  }
 
 }

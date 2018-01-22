@@ -43,6 +43,7 @@ export class UserProfileComponent implements OnInit {
 
       ngOnInit() {
         this.getDropDownList();
+        this.getUserCoinData();
       }
 
       public openModal(dynamicContent:string = "Example") {
@@ -73,16 +74,39 @@ export class UserProfileComponent implements OnInit {
         })
       }
 
+      private getUserCoinData(): void {
+        let apiData: any = {};
+        let usdAmt: number = 0;
+
+        this.mongoDbService.getUserPortfolio().subscribe(result=>{
+          result = JSON.parse((<any>result)._body);
+          result = result[0];
+          let coins: Array<any> = result.coins;
+          let coinAmts: Array<any> = result.coinAmts;
+
+          for(let i = 0; i < coins.length; i++){
+            let coinToAdd = {
+              coinName: coins[i],
+              coinAmt: coinAmts[i],
+            }
+            this.cryptoCompareService.getPrice(coinToAdd.coinName).subscribe(result=>{
+                apiData = JSON.parse(result._body);
+                usdAmt = apiData.USD;
+                //this.updatePieChart(form, usdAmt);
+                this.updateTableList(coinToAdd, usdAmt);
+            })
+          }
+        });
+      }
+
       private updateTableList(newCoin: any, usdAmt: number): void {
           let allCoinData = ALLCOINDATA;
           let newTableData: any = {};
-          let apiData: any = {};
           newTableData.qty = Number.parseInt(newCoin.coinAmt);
           newTableData.asset = allCoinData[0][newCoin.coinName].FullName;
           newTableData.lastPrice = usdAmt;
           newTableData.usdValue = newTableData.lastPrice * newTableData.qty
           this.tableContent.push(newTableData);
-
       }
 
       private getDropDownList(): void {

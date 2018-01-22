@@ -20,7 +20,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
-router.put('/add-coin', function(req, res) {
+router.put('/portfolio', function(req, res) {
   const bodyObj = {
     coinName: req.body.coinName,
     coinAmt: req.body.coinAmt
@@ -72,6 +72,21 @@ router.put('/add-coin', function(req, res) {
         })
 
     });
+  });
+});
+
+router.get('/portfolio', function(req, res) {
+  PortfolioModel.
+  find().
+  where('hodler').
+  equals(req.token).
+  limit(1).
+  select('coins coinAmts').
+  exec(function(err, dbPortfolio) {
+    if (err) {
+      res.status(500).send(err);
+    }
+    res.status(200).send(dbPortfolio);
   });
 });
 
