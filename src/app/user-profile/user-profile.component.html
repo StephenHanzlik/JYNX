@@ -13,8 +13,30 @@
       <div class="row">
         <div class="column" id="content">
           <div class="ui grid">
+            <div class="row">
+              <h3>Total Portfolio value</h3>
             <high-chart></high-chart>
+            </div>
             <div class="ui hidden section divider"></div>
+            <h1 class="ui huge header">
+              Holdings
+            </h1>
+            <div class="ui cards">
+              <div class="card">
+                <div class="content">
+                  <div class="header">Total Portfolio</div>
+                  <div class="meta">+.98%</div>
+                  <div class="description">$12,853</div>
+                </div>
+              </div>
+              <div class="card" *ngFor="let coin of tableContent">
+                <div class="content">
+                  <div class="header">{{coin.asset}}</div>
+                  <div class="meta">Friend</div>
+                  <div class="description">{{coin.usdValue}}</div>
+                </div>
+              </div>
+            </div>
             <div class="row">
               <h1 class="ui huge header">
                 All Coins
