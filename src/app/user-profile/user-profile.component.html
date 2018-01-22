@@ -19,15 +19,31 @@
               <h1 class="ui huge header">
                 All Coins
               </h1>
-                <button (click)="openModal()" class="circular ui icon button">
+                <button (click)="openAddModal()" class="circular ui icon button">
                   <i class="icon plus"></i>
                 </button>
-                <button class="circular ui icon button">
+                <button (click)="openDeleteModal()" class="circular ui icon button">
                   <i class="icon minus"></i>
                 </button>
             </div>
-            <ng-template let-context let-modal="modal" #modalTemplate>
-              <div class="header">Add a coin:</div>
+            <ng-template let-context let-modal="modal" #modalAddTemplate>
+              <div class="header">Add coins:</div>
+              <div class="content">
+                <form class="ui form" [formGroup]="newCoinForm" >
+                    <select name="coinName" [formControl]="newCoinForm.controls['coinName']">
+                      <option *ngFor="let coin of cryptoDropDownList" [value]="coin.Name">{{ coin.FullName }}</option>
+                    </select>
+                    <label for="coinAmtInput">Enter The Amount:</label>
+                    <input class="field ui input" type="text" id="coinAmtInput" [formControl]="newCoinForm.controls['coinAmt']"/>
+                </form>
+              </div>
+              <div class="actions">
+                  <button class="ui red button" (click)="modal.deny('denied')">Cancel</button>
+                  <button class="ui green button" (click)="modal.approve(newCoinForm.value)" autofocus>OK</button>
+              </div>
+            </ng-template>
+            <ng-template let-context let-modal="modal" #modalDeleteTemplate>
+              <div class="header">Delete coins:</div>
               <div class="content">
                 <form class="ui form" [formGroup]="newCoinForm" >
                     <select name="coinName" [formControl]="newCoinForm.controls['coinName']">

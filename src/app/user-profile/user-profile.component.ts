@@ -17,8 +17,10 @@ export interface IContext {
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-      @ViewChild('modalTemplate')
-      public modalTemplate:ModalTemplate<IContext, string, string>
+      @ViewChild('modalAddTemplate')
+      public modalAddTemplate:ModalTemplate<IContext, string, string>
+      @ViewChild('modalDeleteTemplate')
+      public modalDeleteTemplate:ModalTemplate<IContext, string, string>
 
       newCoinForm: FormGroup;
       coinName: AbstractControl;
@@ -46,33 +48,6 @@ export class UserProfileComponent implements OnInit {
         this.getUserCoinData();
       }
 
-      public openModal(dynamicContent:string = "Example") {
-        const config = new TemplateModalConfig<IContext, string, string>(this.modalTemplate);
-
-        config.closeResult = "closed!";
-        config.context = { data: dynamicContent };
-
-        this.modalService
-            .open(config)
-            .onApprove(result => {this.addCoin(result)})
-            .onDeny(result => { /* deny callback */});
-      }
-
-      public addCoin(form: any): void {
-        let apiData: any = {};
-        let usdAmt = 0;
-
-        this.cryptoCompareService.getPrice(form.coinName).subscribe(result=>{
-            apiData = JSON.parse(result._body);
-            usdAmt = apiData.USD;
-
-            //this.updatePieChart(form, usdAmt);
-            this.updateTableList(form, usdAmt);
-            this.mongoDbService.addCoin(form).subscribe(result=>{
-              console.log("result of add coin from mongo db service");
-            });
-        })
-      }
 
       private getUserCoinData(): void {
         let apiData: any = {};
@@ -81,8 +56,8 @@ export class UserProfileComponent implements OnInit {
         this.mongoDbService.getUserPortfolio().subscribe(result=>{
           result = JSON.parse((<any>result)._body);
           result = result[0];
-          let coins: Array<any> = result.coins;
-          let coinAmts: Array<any> = result.coinAmts;
+          let coins: Array<any> = result['coins'];
+          let coinAmts: Array<any> = result['coinAmts'];
 
           for(let i = 0; i < coins.length; i++){
             let coinToAdd = {
@@ -99,6 +74,28 @@ export class UserProfileComponent implements OnInit {
         });
       }
 
+      public addCoin(form: any): void {
+        let apiData: any = {};
+        let usdAmt: number = 0;
+
+        this.cryptoCompareService.getPrice(form.coinName).subscribe(result=>{
+            apiData = JSON.parse(result._body);
+            usdAmt = apiData.USD;
+
+            //this.updatePieChart(form, usdAmt);
+            this.updateTableList(form, usdAmt);
+            this.mongoDbService.addCoin(form).subscribe(result=>{
+              console.log("result of add coin from mongo db service");
+            });
+        })
+      }
+
+      public deleteCoin(form: any): void {
+        this.mongoDbService.deleteCoin(form).subscribe(result=>{
+          console.log("result of add coin from mongo db service");
+        });
+      }
+
       private updateTableList(newCoin: any, usdAmt: number): void {
           let allCoinData = ALLCOINDATA;
           let newTableData: any = {};
@@ -111,6 +108,30 @@ export class UserProfileComponent implements OnInit {
 
       private getDropDownList(): void {
         this.cryptoDropDownList = COINOBJECTS;
+      }
+
+      public openAddModal(dynamicContent:string = "Example") {
+        const config = new TemplateModalConfig<IContext, string, string>(this.modalAddTemplate);
+
+        config.closeResult = "closed!";
+        config.context = { data: dynamicContent };
+
+        this.modalService
+            .open(config)
+            .onApprove(result => {this.addCoin(result)})
+            .onDeny(result => { /* deny callback */});
+      }
+
+      public openDeleteModal(dynamicContent:string = "Example") {
+        const config = new TemplateModalConfig<IContext, string, string>(this.modalDeleteTemplate);
+
+        config.closeResult = "closed!";
+        config.context = { data: dynamicContent };
+
+        this.modalService
+            .open(config)
+            .onApprove(result => {this.deleteCoin(result)})
+            .onDeny(result => { /* deny callback */});
       }
 
 }

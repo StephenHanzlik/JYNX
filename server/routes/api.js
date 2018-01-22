@@ -90,6 +90,27 @@ router.get('/portfolio', function(req, res) {
   });
 });
 
+router.delete('/portfolio', function(req, res) {
+  const bodyObj = {
+    coinName: req.body.coinName,
+    coinAmt: req.body.coinAmt
+  };
+
+  PortfolioModel.
+  find().
+  where('hodler').
+  equals(req.token).
+  limit(1).
+  select('coins coinAmts').
+  exec(function(err, dbPortfolio) {
+    if (err) {
+      res.status(500).send(err);
+    }
+    console.log("dbPortfolio: " + dbPortfolio);
+    res.status(200).send(dbPortfolio);
+  });
+});
+
 // router.post('/sign-up', function(req, res) {
 //   const hash = bcrypt.hashSync(req.body.password, 8);
 //   const bodyObj = {
