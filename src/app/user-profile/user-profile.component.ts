@@ -48,7 +48,6 @@ export class UserProfileComponent implements OnInit {
         this.getUserCoinData();
       }
 
-
       private getUserCoinData(): void {
         let apiData: any = {};
         let usdAmt: number = 0;

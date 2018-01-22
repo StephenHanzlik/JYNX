@@ -13,8 +13,11 @@ import { LogInComponent } from './log-in/log-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { TierionService } from './services/tierion/tierion.service';
 import { HomeComponent } from './home/home.component';
+import { HighChartsComponent } from './high-charts/high-charts.component';
 import { AuthService } from './services/auth/auth.service';
 import { MongoDbService } from './services/mongo-db/mongo-db.service';
+import { ChartModule } from 'angular2-highcharts';
+
 
 @NgModule({
   declarations: [
@@ -23,7 +26,8 @@ import { MongoDbService } from './services/mongo-db/mongo-db.service';
     UserProfileComponent,
     LogInComponent,
     SignUpComponent,
-    HomeComponent
+    HomeComponent,
+    HighChartsComponent
   ],
   imports: [
     BrowserModule,
@@ -32,8 +36,9 @@ import { MongoDbService } from './services/mongo-db/mongo-db.service';
     SuiModule,
     HttpModule,
     AppRoutingModule,
+    ChartModule.forRoot(require('highcharts/highstock'))
   ],
   providers: [CryptoCompareService, TierionService, AuthService, MongoDbService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent, HighChartsComponent]
 })
 export class AppModule { }
