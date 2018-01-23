@@ -29,6 +29,7 @@ export class UserProfileComponent implements OnInit {
       public cryptoDropDownList: any = [];
       public tableContent: any = [];
       public coinsToQuery: any = [];
+      public portfolioTotalArray: any = [];
 
       constructor(private fb: FormBuilder,
                   private modalService:SuiModalService,
@@ -55,8 +56,9 @@ export class UserProfileComponent implements OnInit {
         this.mongoDbService.getUserPortfolio().subscribe(result=>{
           result = JSON.parse((<any>result)._body);
           result = result[0];
-          let coins: Array<any> = result['coins'];
-          let coinAmts: Array<any> = result['coinAmts'];
+          let coins: Array<string> = result['coins'];
+          let coinAmts: Array<number> = result['coinAmts'];
+
 
           for(let i = 0; i < coins.length; i++){
             let coinToAdd = {
@@ -66,8 +68,11 @@ export class UserProfileComponent implements OnInit {
             this.cryptoCompareService.getPrice(coinToAdd.coinName).subscribe(result=>{
                 apiData = JSON.parse(result._body);
                 usdAmt = apiData.USD;
-                //this.updatePieChart(form, usdAmt);
-                this.updateTableList(coinToAdd, usdAmt);
+                this.portfolioTotalArray.push(usdAmt);
+                if( i === coins.length - 1){
+                      this.portfolioTotalArray.reduce( (prev, curr) => prev + curr );
+                }
+                this.updateCards(coinToAdd, usdAmt);
             })
           }
         });
@@ -82,7 +87,7 @@ export class UserProfileComponent implements OnInit {
             usdAmt = apiData.USD;
 
             //this.updatePieChart(form, usdAmt);
-            this.updateTableList(form, usdAmt);
+            this.updateCards(form, usdAmt);
             this.mongoDbService.addCoin(form).subscribe(result=>{
               console.log("result of add coin from mongo db service");
             });
@@ -95,7 +100,7 @@ export class UserProfileComponent implements OnInit {
         });
       }
 
-      private updateTableList(newCoin: any, usdAmt: number): void {
+      private updateCards(newCoin: any, usdAmt: number): void {
           let allCoinData = ALLCOINDATA;
           let newTableData: any = {};
           newTableData.qty = Number.parseInt(newCoin.coinAmt);
