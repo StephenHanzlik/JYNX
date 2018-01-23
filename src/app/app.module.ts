@@ -17,7 +17,16 @@ import { HighChartsComponent } from './high-charts/high-charts.component';
 import { AuthService } from './services/auth/auth.service';
 import { MongoDbService } from './services/mongo-db/mongo-db.service';
 import { ChartModule } from 'angular2-highcharts';
+import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 
+export declare let require: any;
+
+export function highchartsFactory() {
+const hc = require('highcharts/highstock');
+const dd = require('highcharts/modules/exporting');
+dd(hc);
+return hc;
+}
 
 @NgModule({
   declarations: [
@@ -36,9 +45,9 @@ import { ChartModule } from 'angular2-highcharts';
     SuiModule,
     HttpModule,
     AppRoutingModule,
-    ChartModule.forRoot(require('highcharts/highstock'))
+    ChartModule
   ],
-  providers: [CryptoCompareService, TierionService, AuthService, MongoDbService],
+  providers: [CryptoCompareService, TierionService, AuthService, MongoDbService, {provide: HighchartsStatic, useFactory: highchartsFactory}],
   bootstrap: [AppComponent, HighChartsComponent]
 })
 export class AppModule { }
