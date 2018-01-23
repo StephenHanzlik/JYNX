@@ -10,10 +10,17 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "postinstall": "ng build --aot -prod"
+  },
+  "engines": {
+    "node": "~8.9.3",
+    "npm": "~5.5.1"
   },
   "private": true,
   "dependencies": {
+    "@angular/cli": "1.6.2",
+    "@angular/compiler-cli": "^5.0.0",
     "@angular/animations": "^5.0.0",
     "@angular/common": "^5.0.0",
     "@angular/compiler": "^5.0.0",
