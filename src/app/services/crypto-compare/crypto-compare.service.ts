@@ -11,8 +11,14 @@ export class CryptoCompareService {
      return this.http.get(`https://min-api.cryptocompare.com/data/all/coinlist`);
   }
 
-  public getPrice(coinQueryString: string): Observable<any>{
+  public getSinglePrice(coinQueryString: string): Observable<any>{
     return this.http.get(`https://min-api.cryptocompare.com/data/price?fsym=${coinQueryString}&tsyms=USD`);
+  }
+
+  public getMultiFullPrice(coinQueryString: string): Observable<any>{
+    console.log("coinQueryString: " +  coinQueryString);
+    coinQueryString = "BTC,TRX,FDC,SUMO,LTC";
+    return this.http.get(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinQueryString}&tsyms=USD`);
   }
 
 }

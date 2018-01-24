@@ -59,22 +59,42 @@ export class UserProfileComponent implements OnInit {
           let coins: Array<string> = result['coins'];
           let coinAmts: Array<number> = result['coinAmts'];
 
+          this.cryptoCompareService.getMultiFullPrice(coins.join()).subscribe(result=>{
+              apiData = JSON.parse(result._body);
+              apiData = apiData.RAW;
+              let keys: Array<string> = [];
+              keys = Object.keys(apiData);
+              //console.log("keys: " + keys);
+              keys.forEach(key=> {
+              //  console.log(apiData[key]);
+                let coinToAdd = {
+                   coinName: key,
+                   coinPrice: apiData[key]['USD']['PRICE'],
+                   coin24: apiData[key]['USD']['CHANGE24HOUR'],
+                  }
+                  console.log(coinToAdd);
+              })
+              //usdAmt = apiData.USD;
+            //  this.portfolioTotalArray.push(usdAmt);
+              //console.log("apiData: " + JSON.stringify(apiData));
+          })
 
-          for(let i = 0; i < coins.length; i++){
-            let coinToAdd = {
-              coinName: coins[i],
-              coinAmt: coinAmts[i],
-            }
-            this.cryptoCompareService.getPrice(coinToAdd.coinName).subscribe(result=>{
-                apiData = JSON.parse(result._body);
-                usdAmt = apiData.USD;
-                this.portfolioTotalArray.push(usdAmt);
-                if( i === coins.length - 1){
-                      this.portfolioTotalArray.reduce( (prev, curr) => prev + curr );
-                }
-                this.updateCards(coinToAdd, usdAmt);
-            })
-          }
+
+          // for(let i = 0; i < coins.length; i++){
+          //   let coinToAdd = {
+          //     coinName: coins[i],
+          //     coinAmt: coinAmts[i],
+          //   }
+          //   this.cryptoCompareService.getMultiPrice(coinToAdd.coinName).subscribe(result=>{
+          //       apiData = JSON.parse(result._body);
+          //       usdAmt = apiData.USD;
+          //       this.portfolioTotalArray.push(usdAmt);
+          //       if( i === coins.length - 1){
+          //             this.portfolioTotalArray.reduce( (prev, curr) => prev + curr );
+          //       }
+          //       this.updateCards(coinToAdd, usdAmt);
+          //   })
+          // }
         });
       }
 
@@ -82,7 +102,7 @@ export class UserProfileComponent implements OnInit {
         let apiData: any = {};
         let usdAmt: number = 0;
 
-        this.cryptoCompareService.getPrice(form.coinName).subscribe(result=>{
+        this.cryptoCompareService.getSinglePrice(form.coinName).subscribe(result=>{
             apiData = JSON.parse(result._body);
             usdAmt = apiData.USD;
 

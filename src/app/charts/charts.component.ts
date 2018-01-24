@@ -51,7 +51,7 @@ export class ChartsComponent implements OnInit {
     let apiData: any = {};
     let usdAmt = 0;
 
-    this.cryptoCompareService.getPrice(form.coinName).subscribe(result=>{
+    this.cryptoCompareService.getSinglePrice(form.coinName).subscribe(result=>{
         apiData = JSON.parse(result._body);
         usdAmt = apiData.USD;
 

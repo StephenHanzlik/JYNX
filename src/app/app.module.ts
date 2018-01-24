@@ -20,31 +20,6 @@ import { ChartModule } from 'angular2-highcharts';
 import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 import * as highcharts from 'highcharts/highstock';
 
-//coment out for prod
-//export declare let require: any;
-//
-// export declare let require: any;
-//
-//  export function highchartsFactory() {
-//       const hc = require('highcharts/highstock');
-//       const dd = require('highcharts/modules/exporting');
-//       dd(hc);
-//
-//       return hc;
-//  }
-
-// export declare let require: any;
-//
-// export function highchartsFactory() {
-// const hc = System.import('highcharts/highstock');
-// const dd = System.import('highcharts/modules/exporting');
-// //dd(hc);
-// return hc;
-// }
-
-//ngModule for dev
-//ChartModule.forRoot(require('highcharts/highstock')) // add to imports
-
 export function highchartsFactory() {
   return highcharts;
 }
@@ -71,27 +46,5 @@ export function highchartsFactory() {
   providers: [CryptoCompareService, TierionService, AuthService, MongoDbService, {provide: HighchartsStatic, useFactory: highchartsFactory}],
   bootstrap: [AppComponent, HighChartsComponent]
 })
-//ngModule for prod
-// @NgModule({
-//   declarations: [
-//     AppComponent,
-//     ChartsComponent,
-//     UserProfileComponent,
-//     LogInComponent,
-//     SignUpComponent,
-//     HomeComponent,
-//     HighChartsComponent
-//   ],
-//   imports: [
-//     BrowserModule,
-//     FormsModule,
-//     ReactiveFormsModule,
-//     SuiModule,
-//     HttpModule,
-//     AppRoutingModule,
-//     ChartModule
-//   ],
-//   providers: [CryptoCompareService, TierionService, AuthService, MongoDbService, {provide: HighchartsStatic, useFactory: highchartsFactory}],
-//   bootstrap: [AppComponent, HighChartsComponent]
-// })
+
 export class AppModule { }
