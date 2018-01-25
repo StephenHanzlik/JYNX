@@ -29,11 +29,11 @@
                   <div class="description">${{portfolioTotalArray[0]}}</div>
                 </div>
               </div>
-              <div class="card" *ngFor="let coin of tableContent">
+              <div class="card" *ngFor="let coin of cardsContent">
                 <div class="content">
-                  <div class="header">{{coin.asset}}</div>
-                  <div class="meta">Friend</div>
-                  <div class="description">{{coin.usdValue}}</div>
+                  <div class="header">{{coin.coinName}}</div>
+                  <div class="meta">{{coin.coin24}}%</div>
+                  <div class="description">${{coin.coinPrice}}</div>
                 </div>
               </div>
             </div>

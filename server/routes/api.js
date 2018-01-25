@@ -19,7 +19,6 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-
 router.put('/portfolio', function(req, res) {
   const bodyObj = {
     coinName: req.body.coinName,
@@ -294,7 +293,5 @@ router.delete('/portfolio', function(req, res) {
 //   data: [],
 //   message: null
 // };
-
-
 
 module.exports = router;

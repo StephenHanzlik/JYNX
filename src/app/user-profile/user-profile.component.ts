@@ -1,4 +1,4 @@
-newCardDataimport { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {SuiModalService, TemplateModalConfig, ModalTemplate} from 'ng2-semantic-ui';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { CryptoCompareService } from "../services/crypto-compare/crypto-compare.service";
@@ -74,14 +74,11 @@ export class UserProfileComponent implements OnInit {
                 let coinToAdd = {
                    coinName: key,
                    coinPrice: apiData[key]['USD']['PRICE'],
-                   coin24: apiData[key]['USD']['CHANGE24HOUR'],
+                   coin24: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                   }
-                  console.log("coinToAdd");
-                  console.log(coinToAdd);
+                  this.cardsContent.push(coinToAdd);
               })
-              //usdAmt = apiData.USD;
-            //  this.portfolioTotalArray.push(usdAmt);
-              //console.log("apiData: " + JSON.stringify(apiData));
+
           })
 
 
