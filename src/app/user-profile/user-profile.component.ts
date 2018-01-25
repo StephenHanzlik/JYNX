@@ -29,6 +29,8 @@ export class UserProfileComponent implements OnInit {
       public cryptoDropDownList: any = [];
       public cardsContent: any = [];
       public coinsToQuery: any = [];
+      public totalPortfolioValue: any = 0;
+      public totalPortfolioPercentageChange: any;
       public portfolioTotalArray: any = [];
 
       constructor(private fb: FormBuilder,
@@ -72,6 +74,7 @@ export class UserProfileComponent implements OnInit {
               console.log("apiData");
               console.log(apiData);
               let keys: Array<string> = [];
+
               keys = Object.keys(apiData);
               keys.forEach(key=> {
                 let coinToAdd = {
@@ -80,8 +83,10 @@ export class UserProfileComponent implements OnInit {
                    coin24: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                   }
                   this.cardsContent.push(coinToAdd);
+                  this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
+                  console.log(this.totalPortfolioValue);
               })
-
+              this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
           })
 
 
@@ -115,12 +120,15 @@ export class UserProfileComponent implements OnInit {
           while(part2.length < l) {
             part2 += '0';
           }
-          if(part2.length < 1)
-            part2 + "0";
-          part2 = Number(part2.substring(0,2));
+          if(part1 == "0")
+            part2 = Number(part2.substring(0,4));
+          else{
+            if(part2.length < 1)
+              part2 + "0";
+            part2 = Number(part2.substring(0,2));
+          }
         }
         return part1.concat('.' + part2);
-        //return usdValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
 
       public addCoin(form: any): void {
