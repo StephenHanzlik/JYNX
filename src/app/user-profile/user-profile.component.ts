@@ -76,7 +76,7 @@ export class UserProfileComponent implements OnInit {
               keys.forEach(key=> {
                 let coinToAdd = {
                    coinName: key,
-                   coinPrice: apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key],
+                   coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
                    coin24: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                   }
                   this.cardsContent.push(coinToAdd);
@@ -101,6 +101,26 @@ export class UserProfileComponent implements OnInit {
           //   })
           // }
         });
+      }
+
+      private addCommas(usdValue: any): string {
+        usdValue = usdValue.toString();
+        var parts = usdValue.split('.');
+        var part1 = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        var part2 = parts[1];
+        var l = part2.length;
+        if (l > 2) {
+          var p = Number(String(part2).slice(0,3)) / 10;
+          part2 = Math.ceil(p) + '';
+          while(part2.length < l) {
+            part2 += '0';
+          }
+          if(part2.length < 1)
+            part2 + "0";
+          part2 = Number(part2.substring(0,2));
+        }
+        return part1.concat('.' + part2);
+        //return usdValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
 
       public addCoin(form: any): void {
