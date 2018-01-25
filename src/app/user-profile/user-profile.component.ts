@@ -56,24 +56,27 @@ export class UserProfileComponent implements OnInit {
         this.mongoDbService.getUserPortfolio().subscribe(result=>{
           result = JSON.parse((<any>result)._body);
           result = result[0];
-          console.log("portfolio result: ");
-          console.log(result);
-          let coins: Array<string> = result['coins'];
+          let aggregateTotalsObj: any = {};
           let coinAmts: Array<number> = result['coinAmts'];
+          let coins: Array<string> = result['coins'];
+          for (let l = 0; l < coins.length; l++) {
+            if(aggregateTotalsObj[coins[l]])
+              aggregateTotalsObj[coins[l]] = aggregateTotalsObj[coins[l]] + coinAmts[l];
+            else
+              aggregateTotalsObj[coins[l]] = coinAmts[l];
+          }
 
-          this.cryptoCompareService.getMultiFullPrice(coins.join()).subscribe(result=>{
+          this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
               apiData = JSON.parse(result._body);
               apiData = apiData.RAW;
               console.log("apiData");
               console.log(apiData);
               let keys: Array<string> = [];
               keys = Object.keys(apiData);
-              //console.log("keys: " + keys);
               keys.forEach(key=> {
-              //  console.log(apiData[key]);
                 let coinToAdd = {
                    coinName: key,
-                   coinPrice: apiData[key]['USD']['PRICE'],
+                   coinPrice: apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key],
                    coin24: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                   }
                   this.cardsContent.push(coinToAdd);
