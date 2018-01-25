@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+newCardDataimport { Component, OnInit, ViewChild } from '@angular/core';
 import {SuiModalService, TemplateModalConfig, ModalTemplate} from 'ng2-semantic-ui';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { CryptoCompareService } from "../services/crypto-compare/crypto-compare.service";
@@ -27,7 +27,7 @@ export class UserProfileComponent implements OnInit {
       coinAmt: AbstractControl;
 
       public cryptoDropDownList: any = [];
-      public tableContent: any = [];
+      public cardsContent: any = [];
       public coinsToQuery: any = [];
       public portfolioTotalArray: any = [];
 
@@ -56,12 +56,16 @@ export class UserProfileComponent implements OnInit {
         this.mongoDbService.getUserPortfolio().subscribe(result=>{
           result = JSON.parse((<any>result)._body);
           result = result[0];
+          console.log("portfolio result: ");
+          console.log(result);
           let coins: Array<string> = result['coins'];
           let coinAmts: Array<number> = result['coinAmts'];
 
           this.cryptoCompareService.getMultiFullPrice(coins.join()).subscribe(result=>{
               apiData = JSON.parse(result._body);
               apiData = apiData.RAW;
+              console.log("apiData");
+              console.log(apiData);
               let keys: Array<string> = [];
               keys = Object.keys(apiData);
               //console.log("keys: " + keys);
@@ -72,6 +76,7 @@ export class UserProfileComponent implements OnInit {
                    coinPrice: apiData[key]['USD']['PRICE'],
                    coin24: apiData[key]['USD']['CHANGE24HOUR'],
                   }
+                  console.log("coinToAdd");
                   console.log(coinToAdd);
               })
               //usdAmt = apiData.USD;
@@ -122,12 +127,12 @@ export class UserProfileComponent implements OnInit {
 
       private updateCards(newCoin: any, usdAmt: number): void {
           let allCoinData = ALLCOINDATA;
-          let newTableData: any = {};
-          newTableData.qty = Number.parseInt(newCoin.coinAmt);
-          newTableData.asset = allCoinData[0][newCoin.coinName].FullName;
-          newTableData.lastPrice = usdAmt;
-          newTableData.usdValue = newTableData.lastPrice * newTableData.qty
-          this.tableContent.push(newTableData);
+          let newCardData: any = {};
+          newCardData.qty = Number.parseInt(newCoin.coinAmt);
+          newCardData.asset = allCoinData[0][newCoin.coinName].FullName;
+          newCardData.lastPrice = usdAmt;
+          newCardData.usdValue = newCardData.lastPrice * newCardData.qty
+          this.cardsContent.push(newCardData);
       }
 
       private getDropDownList(): void {
