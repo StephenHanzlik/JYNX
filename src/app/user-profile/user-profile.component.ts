@@ -74,11 +74,14 @@ export class UserProfileComponent implements OnInit {
               console.log("apiData");
               console.log(apiData);
               let keys: Array<string> = [];
+              let allCoinData: object = ALLCOINDATA[0];
 
               keys = Object.keys(apiData);
               keys.forEach(key=> {
+
                 let coinToAdd = {
-                   coinName: key,
+                   coinTicker: key,
+                   coinName: allCoinData[key].CoinName,
                    coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
                    coin24: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                   }
@@ -112,8 +115,9 @@ export class UserProfileComponent implements OnInit {
         });
       }
 
-      public chartCardData(cardQueryString: string): void {
-        this.cryptoCompareService.getHistoricalPrice(cardQueryString).subscribe(result=>{
+      public chartCardData(cardTicker: string): void {
+
+        this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
 
         });
       }
