@@ -55,6 +55,7 @@ export class UserProfileComponent implements OnInit {
         let apiData: any = {};
         let usdAmt: number = 0;
         let colorsArray: Array<string> = ['#828A95', '#C98686', '#3C7A89', '#C9B1BD', '#81AE9D'];
+        let colorNamesArray: Array<string> = ['color1', 'color2', 'color3', 'color4', 'color5'];
 
         this.mongoDbService.getUserPortfolio().subscribe(result=>{
           result = JSON.parse((<any>result)._body);
@@ -79,6 +80,7 @@ export class UserProfileComponent implements OnInit {
               keys.forEach(key=> {
                 let coinToAdd = {
                    coinColor: colorsArray[iterable],
+                   coinColorName: colorNamesArray[iterable],
                    coinTicker: key,
                    coinName: allCoinData[key].CoinName,
                    coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
