@@ -10,8 +10,17 @@ import { HttpModule,Http } from '@angular/http';
     template: `<chart type="StockChart" [options]="options"></chart>`
 })
 export class HighChartsComponent implements OnInit{
-    @Input() chartColor: string;
-    options: Object;
+    private options: Object;
+    private chartColor: string = '';
+
+    @Input()
+    set color(inputColor: string){
+      this.chartColor = inputColor;
+    }
+
+    get color(): string {
+      return this.chartColor;
+    }
 
     constructor(private http: Http) {}
 
@@ -43,7 +52,7 @@ export class HighChartsComponent implements OnInit{
                 series : [{
                     name : 'BTC',
                     data : res.json(),
-                    color: '#C98686',
+                    color: this.chartColor,
                     tooltip: {
                          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
                          valueDecimals: 2,

@@ -33,6 +33,8 @@ export class UserProfileComponent implements OnInit {
       public totalPortfolioPercentageChange: any;
       public portfolioTotalArray: any = [];
 
+      chartColor = "orange";
+
       constructor(private fb: FormBuilder,
                   private modalService:SuiModalService,
                   private mongoDbService:MongoDbService,
