@@ -54,6 +54,7 @@ export class UserProfileComponent implements OnInit {
       private getUserCoinData(): void {
         let apiData: any = {};
         let usdAmt: number = 0;
+        let colorsArray: Array<string> = ['#828A95', '#C98686', '#3C7A89', '#C9B1BD', '#81AE9D'];
 
         this.mongoDbService.getUserPortfolio().subscribe(result=>{
           result = JSON.parse((<any>result)._body);
@@ -71,20 +72,22 @@ export class UserProfileComponent implements OnInit {
           this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
               apiData = JSON.parse(result._body);
               apiData = apiData.RAW;
-              console.log("apiData");
-              console.log(apiData);
               let keys: Array<string> = [];
               let allCoinData: object = ALLCOINDATA[0];
-
+              let iterable: number = 0;
               keys = Object.keys(apiData);
               keys.forEach(key=> {
-
                 let coinToAdd = {
+                   coinColor: colorsArray[iterable],
                    coinTicker: key,
                    coinName: allCoinData[key].CoinName,
                    coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
                    coin24: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                   }
+                  if(iterable < colorsArray.length)
+                    iterable++;
+                  else
+                    iterable = 0;
                   console.log("coinToAdd");
                   console.log(coinToAdd);
                   console.log("this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]");
@@ -118,7 +121,8 @@ export class UserProfileComponent implements OnInit {
       public chartCardData(cardTicker: string): void {
 
         this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
-
+          console.log("result from history times");
+          console.log(result._body);
         });
       }
 
