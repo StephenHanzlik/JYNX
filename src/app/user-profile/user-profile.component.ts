@@ -82,9 +82,13 @@ export class UserProfileComponent implements OnInit {
                    coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
                    coin24: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                   }
+                  console.log("coinToAdd");
+                  console.log(coinToAdd);
+                  console.log("this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]");
+                  console.log(this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]);
                   this.cardsContent.push(coinToAdd);
                   this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
-                  console.log(this.totalPortfolioValue);
+                  // console.log(this.totalPortfolioValue);
               })
               this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
           })
@@ -113,22 +117,32 @@ export class UserProfileComponent implements OnInit {
         var parts = usdValue.split('.');
         var part1 = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         var part2 = parts[1];
-        var l = part2.length;
-        if (l > 2) {
-          var p = Number(String(part2).slice(0,3)) / 10;
-          part2 = Math.ceil(p) + '';
-          while(part2.length < l) {
-            part2 += '0';
-          }
-          if(part1 == "0")
-            part2 = Number(part2.substring(0,4));
+        if(part2){
+          var l = part2.length;
+          if (l > 2) {
+            var p = Number(String(part2).slice(0,3)) / 10;
+            part2 = Math.ceil(p) + '';
+            while(part2.length < l) {
+              part2 += '0';
+            }
+          if(part1 == "0" && part2[0] == "0")
+            part2 = Number(part2.substring(0,3));
+          else if(part1 == "0" && part2[0] !== "0")
+            part2 = Number(part2.substring(0,2));
+          else if(part1 == "0" && part2[1] == "0")
+              part2 = Number(part2.substring(0,4));
+          else if(part1 == "0" && part2[3] == "0")
+              part2 = Number(part2.substring(0,5));
           else{
             if(part2.length < 1)
               part2 + "0";
             part2 = Number(part2.substring(0,2));
           }
+          }
+          return part1.concat('.' + part2);
         }
-        return part1.concat('.' + part2);
+        else
+          return part1;
       }
 
       public addCoin(form: any): void {

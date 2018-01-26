@@ -33,6 +33,7 @@ export class HighChartsComponent {
                 series : [{
                     name : 'BTC',
                     data : res.json(),
+                    color: '#BC8929',
                     tooltip: {
                          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
                          valueDecimals: 2,
