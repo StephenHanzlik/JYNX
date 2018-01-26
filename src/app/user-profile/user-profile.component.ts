@@ -112,6 +112,12 @@ export class UserProfileComponent implements OnInit {
         });
       }
 
+      public chartCardData(cardQueryString: string): void {
+        this.cryptoCompareService.getHistoricalPrice(cardQueryString).subscribe(result=>{
+
+        });
+      }
+
       private addCommas(usdValue: any): string {
         usdValue = usdValue.toString();
         var parts = usdValue.split('.');

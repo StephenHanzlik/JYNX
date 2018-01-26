@@ -19,4 +19,8 @@ export class CryptoCompareService {
     return this.http.get(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinQueryString}&tsyms=USD`);
   }
 
+  public getHistoricalPrice(coinQueryString: string): Observable<any>{
+    return this.http.get(`  https://min-api.cryptocompare.com/data/pricehistorical?${coinQueryString}`);
+  }
+
 }
