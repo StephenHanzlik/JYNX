@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, OnChanges, SimpleChange } from '@angular/core';
 import { HttpModule,Http } from '@angular/http';
 
 @Component({
@@ -9,27 +9,31 @@ import { HttpModule,Http } from '@angular/http';
           }`],
     template: `<chart type="StockChart" [options]="options"></chart>`
 })
-export class HighChartsComponent implements OnInit{
+export class HighChartsComponent implements OnInit, OnChanges{
     private options: Object;
-    private chartColor: string = '';
-
-    @Input()
-    set color(inputColor: string){
-      this.chartColor = inputColor;
-    }
-
-    get color(): string {
-      return this.chartColor;
-    }
+    @Input() color: string;
+    // private chartColor: string = '';
+    //
+    // @Input()
+    // set color(inputColor: string){
+    //   this.chartColor = inputColor;
+    // }
+    //
+    // get color(): string {
+    //   return this.chartColor;
+    // }
 
     constructor(private http: Http) {}
 
     ngOnInit(){
-      this.initChart("init color");
+      this.initChart("colorString");
+    }
+
+    ngOnChanges(changes: {string: SimpleChange}){
+      console.log("changes occured!!! " +  changes);
     }
 
     private initChart(color: string): void {
-      console.log("color of chart: " + color);
       this.http.get('https://cdn.rawgit.com/gevgeny/angular2-highcharts/99c6324d/examples/aapl.json').subscribe(res => {
             this.options = {
                 title : { text : 'Your Crypto Portfolio' },
