@@ -33,7 +33,7 @@ export class UserProfileComponent implements OnInit {
       public totalPortfolioPercentageChange: any;
       public portfolioTotalArray: any = [];
 
-      color = "orange";
+      color = "#36DBA3";
 
       constructor(private fb: FormBuilder,
                   private modalService:SuiModalService,
@@ -122,9 +122,9 @@ export class UserProfileComponent implements OnInit {
         });
       }
 
-      public chartCardData(cardTicker: string): void {
-        console.log("chartCardData Ran!!!");
-        this.color = "red";
+      public chartCardData(cardTicker: string, cardColor: string): void {
+        console.log("card Color in chart Card Data: " + cardColor);
+        this.color = cardColor;
         this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
           console.log("result from history times");
           console.log(result._body);

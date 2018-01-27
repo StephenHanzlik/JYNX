@@ -29,7 +29,7 @@
                   <div class="description">${{totalPortfolioValue}}</div>
                 </div>
               </div>
-              <div class="card" *ngFor="let coin of cardsContent" (click)="chartCardData(coin.coinTicker)">
+              <div class="card" *ngFor="let coin of cardsContent" (click)="chartCardData(coin.coinTicker, coin.coinColor)">
                 <div class="content">
                   <div [attr.Class]="coin.coinColorName"></div>
                   <div class="header">{{coin.coinName}}</div>

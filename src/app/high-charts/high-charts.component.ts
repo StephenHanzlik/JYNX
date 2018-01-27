@@ -26,15 +26,15 @@ export class HighChartsComponent implements OnInit, OnChanges{
     constructor(private http: Http) {}
 
     ngOnInit(){
-      this.initChart("colorString");
+      this.initChart("#36DBA3");
     }
 
     ngOnChanges(changes: SimpleChanges){
-      console.log("changes occured!!!");
-      console.log(changes);
+      this.initChart(changes.color.currentValue);
     }
 
     private initChart(color: string): void {
+      console.log("color in initChart: " + color);
       this.http.get('https://cdn.rawgit.com/gevgeny/angular2-highcharts/99c6324d/examples/aapl.json').subscribe(res => {
             this.options = {
                 title : { text : 'Your Crypto Portfolio' },
@@ -57,7 +57,7 @@ export class HighChartsComponent implements OnInit, OnChanges{
                 series : [{
                     name : 'BTC',
                     data : res.json(),
-                    color: "red",
+                    color: color,
                     tooltip: {
                          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
                          valueDecimals: 2,
