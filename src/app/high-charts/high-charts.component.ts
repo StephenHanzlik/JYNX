@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit, OnChanges, SimpleChange } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import { HttpModule,Http } from '@angular/http';
 
 @Component({
@@ -29,8 +29,9 @@ export class HighChartsComponent implements OnInit, OnChanges{
       this.initChart("colorString");
     }
 
-    ngOnChanges(changes: {string: SimpleChange}){
-      console.log("changes occured!!! " +  changes);
+    ngOnChanges(changes: SimpleChanges){
+      console.log("changes occured!!!");
+      console.log(changes);
     }
 
     private initChart(color: string): void {
@@ -56,7 +57,7 @@ export class HighChartsComponent implements OnInit, OnChanges{
                 series : [{
                     name : 'BTC',
                     data : res.json(),
-                    color: this.chartColor,
+                    color: "red",
                     tooltip: {
                          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
                          valueDecimals: 2,
