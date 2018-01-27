@@ -10,7 +10,7 @@ import { HttpModule,Http } from '@angular/http';
     template: `<chart type="StockChart" [options]="options"></chart>`
 })
 export class HighChartsComponent implements OnInit, OnChanges{
-    private options: Object;
+    public options: Object;
     @Input() color: string;
     // private chartColor: string = '';
     //
