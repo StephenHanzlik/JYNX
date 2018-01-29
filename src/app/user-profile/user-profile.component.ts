@@ -34,7 +34,7 @@ export class UserProfileComponent implements OnInit {
       public portfolioTotalArray: any = [];
 
       color = "#36DBA3";
-      chartData = [1266278400000, 29.06];
+      chartData = [];
 
       constructor(private fb: FormBuilder,
                   private modalService:SuiModalService,
@@ -103,17 +103,17 @@ export class UserProfileComponent implements OnInit {
       }
 
       public chartCardData(cardTicker: string, cardColor: string): void {
+        let changedArray = [];
         this.color = cardColor;
         this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
           result = JSON.parse(result._body);
-          console.log("result from history times");
-          console.log(result.Data);
           result.Data.forEach(result=>{
             let dataArray = [];
-            dataArray.push(result.Time);
+            dataArray.push(result.time);
             dataArray.push(result.close);
-            this.chartData.push(dataArray);
+            changedArray.push(dataArray);
           });
+          this.chartData = changedArray;
         });
       }
 

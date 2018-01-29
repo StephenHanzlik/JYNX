@@ -31,15 +31,17 @@ export class HighChartsComponent implements OnInit, OnChanges{
     }
 
     ngOnChanges(changes: SimpleChanges){
-      console.log("changes");
-      console.log(changes);
-      this.initChart(changes.color.currentValue, changes.chartData.currentValue);
+      if(changes.color)
+        this.color = changes.color.currentValue;
+      if(changes.chartData)
+        this.chartData = changes.chartData.currentValue
+      this.initChart(this.color, this.chartData);
     }
 
     private initChart(color: string, data: Array<any>): void {
-      this.http.get('https://cdn.rawgit.com/gevgeny/angular2-highcharts/99c6324d/examples/aapl.json').subscribe(res => {
-        console.log("response for appl charting data");
-        console.log(res.json());
+    //  this.http.get('https://cdn.rawgit.com/gevgeny/angular2-highcharts/99c6324d/examples/aapl.json').subscribe(res => {
+          console.log("data");
+          console.log(data);
             this.options = {
                 title : { text : 'Your Crypto Portfolio' },
                 chart: {type: 'area'},
@@ -69,7 +71,7 @@ export class HighChartsComponent implements OnInit, OnChanges{
                      },
                 }]
             };
-        });
+        //});
     }
 
 
