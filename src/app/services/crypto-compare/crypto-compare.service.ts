@@ -20,7 +20,7 @@ export class CryptoCompareService {
   }
 
   public getHistoricalPrice(coinQueryString: string): Observable<any>{
-    return this.http.get(`  https://min-api.cryptocompare.com/data/pricehistorical?fsym=${coinQueryString}&tsyms=USD`);
+    return this.http.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${coinQueryString}&tsym=USD&limit=60&aggregate=3&e=CCCAGG&allData=true`);
   }
 
 }

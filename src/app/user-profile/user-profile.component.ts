@@ -34,6 +34,7 @@ export class UserProfileComponent implements OnInit {
       public portfolioTotalArray: any = [];
 
       color = "#36DBA3";
+      chartData = [1266278400000, 29.06];
 
       constructor(private fb: FormBuilder,
                   private modalService:SuiModalService,
@@ -92,42 +93,27 @@ export class UserProfileComponent implements OnInit {
                     iterable++;
                   else
                     iterable = 0;
-                  console.log("coinToAdd");
-                  console.log(coinToAdd);
-                  console.log("this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]");
-                  console.log(this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]);
+
                   this.cardsContent.push(coinToAdd);
                   this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
-                  // console.log(this.totalPortfolioValue);
               })
               this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
           })
-
-
-          // for(let i = 0; i < coins.length; i++){
-          //   let coinToAdd = {
-          //     coinName: coins[i],
-          //     coinAmt: coinAmts[i],
-          //   }
-          //   this.cryptoCompareService.getMultiPrice(coinToAdd.coinName).subscribe(result=>{
-          //       apiData = JSON.parse(result._body);
-          //       usdAmt = apiData.USD;
-          //       this.portfolioTotalArray.push(usdAmt);
-          //       if( i === coins.length - 1){
-          //             this.portfolioTotalArray.reduce( (prev, curr) => prev + curr );
-          //       }
-          //       this.updateCards(coinToAdd, usdAmt);
-          //   })
-          // }
         });
       }
 
       public chartCardData(cardTicker: string, cardColor: string): void {
-        console.log("card Color in chart Card Data: " + cardColor);
         this.color = cardColor;
         this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
+          result = JSON.parse(result._body);
           console.log("result from history times");
-          console.log(result._body);
+          console.log(result.Data);
+          result.Data.forEach(result=>{
+            let dataArray = [];
+            dataArray.push(result.Time);
+            dataArray.push(result.close);
+            this.chartData.push(dataArray);
+          });
         });
       }
 
