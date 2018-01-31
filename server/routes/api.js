@@ -50,25 +50,25 @@ router.put('/portfolio', function(req, res) {
       if (err) throw err;
 
       //Tierion Data API
-      const options = {
-        method: 'POST',
-        uri: 'https://api.tierion.com/v1/records',
-        body: updateDbObject,
-        headers: {
-          'X-Username': 'stephenhanzlik@gmail.com',
-          'X-Api-Key': '/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=',
-          'Content-Type': 'application/json'
-        },
-        json: true
-      };
-
-      request(options)
-        .then(function(response) {
-          // Handle the response
-        })
-        .catch(function(err) {
-          // Deal with the error
-        })
+      // const options = {
+      //   method: 'POST',
+      //   uri: 'https://api.tierion.com/v1/records',
+      //   body: updateDbObject,
+      //   headers: {
+      //     'X-Username': 'stephenhanzlik@gmail.com',
+      //     'X-Api-Key': '/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=',
+      //     'Content-Type': 'application/json'
+      //   },
+      //   json: true
+      // };
+      //
+      // request(options)
+      //   .then(function(response) {
+      //     // Handle the response
+      //   })
+      //   .catch(function(err) {
+      //     // Deal with the error
+      //   })
 
     });
     res.status(200).send("ok");
