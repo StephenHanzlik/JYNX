@@ -40,3 +40,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+#Node Routes (this has sensitive password information in it);
+./server/routes/auth.js

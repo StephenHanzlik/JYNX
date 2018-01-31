@@ -2,14 +2,21 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const privateKey = 'xt67rhdk30_cookie_signing_key_1las01103ksd';
 const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
-const UserModel = require('../models/userModel');
 const PortfolioModel = require('../models/portfolioModel');
-const SettingsModel = require('../models/settingsModel');
 const request = require('request-promise');
+
+//const UserModel = require('../models/userModel');
+//const bcrypt = require('bcrypt');
+//const jwt = require('jsonwebtoken');
+//const privateKey = 'xt67rhdk30_cookie_signing_key_1las01103ksd';
+//const SettingsModel = require('../models/settingsModel');
+
+const hashclient = require('hashapi-lib-node');
+
+const access_token = 'your_access_token_here';
+const refresh_token = 'your_refresh_token_here';
+const hashClient = new hashclient(access_token, refresh_token);
 
 mongoose.connect(mongoDB, {
   useMongoClient: true

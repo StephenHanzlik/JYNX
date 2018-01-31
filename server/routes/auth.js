@@ -11,6 +11,12 @@ const PortfolioModel = require('../models/portfolioModel');
 const SettingsModel = require('../models/settingsModel');
 const request = require('request-promise');
 
+const hashclient = require('hashapi-lib-node');
+
+const username = 'stephenhanzlik@gmail.com';
+const password = 'OQJgbTvXMZbPyy5Dkjs2KYd8IvxDCUwUCstXqbRQron1JkKHDKX0MxQxyP3Xqth9G3dcPc5DZP3T6jiTrgVpXegUUKAI';
+const hashClient = new hashclient();
+
 
 mongoose.connect(mongoDB, {
   useMongoClient: true
