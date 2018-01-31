@@ -19,26 +19,6 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-const portfolioDeleteCheck = function (requestCoin, dbCoin, requestAmt, dbAmount){
-  if(requestCoin === dbCoin){
-      if(requestCoin - requestAmt > 0){
-        dbAmount = dbAmount - requestAmt;
-      }
-      else if(dbAmount - requestAmt === 0){
-        dbAmount = dbAmount - requestAmt;
-        newAmountsArr.splice(i, 0);
-        newCoinsArr.splice(i, 0);
-      }
-      else{
-        difference = dbAmount - requestAmt;
-        difference = Math.abs(difference);
-        console.log("neg Diff: " + difference);
-        newAmountsArr.splice(i, 0);
-        newCoinsArr.splice(i, 0);
-      }
-  }
-}
-
 router.put('/portfolio', function(req, res) {
   const bodyObj = {
     coinName: req.body.coinName,
@@ -55,9 +35,9 @@ router.put('/portfolio', function(req, res) {
     if (err) {
       res.status(500).send(err);
     }
-    let newCoinsArr = dbPortfolio[0].coins
+    let newCoinsArr = dbPortfolio[0].coinsp;
     newCoinsArr.push(bodyObj.coinName);
-    let newAmountsArr = dbPortfolio[0].coinAmts
+    let newAmountsArr = dbPortfolio[0].coinAmts;
     newAmountsArr.push(bodyObj.coinAmt);
 
     const updateDbObject = {
@@ -65,10 +45,6 @@ router.put('/portfolio', function(req, res) {
       coins: newCoinsArr,
       datastoreId: 5840
     };
-
-    console.log("arrays in put request");
-    console.log(newCoinsArr);
-    console.log(newAmountsArr);
 
     PortfolioModel.findOneAndUpdate({ hodler: req.token }, updateDbObject, function(err, user) {
       if (err) throw err;
@@ -129,17 +105,13 @@ router.delete('/portfolio/:name/:amount', function(req, res) {
     if (err) {
       res.status(500).send(err);
     }
-    // res.status(200).send(dbPortfolio);
+
     let newCoinsArr = dbPortfolio[0].coins
     let newAmountsArr = dbPortfolio[0].coinAmts
     let difference = 0;
 
-    console.log("arrays before loop");
-    console.log(newCoinsArr);
-    console.log(newAmountsArr);
-
     for(let i = newCoinsArr.length - 1; i >= 0; i--){
-      // portfolioDeleteCheck(bodyObj.coinName, newCoinsArr[i], bodyObj.coinAmt,  newAmountsArr[i]);
+
       if(bodyObj.coinName === newCoinsArr[i]){
         if(newAmountsArr[i] - bodyObj.coinAmt > 0){
           newAmountsArr[i] = newAmountsArr[i] - bodyObj.coinAmt;
@@ -153,17 +125,12 @@ router.delete('/portfolio/:name/:amount', function(req, res) {
         }
         else{
           difference = newAmountsArr[i] - bodyObj.coinAmt;
-          console.log("difference");
-          console.log(difference);
           bodyObj.coinAmt = Math.abs(difference);
           newAmountsArr.splice(i, 1);
           newCoinsArr.splice(i, 1);
         }
       }
     }
-    console.log("arrays after loop");
-    console.log(newCoinsArr);
-    console.log(newAmountsArr);
 
     const updateDbObject = {
       coinAmts: newAmountsArr,
