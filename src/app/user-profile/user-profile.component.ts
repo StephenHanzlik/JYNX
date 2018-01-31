@@ -99,6 +99,8 @@ export class UserProfileComponent implements OnInit {
                   this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
               })
               this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
+              console.log("totalPortfolioValue");
+              console.log(this.totalPortfolioValue);
           })
         });
       }
@@ -153,36 +155,36 @@ export class UserProfileComponent implements OnInit {
       }
 
       public addCoin(form: any): void {
-        let apiData: any = {};
-        let usdAmt: number = 0;
 
-        this.cryptoCompareService.getSinglePrice(form.coinName).subscribe(result=>{
-            apiData = JSON.parse(result._body);
-            usdAmt = apiData.USD;
+        this.cardsContent = [];
+        this.totalPortfolioValue = 0;
 
-            //this.updatePieChart(form, usdAmt);
-            this.updateCards(form, usdAmt);
             this.mongoDbService.addCoin(form).subscribe(result=>{
-              console.log("result of add coin from mongo db service");
+              console.log("Get User Coin Data about to be called");
+              this.getUserCoinData();
             });
-        })
+      //  })
       }
 
       public deleteCoin(form: any): void {
+        this.cardsContent = [];
+        this.totalPortfolioValue = 0;
+        
         this.mongoDbService.deleteCoin(form).subscribe(result=>{
           console.log("result of add coin from mongo db service");
+          this.getUserCoinData();
         });
       }
 
-      private updateCards(newCoin: any, usdAmt: number): void {
-          let allCoinData = ALLCOINDATA;
-          let newCardData: any = {};
-          newCardData.qty = Number.parseInt(newCoin.coinAmt);
-          newCardData.asset = allCoinData[0][newCoin.coinName].FullName;
-          newCardData.lastPrice = usdAmt;
-          newCardData.usdValue = newCardData.lastPrice * newCardData.qty
-          this.cardsContent.push(newCardData);
-      }
+      // private updateCards(newCoin: any, usdAmt: number): void {
+      //     let allCoinData = ALLCOINDATA;
+      //     let newCardData: any = {};
+      //     newCardData.qty = Number.parseInt(newCoin.coinAmt);
+      //     newCardData.asset = allCoinData[0][newCoin.coinName].FullName;
+      //     newCardData.lastPrice = usdAmt;
+      //     newCardData.usdValue = newCardData.lastPrice * newCardData.qty
+      //     this.cardsContent.push(newCardData);
+      // }
 
       private getDropDownList(): void {
         this.cryptoDropDownList = COINOBJECTS;

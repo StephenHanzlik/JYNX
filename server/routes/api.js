@@ -71,6 +71,7 @@ router.put('/portfolio', function(req, res) {
         })
 
     });
+    res.status(200).send("ok");
   });
 });
 
@@ -142,6 +143,7 @@ router.delete('/portfolio/:name/:amount', function(req, res) {
       if (err) throw err;
     });
 
+    res.status(200).send("ok");
   });
 });
 
