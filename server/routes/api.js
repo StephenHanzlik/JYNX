@@ -89,10 +89,10 @@ router.get('/portfolio', function(req, res) {
   });
 });
 
-router.delete('/portfolio', function(req, res) {
+router.delete('/portfolio/:name/:amount', function(req, res) {
   const bodyObj = {
-    coinName: req.body.coinName,
-    coinAmt: req.body.coinAmt
+    coinName: req.params.name,
+    coinAmt: req.params.amount
   };
 
   PortfolioModel.
@@ -100,13 +100,23 @@ router.delete('/portfolio', function(req, res) {
   where('hodler').
   equals(req.token).
   limit(1).
-  select('coins coinAmts').
+  select('coins coinAmts _id').
   exec(function(err, dbPortfolio) {
     if (err) {
       res.status(500).send(err);
     }
-    console.log("dbPortfolio: " + dbPortfolio);
-    res.status(200).send(dbPortfolio);
+    // console.log("dbPortfolio: " + dbPortfolio);
+    // res.status(200).send(dbPortfolio);
+    let newCoinsArr = dbPortfolio[0].coins
+    //newCoinsArr.push(bodyObj.coinName);
+    let newAmountsArr = dbPortfolio[0].coinAmts
+    //newAmountsArr.push(bodyObj.coinAmt);
+    console.log("new coins Array:");
+    console.log(newCoinsArr);
+    console.log("new coins Array:");
+    console.log(newAmountsArr);
+    console.log("bodyObj");
+    console.log(bodyObj);
   });
 });
 

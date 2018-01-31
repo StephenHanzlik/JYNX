@@ -34,6 +34,7 @@ export class UserProfileComponent implements OnInit {
       public portfolioTotalArray: any = [];
 
       color = "#36DBA3";
+      coinTicker = "Total";
       chartData = [];
 
       constructor(private fb: FormBuilder,
@@ -114,6 +115,7 @@ export class UserProfileComponent implements OnInit {
             changedArray.push(dataArray);
           });
           this.chartData = changedArray;
+          this.coinTicker = cardTicker;
         });
       }
 
