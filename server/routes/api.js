@@ -35,7 +35,7 @@ router.put('/portfolio', function(req, res) {
     if (err) {
       res.status(500).send(err);
     }
-    let newCoinsArr = dbPortfolio[0].coinsp;
+    let newCoinsArr = dbPortfolio[0].coins;
     newCoinsArr.push(bodyObj.coinName);
     let newAmountsArr = dbPortfolio[0].coinAmts;
     newAmountsArr.push(bodyObj.coinAmt);
