@@ -105,18 +105,32 @@ router.delete('/portfolio/:name/:amount', function(req, res) {
     if (err) {
       res.status(500).send(err);
     }
-    // console.log("dbPortfolio: " + dbPortfolio);
     // res.status(200).send(dbPortfolio);
     let newCoinsArr = dbPortfolio[0].coins
-    //newCoinsArr.push(bodyObj.coinName);
     let newAmountsArr = dbPortfolio[0].coinAmts
-    //newAmountsArr.push(bodyObj.coinAmt);
-    console.log("new coins Array:");
-    console.log(newCoinsArr);
-    console.log("new coins Array:");
-    console.log(newAmountsArr);
-    console.log("bodyObj");
-    console.log(bodyObj);
+    let negDifference = 0;
+
+    for(let i = newCoinsArr.length - 1; i >= 0; i--){
+      console.log("values in loop");
+      console.log(newAmountsArr[i]);
+      console.log(newCoinsArr[i]);
+      if(bodyObj.coinName === newCoinsArr[i]){
+        if(newAmountsArr[i] - bodyObj.coinAmt > 0){
+          newAmountsArr[i] = newAmountsArr[i] - bodyObj.coinAmt;
+        }
+        else if(newAmountsArr[i] - bodyObj.coinAmt === 0){
+          newAmountsArr[i] = newAmountsArr[i] - bodyObj.coinAmt;
+          newAmountsArr.splice(i, 0);
+          newCoinsArr.splice(i, 0);
+        }
+        else{
+          negDifference = newAmountsArr[i] - bodyObj.coinAmt;
+          console.log("neg Diff: " + negDifference);
+          newAmountsArr.splice(i, 0);
+          newCoinsArr.splice(i, 0);
+        }
+      }
+    }
   });
 });
 
