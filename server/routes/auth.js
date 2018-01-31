@@ -17,6 +17,17 @@ const username = 'stephenhanzlik@gmail.com';
 const password = 'OQJgbTvXMZbPyy5Dkjs2KYd8IvxDCUwUCstXqbRQron1JkKHDKX0MxQxyP3Xqth9G3dcPc5DZP3T6jiTrgVpXegUUKAI';
 const hashClient = new hashclient();
 
+hashClient.authenticate(username, password, function(err, authToken){
+    if(err) {
+      console.log("there was an error with hash client");
+        // handle the error
+    } else {
+      console.log("no error with hash client")
+        // authentication was successful
+        // access_token, refresh_token are returned in authToken
+        // authToken values are saved internally and managed autmatically for the life of the HashClient
+    }
+});
 
 mongoose.connect(mongoDB, {
   useMongoClient: true

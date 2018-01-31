@@ -12,11 +12,11 @@ const request = require('request-promise');
 //const privateKey = 'xt67rhdk30_cookie_signing_key_1las01103ksd';
 //const SettingsModel = require('../models/settingsModel');
 
-const hashclient = require('hashapi-lib-node');
-
-const access_token = 'your_access_token_here';
-const refresh_token = 'your_refresh_token_here';
-const hashClient = new hashclient(access_token, refresh_token);
+// const hashclient = require('hashapi-lib-node');
+//
+// const access_token = 'your_access_token_here';
+// const refresh_token = 'your_refresh_token_here';
+// const hashClient = new hashclient(access_token, refresh_token);
 
 mongoose.connect(mongoDB, {
   useMongoClient: true

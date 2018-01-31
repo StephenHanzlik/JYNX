@@ -41,5 +41,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-#Node Routes (this has sensitive password information in it);
-./server/routes/auth.js
+# Node Routes (this has sensitive password information in it);
+/server/routes/auth.js
