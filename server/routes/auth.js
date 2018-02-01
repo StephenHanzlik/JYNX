@@ -17,6 +17,9 @@ const username = 'stephenhanzlik@gmail.com';
 const password = 'OQJgbTvXMZbPyy5Dkjs2KYd8IvxDCUwUCstXqbRQron1JkKHDKX0MxQxyP3Xqth9G3dcPc5DZP3T6jiTrgVpXegUUKAI';
 const hashClient = new hashclient();
 
+// const crypto = require('crypto');
+// const hash = crypto.createHash('sha256');
+
 hashClient.authenticate(username, password, function(err, authToken){
     if(err) {
       console.log("there was an error with hash client");
@@ -72,26 +75,48 @@ router.post('/sign-up', function(req, res) {
     bodyObj.datastoreId = 5841;
 
     //Tierion Data API
-    const options = {
-      method: 'POST',
-      uri: 'https://api.tierion.com/v1/records',
-      body: bodyObj,
-      headers: {
-        'X-Username': 'stephenhanzlik@gmail.com',
-        'X-Api-Key': '/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=',
-        'Content-Type': 'application/json'
-      },
-      json: true
-    };
+    // const options = {
+    //   method: 'POST',
+    //   uri: 'https://api.tierion.com/v1/records',
+    //   body: bodyObj,
+    //   headers: {
+    //     'X-Username': 'stephenhanzlik@gmail.com',
+    //     'X-Api-Key': '/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   json: true
+    // };
+    //
+    // request(options)
+    //   .then(function(response) {
+    //     // Handle the response
+    //   })
+    //   .catch(function(err) {
+    //     // Deal with the error
+    //   })
+    //Tierion Hash API node interface
+    let hashTarget = JSON.stringify(bodyObj);
+    let crypto = require('crypto');
+    let hash = crypto.createHash('sha256')
+      .update(hashTarget)
+      //.digest('hex');
 
-    request(options)
-      .then(function(response) {
-        // Handle the response
-      })
-      .catch(function(err) {
-        // Deal with the error
-      })
+    // hash.update("hashTarget");
+    //let hashResult = sha256.digest("base64");
+    console.log("sha256: ");
+    console.log(hash);
+    var hex = hash.digest('hex');
+    console.log("shad256 digest: " + hex);
 
+    hashClient.submitHashItem(hex, function(err, result) {
+      if (err) {
+        // handle the error
+        console.log("error in submit hash: " + JSON.stringify(err));
+      } else {
+        // process result
+        console.log("Succes!!! result: " + JSON.stringify(result));
+      }
+    });//
 
   });
 });
