@@ -20,6 +20,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 router.post('/', function(req, res){
     console.log("reciepts route hit");
+    res.status(200).send("we got it!");
 });
 
 module.exports = router;

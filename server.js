@@ -33,13 +33,11 @@ const authorize = function(req, res, next) {
   }
 };
 
-// const authorizeReceipts = function(req, res, next){
-//   console.log("req.body");
-//   console.log(req.body);
-//   console.log("response");
-//   console.log(res.);
-//   next();
-// }
+const authorizeReceipts = function(req, res, next){
+  console.log("req.body");
+  console.log(req.body);
+  next();
+}
 
 // Angular DIST output folder
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -47,9 +45,8 @@ app.use(express.static(path.join(__dirname, 'dist')));
 // API location
 app.use('/auth', auth);
 app.use('/api/portfolio', authorize, apiPortfolio);
-app.use('/api/receipts', apiReceipts);
+app.use('/api/receipts', authorizeReceipts, apiReceipts);
 
-// authorizeReceipts,
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
