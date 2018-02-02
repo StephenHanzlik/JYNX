@@ -17,3 +17,7 @@ mongoose.connect(mongoDB, {
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+router.put('/receipts', function(req, res){
+    console.log("reciepts route hit");
+});
