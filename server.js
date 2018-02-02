@@ -7,7 +7,8 @@ const app = express();
 const jwt = require('jsonwebtoken');
 const privateKey = 'xt67rhdk30_cookie_signing_key_1las01103ksd';
 const cookieParser = require('cookie-parser');
-const api = require('./server/routes/api');
+const apiPortfolio = require('./server/routes/api/portfolio');
+const apiHashReceipts = require('./server/routes/api/hash-receipts');
 const auth = require('./server/routes/auth');
 
 app.use(bodyParser.json());
@@ -37,7 +38,8 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 // API location
 app.use('/auth', auth);
-app.use('/api', authorize, api);
+app.use('/api/portfolio', authorize, apiPortfolio);
+app.use('/api/hash-receipts', apiHashReceipts);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
