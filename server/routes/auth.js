@@ -115,8 +115,21 @@ router.post('/sign-up', function(req, res) {
       } else {
         // process result
         console.log("Succes!!! result: " + JSON.stringify(result));
+        hashClient.getReceipt(result.receiptId, function(err, result){
+            if(err) {
+              console.log("error on receipt");
+              console.log(err);
+                // handle the error
+            } else {
+              console.log("Sucess!! receipt");
+              console.log(result);
+                // process result
+            }
+        });
       }
     });//
+
+
 
   });
 });
