@@ -11,23 +11,12 @@ const PortfolioModel = require('../models/portfolioModel');
 const SettingsModel = require('../models/settingsModel');
 const request = require('request-promise');
 
-const authorizeTierion = function () {
-  hashClient.authenticate(username, password, function(err, authToken){
-      if(err) {
-        console.log("there was an error with hash client");
-          // handle the error
-      } else {
-        console.log("no error with hash client")
-          // authentication was successful
-          // access_token, refresh_token are returned in authToken
-          // authToken values are saved internally and managed autmatically for the life of the HashClient
-      }
-  });
-}
 const hashclient = require('hashapi-lib-node');
 const username = 'stephenhanzlik@gmail.com';
 const password = 'OQJgbTvXMZbPyy5Dkjs2KYd8IvxDCUwUCstXqbRQron1JkKHDKX0MxQxyP3Xqth9G3dcPc5DZP3T6jiTrgVpXegUUKAI';
 const hashClient = new hashclient();
+
+
 
 mongoose.connect(mongoDB, {
   useMongoClient: true
@@ -38,7 +27,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
-router.post('/sign-up', authorizeTierion, function(req, res) {
+router.post('/sign-up', function(req, res) {
   const hash = bcrypt.hashSync(req.body.password, 8);
   let bodyObj = {
     username: req.body.username,
@@ -71,58 +60,50 @@ router.post('/sign-up', authorizeTierion, function(req, res) {
 
     bodyObj.datastoreId = 5841;
 
-    //Tierion Data API *** DEPRICATED ***
-    // const options = {
-    //   method: 'POST',
-    //   uri: 'https://api.tierion.com/v1/records',
-    //   body: bodyObj,
-    //   headers: {
-    //     'X-Username': 'stephenhanzlik@gmail.com',
-    //     'X-Api-Key': '/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   json: true
-    // };
-    //
-    // request(options)
-    //   .then(function(response) {
-    //     // Handle the response
-    //   })
-    //   .catch(function(err) {
-    //     // Deal with the error
-    //   })
-
     // //Tierion Hash API node interface
-    const hashTarget = JSON.stringify(bodyObj);
-    const crypto = require('crypto');
-    let hash = crypto.createHash('sha256')
-      .update(hashTarget)
+    hashClient.authenticate(username, password, function(err, authToken, next){
+        if(err) {
+          console.log("there was an error with hash client");
+          console.log(err);
+            // handle the error
+        } else {
 
-    let hex = hash.digest('hex');
+          const hashTarget = JSON.stringify(bodyObj);
+          const crypto = require('crypto');
+          let hash = crypto.createHash('sha256')
+            .update(hashTarget)
 
-    hashClient.submitHashItem(hex, function(err, result) {
-       if (err) {
-         console.log("error in submit hash: " + JSON.stringify(err));
-       } else {
-         console.log("Succes!!! result: " + JSON.stringify(result));
-      }
+          let hex = hash.digest('hex');
+
+          hashClient.submitHashItem(hex, function(err, result) {
+             if (err) {
+               console.log("error in submit hash: " + JSON.stringify(err));
+             } else {
+               console.log("Succes!!! result: ")
+               console.log(result);
+               let result = JSON.stringify(result);
+             }//c
+          });//c
+
+               // const parameters = {
+               //   callbackUrl: `http://localhost:3000/receipts/${result.id}`
+               // };
+               // hashClient.createBlockSubscription(parameters, function(err, result){
+               //     if(err) {
+               //         // handle the error
+               //         console.log("there was an error creating sub");
+               //         console.log(err);
+               //     } else {
+               //         // process result
+               //         console.log("successful block subscription");
+               //         console.log(result);
+               //     }
+               // });
+
+            //}//c
+          //});//c
+        }
     });
-
-    const parameters = {
-      callbackUrl: "http://localhost:3000/receipts"
-    };
-
-    // hashClient.createBlockSubscription(parameters, function(err, result){
-    //     if(err) {
-    //         // handle the error
-    //         console.log("there was an error");
-    //         console.log(err);
-    //     } else {
-    //         // process result
-    //         console.log("successful block subscription");
-    //         console.log(result);
-    //     }
-    // });
 
   });
 });
