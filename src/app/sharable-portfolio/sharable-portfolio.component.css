@@ -2,6 +2,11 @@ body {
         display: relative;
       }
 
+      .body-padding{
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
       .color1 {
         width: 18px;
         height: 18px;
