@@ -67,6 +67,7 @@ router.post('/sign-up', function(req, res) {
 
                    const newPortfolio = new PortfolioModel({
                      hodler: newUser._id,
+                     portfolioName: "your portfolio name here",
                      coins: [],
                      coinAmts: []
                    });

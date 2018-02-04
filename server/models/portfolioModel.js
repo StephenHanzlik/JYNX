@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 
 const PortfolioSchema = new Schema({
   hodler: [{ type: Schema.Types.ObjectId, ref: 'UserSchema' }],
+  portfolioName: String,
   coins: [String],
   coinAmts: [Number]
 });

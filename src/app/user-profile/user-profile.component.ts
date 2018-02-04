@@ -32,6 +32,7 @@ export class UserProfileComponent implements OnInit {
       public totalPortfolioValue: any = 0;
       public totalPortfolioPercentageChange: any;
       public portfolioTotalArray: any = [];
+      public portfolioName: string = '';
 
       color = "#36DBA3";
       coinTicker = "Total";
@@ -67,6 +68,7 @@ export class UserProfileComponent implements OnInit {
           let aggregateTotalsObj: any = {};
           let coinAmts: Array<number> = result['coinAmts'];
           let coins: Array<string> = result['coins'];
+          this.portfolioName = result['portfolioName'];
           for (let l = 0; l < coins.length; l++) {
             if(aggregateTotalsObj[coins[l]])
               aggregateTotalsObj[coins[l]] = aggregateTotalsObj[coins[l]] + coinAmts[l];
@@ -169,7 +171,7 @@ export class UserProfileComponent implements OnInit {
       public deleteCoin(form: any): void {
         this.cardsContent = [];
         this.totalPortfolioValue = 0;
-        
+
         this.mongoDbService.deleteCoin(form).subscribe(result=>{
           console.log("result of add coin from mongo db service");
           this.getUserCoinData();
