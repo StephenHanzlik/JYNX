@@ -15,10 +15,6 @@ import { AdminComponent } from '../admin/admin.component';
           component: HomeComponent,
        },
        {
-           path: 'charts',
-           component: ChartsComponent,
-       },
-       {
             path: 'log-in',
             component: LogInComponent,
        },
