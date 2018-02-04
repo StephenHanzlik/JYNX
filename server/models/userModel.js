@@ -21,6 +21,12 @@ const UserSchema = new Schema({
     min: [2, 'Password too short'],
     max: [20, 'Password too long']
   },
+  tierionTimeStamp: {
+    type: Number,
+  },
+  tierionReceipt: {
+    type: String,
+  },
   created: {
     type: Date,
     default: Date.now
