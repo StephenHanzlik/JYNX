@@ -6,6 +6,7 @@ import { ChartsComponent } from '../charts/charts.component';
 import { LogInComponent } from '../log-in/log-in.component';
 import { SignUpComponent } from '../sign-up/sign-up.component';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
+import { SharablePortfolioComponent } from '../sharable-portfolio/sharable-portfolio.component';
 
    const routes: Routes = [
       {
@@ -25,8 +26,12 @@ import { UserProfileComponent } from '../user-profile/user-profile.component';
             component: SignUpComponent,
        },
        {
-            path: 'settings',
+            path: 'admin',
             component: UserProfileComponent,
+       },
+       {
+            path: 'sharable-portfolio',
+            component: SharablePortfolioComponent,
        }
    ];
 

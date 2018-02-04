@@ -19,6 +19,7 @@ import { MongoDbService } from './services/mongo-db/mongo-db.service';
 import { ChartModule } from 'angular2-highcharts';
 import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 import * as highcharts from 'highcharts/highstock';
+import { SharablePortfolioComponent } from './sharable-portfolio/sharable-portfolio.component';
 
 export function highchartsFactory() {
   return highcharts;
@@ -32,7 +33,8 @@ export function highchartsFactory() {
     LogInComponent,
     SignUpComponent,
     HomeComponent,
-    HighChartsComponent
+    HighChartsComponent,
+    SharablePortfolioComponent
   ],
   imports: [
     BrowserModule,
