@@ -7,6 +7,7 @@ import { LogInComponent } from '../log-in/log-in.component';
 import { SignUpComponent } from '../sign-up/sign-up.component';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { SharablePortfolioComponent } from '../sharable-portfolio/sharable-portfolio.component';
+import { AdminComponent } from '../admin/admin.component';
 
    const routes: Routes = [
       {
@@ -27,7 +28,7 @@ import { SharablePortfolioComponent } from '../sharable-portfolio/sharable-portf
        },
        {
             path: 'admin',
-            component: UserProfileComponent,
+            component: AdminComponent,
        },
        {
             path: 'sharable-portfolio',

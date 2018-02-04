@@ -20,6 +20,7 @@ import { ChartModule } from 'angular2-highcharts';
 import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 import * as highcharts from 'highcharts/highstock';
 import { SharablePortfolioComponent } from './sharable-portfolio/sharable-portfolio.component';
+import { AdminComponent } from './admin/admin.component';
 
 export function highchartsFactory() {
   return highcharts;
@@ -34,7 +35,8 @@ export function highchartsFactory() {
     SignUpComponent,
     HomeComponent,
     HighChartsComponent,
-    SharablePortfolioComponent
+    SharablePortfolioComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
