@@ -83,7 +83,10 @@ export class UserProfileComponent implements OnInit {
               let keys: Array<string> = [];
               let allCoinData: object = ALLCOINDATA[0];
               let iterable: number = 0;
-              keys = Object.keys(apiData);
+              if(apiData)
+                keys = Object.keys(apiData);
+              else
+                return;
               keys.forEach(key=> {
                 let coinToAdd = {
                    coinColor: colorsArray[iterable],
