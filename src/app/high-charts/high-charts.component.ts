@@ -48,7 +48,7 @@ export class HighChartsComponent implements OnInit, OnChanges{
           console.log("data");
           console.log(data);
             this.options = {
-                title : { text : 'Your Crypto Portfolio' },
+                title : { text : '' },
                 chart: {type: 'area'},
                 // xAxis: {
                 //     type: 'datetime',
