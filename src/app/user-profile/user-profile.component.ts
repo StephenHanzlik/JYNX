@@ -69,6 +69,7 @@ export class UserProfileComponent implements OnInit {
           let coinAmts: Array<number> = result['coinAmts'];
           let coins: Array<string> = result['coins'];
           this.portfolioName = result['portfolioName'];
+          console.log("this.portfolioName: " + this.portfolioName);
           for (let l = 0; l < coins.length; l++) {
             if(aggregateTotalsObj[coins[l]])
               aggregateTotalsObj[coins[l]] = aggregateTotalsObj[coins[l]] + coinAmts[l];
