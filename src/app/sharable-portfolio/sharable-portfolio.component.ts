@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {SuiModalService, TemplateModalConfig, ModalTemplate} from 'ng2-semantic-ui';
+import {SuiModalService, TemplateModalConfig, ModalTemplate, IPopup} from 'ng2-semantic-ui';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { CryptoCompareService } from "../services/crypto-compare/crypto-compare.service";
 import { MongoDbService } from "../services/mongo-db/mongo-db.service";
