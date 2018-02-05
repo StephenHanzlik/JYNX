@@ -10,7 +10,7 @@
   <div class="ui grid top-margin">
     <div class="row">
       <div class="one wide column"></div>
-      <div class="three wide column flex-parent">
+      <div class="three wide column left aligned">
         <h4 class="grey-text sub header">Total Portfolio value</h4>
         <h1 class="ui header main-price">$109,234,324</h1>
         <h4 class="sub header">+9.5%</h4>
@@ -20,7 +20,35 @@
     </div>
     <div class="one wide column"></div>
     </div>
+    <div class="row">
+        <div class="one wide column"></div>
+        <div class="one wide column">
+          <h4 class="sub header">Holdings</h4>
+        </div>
+        <div class="fourteen wide column"></div>
+    </div>
+    <div class="row">
+      <div class="ui cards">
+        <div class="card">
+          <div class="content">
+            <div class="header">Total Portfolio</div>
+            <div class="meta">+.98%</div>
+            <div class="description">${{totalPortfolioValue}}</div>
+          </div>
+        </div>
+        <div class="card" *ngFor="let coin of cardsContent" (click)="chartCardData(coin.coinTicker, coin.coinColor)">
+          <div class="content">
+            <div [attr.Class]="coin.coinColorName"></div>
+            <div class="header">{{coin.coinName}}</div>
+            <div class="meta">{{coin.coin24}}%</div>
+            <div class="description">${{coin.coinPrice}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
+
 
   <div class="ui grid">
 
