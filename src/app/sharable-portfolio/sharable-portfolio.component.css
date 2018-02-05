@@ -6,6 +6,24 @@ body {
         margin-top: 100px;
       }
 
+      .card-header{
+        margin-top: -20px !important;
+        float: left;
+        padding-left: 40px;
+      }
+
+      .card-24-change{
+        margin-top: 12px;
+        float: left;
+        margin-left: -63px;
+      }
+
+      .card-price{
+        float: right;
+        margin-top: -9px !important;
+        font-size: 17 !important;
+      }
+
       .grey-text{
         color: rgba(0,0,0,.4);
       }
