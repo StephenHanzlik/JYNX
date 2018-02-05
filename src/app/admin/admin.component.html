@@ -56,7 +56,7 @@
         </div>
       <!--  <div class="one wide column"></div>-->
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <h1 class="ui huge header">
           Buy/Sell
         </h1>
@@ -66,9 +66,9 @@
           <button (click)="openDeleteModal()" class="circular ui icon button">
             <i class="icon minus"></i>
           </button>
-      </div>
+      </div> -->
       <ng-template let-context let-modal="modal" #modalAddTemplate>
-        <div class="header">Add coins:</div>
+        <div class="header">Buy Coins:</div>
         <div class="content">
           <form class="ui form" [formGroup]="newCoinForm" >
               <select name="coinName" [formControl]="newCoinForm.controls['coinName']">
@@ -84,7 +84,7 @@
         </div>
       </ng-template>
       <ng-template let-context let-modal="modal" #modalDeleteTemplate>
-        <div class="header">Delete coins:</div>
+        <div class="header">Sell Coins:</div>
         <div class="content">
           <form class="ui form" [formGroup]="newCoinForm" >
               <select name="coinName" [formControl]="newCoinForm.controls['coinName']">
@@ -99,4 +99,11 @@
             <button class="ui green button" (click)="modal.approve(newCoinForm.value)" autofocus>OK</button>
         </div>
       </ng-template>
+  </div>
+  <div class="ui footer admin-footer">
+    <div class="ui large buttons">
+      <button (click)="openAddModal()" class="ui button">Buy</button>
+      <div class="or"></div>
+      <button (click)="openDeleteModal()" class="ui button">Sell</button>
+    </div>
   </div>

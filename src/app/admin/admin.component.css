@@ -114,6 +114,15 @@ body {
         border-radius: 50px;
       }
 
+      .admin-footer{
+        background-color: #1CB5AC;
+        display: flex;
+        justify-content: center;
+        margin-bottom: -14px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+      }
+
       #content {
         margin-left: 19%;
         width: 81%;
