@@ -6,6 +6,22 @@ body {
         margin-top: 100px;
       }
 
+
+      .tierion-color{
+        margin-top: 31px;
+        margin-right: 5px;
+        width: 10px;
+        height:   10px;
+        background: #e43777;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+      }
+
+      .menu-left {
+      margin-right: 10px;
+      }
+
       .card-header{
         margin-top: -20px !important;
         float: left;
@@ -32,8 +48,6 @@ body {
         margin-top: -2px;
         margin-bottom: -2px;
       }
-
-
       .color1 {
         width: 18px;
         height: 18px;
