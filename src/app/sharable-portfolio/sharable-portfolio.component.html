@@ -4,7 +4,7 @@
       <div class="item">
       </div>
       <div class="tierion-color"></div>
-      <h4 class="menu-left" suiPopup popupPlacement="center" popupInverted popupText="We use Tierion to securely anchor your hashed data to the blockchain. This allows us to prove the integrity and timestamp of your data.  The most recent block containing your data has been processed.">Data Hashed and Anchored to Blockchain</h4>
+      <h4 class="menu-left" suiPopup popupPlacement="center" popupInverted popupText="We use Tierion to securely anchor your hashed data to the blockchain. This allows us to prove the integrity and timestamp of your data.  The most recent block containing your data has been processed and all data is up to date.">Data Hashed and Anchored to Blockchain</h4>
       <h4 class="menu-left">Share this portfolio:  link</h4>
       <h4 class="menu-left">Password:  ndh57j132</h4>
     </div>
@@ -30,14 +30,15 @@
         <div class="fourteen wide column"></div>
     </div>
       <div class="row">
-        <div class="two wide column"></div>
-        <div class="thirteen wide column">
-        <div class="ui cards">
+      <!--  <div class="two wide column"></div>-->
+        <div class="sixteen wide column">
+        <div class="ui cards cards-div">
           <div class="card">
             <div class="content">
-              <div class="header">Total Portfolio</div>
-              <div class="meta">+.98%</div>
-              <div class="description">${{totalPortfolioValue}}</div>
+              <div class="portfolio-color"></div>
+              <div class="header card-header">Total Portfolio</div>
+              <div class="meta card-24-change">+.98%</div>
+              <div class="header card-price">${{totalPortfolioValue}}</div>
             </div>
           </div>
           <div class="card" *ngFor="let coin of cardsContent" (click)="chartCardData(coin.coinTicker, coin.coinColor)">
@@ -50,7 +51,7 @@
           </div>
         </div>
         </div>
-        <div class="one wide column"></div>
+      <!--  <div class="one wide column"></div>-->
       </div>
       <div class="row">
         <h1 class="ui huge header">
