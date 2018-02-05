@@ -2,6 +2,73 @@ body {
         display: relative;
       }
 
+      .admin-banner{
+        display: flex;
+        justify-content: center;
+        margin-bottom: -14px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+      }
+
+      .top-margin{
+        margin-top: 100px;
+      }
+
+      .tierion-color{
+        margin-top: 31px;
+        margin-right: 5px;
+        width: 10px;
+        height:   10px;
+        background: #e43777;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+      }
+
+      .menu-left {
+      margin-right: 35px;
+      }
+
+      .cards-div{
+        padding-left: 46px;
+      }
+
+      .card-header{
+        margin-top: -20px !important;
+        float: left;
+        padding-left: 40px;
+      }
+
+      .card-24-change{
+        margin-top: 12px;
+        float: left;
+        margin-left: -63px;
+      }
+
+      .card-price{
+        float: right;
+        margin-top: -9px !important;
+        font-size: 17 !important;
+      }
+
+      .grey-text{
+        color: rgba(0,0,0,.4);
+      }
+
+      .main-price{
+        margin-top: -2px;
+        margin-bottom: -2px;
+      }
+
+      .portfolio-color {
+        width: 18px;
+        height: 18px;
+        background: #81AE9D;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+      }
+
       .color1 {
         width: 18px;
         height: 18px;
