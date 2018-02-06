@@ -161,23 +161,17 @@ export class SharablePortfolioComponent implements OnInit {
       }
 
       public addCoin(form: any): void {
-
-        this.cardsContent = [];
-        this.totalPortfolioValue = 0;
-
-            this.mongoDbService.addCoin(form).subscribe(result=>{
-              console.log("Get User Coin Data about to be called");
-              this.getUserCoinData();
-            });
-      //  })
+        this.mongoDbService.addCoin(form).subscribe(result=>{
+          this.cardsContent = [];
+          this.totalPortfolioValue = 0;
+          this.getUserCoinData();
+        });
       }
 
       public deleteCoin(form: any): void {
-        this.cardsContent = [];
-        this.totalPortfolioValue = 0;
-
         this.mongoDbService.deleteCoin(form).subscribe(result=>{
-          console.log("result of add coin from mongo db service");
+          this.cardsContent = [];
+          this.totalPortfolioValue = 0;
           this.getUserCoinData();
         });
       }
