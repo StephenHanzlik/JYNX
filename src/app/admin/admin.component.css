@@ -15,17 +15,30 @@ body {
       }
 
       .edit-buttons{
-        width: 25px;
-        height: 25px;
+        /* width: 10px;
+        height: 10px;
         text-align: center;
-        margin-top: 21px;
+        margin-top: 21px; */
+        /* //padding: 5px; */
+        /* height: 10px !important */
+        margin-top: 18px;
+        margin-left: -14px;
+        height: 34px;
+      }
+
+      .float-button-text{
+        padding-left: 10px !important;
+      }
+
+      .edit-icon{
+        /* button tag has style in tag */
       }
 
       .tierion-color{
         margin-top: 31px;
         margin-right: 5px;
         width: 10px;
-        height:   10px;
+        height: 10px;
         background: #e43777;
         -moz-border-radius: 50px;
         -webkit-border-radius: 50px;
