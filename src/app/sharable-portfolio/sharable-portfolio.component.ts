@@ -94,7 +94,7 @@ export class SharablePortfolioComponent implements OnInit {
                    coinTicker: key,
                    coinName: allCoinData[key].CoinName,
                    coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
-                   coin24: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
+                   coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                   }
                   if(iterable < colorsArray.length)
                     iterable++;
