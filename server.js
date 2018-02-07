@@ -15,6 +15,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+setInterval(function(){
+  console.log('hi');
+}, 3000);
+
 const authorize = function(req, res, next) {
   if (req.cookies) {
     const token = req.cookies.token;
