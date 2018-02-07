@@ -12,11 +12,11 @@ export interface IContext {
 }
 
 @Component({
-  selector: 'app-sharable-portfolio',
-  templateUrl: './sharable-portfolio.component.html',
-  styleUrls: ['./sharable-portfolio.component.css']
+  selector: 'app-admin',
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.css']
 })
-export class SharablePortfolioComponent implements OnInit {
+export class AdminComponent implements OnInit {
       @ViewChild('modalAddTemplate')
       public modalAddTemplate:ModalTemplate<IContext, string, string>
       @ViewChild('modalDeleteTemplate')
@@ -78,57 +78,73 @@ export class SharablePortfolioComponent implements OnInit {
               aggregateTotalsObj[coins[l]] = coinAmts[l];
           }
 
-          this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
-              apiData = JSON.parse(result._body);
-              apiData = apiData.RAW;
-              let keys: Array<string> = [];
-              let allCoinData: object = ALLCOINDATA[0];
-              let iterable: number = 0;
-              if(apiData)
-                keys = Object.keys(apiData);
-              else
-                return;
-              keys.forEach(key=> {
-                let coinToAdd = {
-                   coinColor: colorsArray[iterable],
-                   coinColorName: colorNamesArray[iterable],
-                   coinTicker: key,
-                   coinName: allCoinData[key].CoinName,
-                   coinPrice: this.addCommas(parseInt(apiData[key]['USD']['PRICE'], 10) * aggregateTotalsObj[key]),
-                   coin24Percent: Math.round( parseInt(apiData[key]['USD']['CHANGEPCT24HOUR'], 10) * 100)/100,
-                   coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10)
-                  }
-                  if(iterable < colorsArray.length)
-                    iterable++;
-                  else
-                    iterable = 0;
+          if(coins.length > 0){
+            this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
+                apiData = JSON.parse(result._body);
+                apiData = apiData.RAW;
+                let keys: Array<string> = [];
+                let allCoinData: object = ALLCOINDATA[0];
+                let iterable: number = 0;
+                if(apiData)
+                  keys = Object.keys(apiData);
+                else
+                  return;
+                keys.forEach(key=> {
+                  console.log("Key");
+                  console.log(key);
+                  console.log("apiData[key]['USD']['CHANGEPCT24HOUR']");
+                  console.log(apiData[key]['USD']['CHANGEPCT24HOUR']);
+                  let coinToAdd = {
+                     coinColor: colorsArray[iterable],
+                     coinColorName: colorNamesArray[iterable],
+                     coinTicker: key,
+                     coinName: allCoinData[key].CoinName,
+                     coinPrice: this.addCommas(parseInt(apiData[key]['USD']['PRICE'], 10) * aggregateTotalsObj[key]),
+                     coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
+                     coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10)
+                    }
 
-                  this.cardsContent.push(coinToAdd);
+                    if(iterable < colorsArray.length)
+                      iterable++;
+                    else
+                      iterable = 0;
 
-                  this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
+                    this.cardsContent.push(coinToAdd);
 
-                  this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * aggregateTotalsObj[key];
-              })
-              
-              let change: number = this.totalPortfolioValue24hr - this.totalPortfolioValue;
+                    this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
 
-              let percChange: any = (change / this.totalPortfolioValue) *
-               100;
+                    this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * aggregateTotalsObj[key];
+                })
 
-              percChange = percChange.toString();
+                let change: number = this.totalPortfolioValue24hr - this.totalPortfolioValue;
 
-              this.totalPortfolioValue24hr = Math.round(percChange * 100)/100;
+                let percChange: any = (change / this.totalPortfolioValue) *
+                 100;
 
-              this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
-          })
+                percChange = percChange.toString();
+
+                this.totalPortfolioValue24hr = Math.round(percChange * 100)/100;
+
+                this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
+            })
+          }
+
+
         });
       }
 
+      private getHistoricalPorfolioPrice(): void {
+        //need a function to pass through coins tickers
+      }
+
       public chartCardData(cardTicker: string, cardColor: string): void {
+        console.log("chart card data ran")
         let changedArray = [];
         this.color = cardColor;
         this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
           result = JSON.parse(result._body);
+          console.log("chart card price callback result:");
+          console.log(result._body);
           result.Data.forEach(result=>{
             let dataArray = [];
             dataArray.push(result.time);
@@ -174,17 +190,23 @@ export class SharablePortfolioComponent implements OnInit {
       }
 
       public addCoin(form: any): void {
-        this.mongoDbService.addCoin(form).subscribe(result=>{
-          this.cardsContent = [];
-          this.totalPortfolioValue = 0;
-          this.getUserCoinData();
-        });
+
+        this.cardsContent = [];
+        this.totalPortfolioValue = 0;
+
+            this.mongoDbService.addCoin(form).subscribe(result=>{
+              console.log("Get User Coin Data about to be called");
+              this.getUserCoinData();
+            });
+      //  })
       }
 
       public deleteCoin(form: any): void {
+        this.cardsContent = [];
+        this.totalPortfolioValue = 0;
+
         this.mongoDbService.deleteCoin(form).subscribe(result=>{
-          this.cardsContent = [];
-          this.totalPortfolioValue = 0;
+          console.log("result of add coin from mongo db service");
           this.getUserCoinData();
         });
       }
