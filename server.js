@@ -10,14 +10,33 @@ const cookieParser = require('cookie-parser');
 const apiPortfolio = require('./server/routes/api/portfolio');
 const apiReceipts = require('./server/routes/api/receipts');
 const auth = require('./server/routes/auth');
+const request = require('request-promise');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 setInterval(function(){
-  console.log('hi');
-}, 3000);
+  const options = {
+    method: 'GET',
+    uri: 'ttps://api.coinmarketcap.com/v1/ticker/',
+    // headers: {
+    //   'X-Username': 'stephenhanzlik@gmail.com',
+    //   'X-Api-Key': '/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=',
+    //   'Content-Type': 'application/json'
+    // },
+  };
+
+  request(options)
+    .then(function(response) {
+      console.log("response in interval");
+      console.log(response)
+      // Handle the response
+    })
+    .catch(function(err) {
+      // Deal with the error
+    })
+}, 330000);
 
 const authorize = function(req, res, next) {
   if (req.cookies) {
