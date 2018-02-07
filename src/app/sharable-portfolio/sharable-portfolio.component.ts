@@ -30,6 +30,7 @@ export class SharablePortfolioComponent implements OnInit {
       public cardsContent: any = [];
       public coinsToQuery: any = [];
       public totalPortfolioValue: any = 0;
+      public totalPortfolioValue24hr: any = 0;
       public totalPortfolioPercentageChange: any;
       public portfolioTotalArray: any = [];
       public portfolioName: string = '';
@@ -93,8 +94,9 @@ export class SharablePortfolioComponent implements OnInit {
                    coinColorName: colorNamesArray[iterable],
                    coinTicker: key,
                    coinName: allCoinData[key].CoinName,
-                   coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
-                   coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
+                   coinPrice: this.addCommas(parseInt(apiData[key]['USD']['PRICE'], 10) * aggregateTotalsObj[key]),
+                   coin24Percent: Math.round( parseInt(apiData[key]['USD']['CHANGEPCT24HOUR'], 10) * 100)/100,
+                   coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10)
                   }
                   if(iterable < colorsArray.length)
                     iterable++;
@@ -102,11 +104,22 @@ export class SharablePortfolioComponent implements OnInit {
                     iterable = 0;
 
                   this.cardsContent.push(coinToAdd);
+
                   this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
+
+                  this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * aggregateTotalsObj[key];
               })
+              
+              let change: number = this.totalPortfolioValue24hr - this.totalPortfolioValue;
+
+              let percChange: any = (change / this.totalPortfolioValue) *
+               100;
+
+              percChange = percChange.toString();
+
+              this.totalPortfolioValue24hr = Math.round(percChange * 100)/100;
+
               this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
-              console.log("totalPortfolioValue");
-              console.log(this.totalPortfolioValue);
           })
         });
       }

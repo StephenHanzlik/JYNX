@@ -21,6 +21,14 @@ body {
       margin-right: 35px;
       }
 
+      .green-text{
+        color: green !important;
+      }
+
+      .red-text{
+        color: red !important;
+      }
+
       .cards-div{
         padding-left: 46px;
       }
