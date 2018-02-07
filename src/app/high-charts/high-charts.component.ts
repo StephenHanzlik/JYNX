@@ -14,16 +14,7 @@ export class HighChartsComponent implements OnInit, OnChanges{
     @Input() color: string;
     @Input() coinTicker: string;
     @Input() chartData: Array<any>;
-    // private chartColor: string = '';
-    //
-    // @Input()
-    // set color(inputColor: string){
-    //   this.chartColor = inputColor;
-    // }
-    //
-    // get color(): string {
-    //   return this.chartColor;
-    // }
+
 
     constructor(private http: Http) {}
 
@@ -42,10 +33,9 @@ export class HighChartsComponent implements OnInit, OnChanges{
     }
 
     private initChart(color: string, data: Array<any>, ticker: string): void {
-     this.http.get('https://cdn.rawgit.com/gevgeny/angular2-highcharts/99c6324d/examples/aapl.json').subscribe(res => {
-          console.log("res");
-          console.log(res.json());
-          console.log("data");
+     // this.http.get('https://cdn.rawgit.com/gevgeny/angular2-highcharts/99c6324d/examples/aapl.json').subscribe(res => {
+
+          console.log("JYNX Data:");
           console.log(data);
             this.options = {
                 title : { text : '' },
@@ -82,7 +72,7 @@ export class HighChartsComponent implements OnInit, OnChanges{
                      },
                 }]
             };
-        });
+      //  });
     }
 
 
