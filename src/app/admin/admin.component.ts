@@ -30,6 +30,7 @@ export class AdminComponent implements OnInit {
       public cardsContent: any = [];
       public coinsToQuery: any = [];
       public totalPortfolioValue: any = 0;
+      public totalPortfolioValue24hr: any = 0;
       public totalPortfolioPercentageChange: any;
       public portfolioTotalArray: any = [];
       public portfolioName: string = '';
@@ -88,6 +89,7 @@ export class AdminComponent implements OnInit {
               else
                 return;
               keys.forEach(key=> {
+
                 let coinToAdd = {
                    coinColor: colorsArray[iterable],
                    coinColorName: colorNamesArray[iterable],
@@ -98,15 +100,30 @@ export class AdminComponent implements OnInit {
                    coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10)
                   }
 
-
                   if(iterable < colorsArray.length)
                     iterable++;
                   else
                     iterable = 0;
 
                   this.cardsContent.push(coinToAdd);
+
                   this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
+
+                  this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * aggregateTotalsObj[key];
               })
+
+              let change: number = this.totalPortfolioValue24hr - this.totalPortfolioValue;
+
+              let percChange: any = (change / this.totalPortfolioValue) *
+               100;
+
+              percChange = percChange.toString();
+
+              console.log("total porftolio change");
+              console.log(Math.round(percChange * 100)/100);
+              console.log(percChange);
+              this.totalPortfolioValue24hr = Math.round(percChange * 100)/100;
+
               this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
               console.log("totalPortfolioValue");
               console.log(this.totalPortfolioValue);

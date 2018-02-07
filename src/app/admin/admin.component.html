@@ -46,7 +46,7 @@
       <div class="three wide column left aligned">
         <h4 class="grey-text sub header">Total Portfolio value</h4>
         <h1 class="ui header main-price">${{totalPortfolioValue}}</h1>
-        <h4 class="sub header">+9.5%</h4>
+        <h4 class="sub header">{{totalPortfolioValue24hr}}</h4>
       </div>
     <div class="eleven wide column">
       <high-chart [color]="color" [chartData]="chartData" [coinTicker]="coinTicker"></high-chart>
@@ -68,7 +68,7 @@
             <div class="content">
               <div class="portfolio-color"></div>
               <div class="header card-header">Total Portfolio</div>
-              <div class="meta card-24-change">+.98%</div>
+              <div class="meta card-24-change">{{totalPortfolioValue24hr}}</div>
               <div class="header card-price">${{totalPortfolioValue}}</div>
             </div>
           </div>
