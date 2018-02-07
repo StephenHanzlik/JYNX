@@ -121,12 +121,6 @@ export class AdminComponent implements OnInit {
 
               this.totalPortfolioValue24hr = Math.round(percChange * 100)/100;
 
-              console.log("totalPortfolioValue24hr");
-              console.log(this.totalPortfolioValue24hr);
-              console.log(this.totalPortfolioValue24hr > 0);
-              console.log(this.totalPortfolioValue24hr < 0);
-              console.log(this.totalPortfolioValue24hr === 0);
-
               this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
           })
         });
