@@ -42,6 +42,6 @@ testem.log
 Thumbs.db
 
 # Node Routes (this has sensitive password information in it);
-/server/routes/auth.js
-/server/routes/api/portfolio.js
-/server/routes/api/receipts.js
+#/server/routes/auth.js
+#/server/routes/api/portfolio.js
+#/server/routes/api/receipts.js
