@@ -17,6 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 setInterval(function(){
+  console.log("interval ran");
+  
   const options = {
     method: 'GET',
     uri: 'ttps://api.coinmarketcap.com/v1/ticker/',
