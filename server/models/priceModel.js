@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const PriceSchema = new Schema({
-  name: "priceData",
+  name: String,
   priceString: String,
 });
 

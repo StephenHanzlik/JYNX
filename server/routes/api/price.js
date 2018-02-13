@@ -14,15 +14,19 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-router.post('/', function(req, res){
-    console.log("reciepts route hit");
-    res.status(200).send("we got it!");
-});
+// router.post('/', function(req, res){
+//     console.log("reciepts route hit");
+//     res.status(200).send("we got it!");
+// });
 
-router.put('/', function(req, res) {
+router.post('/', function(req, res) {
   const bodyObj = {
     priceData: req.body,
   };
+
+  console.log("req.body");
+  console.log(req.body);
+  console.log("req.body triggered");
 
   PriceModel.
   find().
@@ -34,7 +38,7 @@ router.put('/', function(req, res) {
     if (err) {
       res.status(500).send(err);
     }
-    console.log(dbPriceString);
+    //console.log(dbPriceString);
 
     const updateDbObject = {
       //new JSON data goes here

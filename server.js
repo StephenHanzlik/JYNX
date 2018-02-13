@@ -11,34 +11,87 @@ const apiPortfolio = require('./server/routes/api/portfolio');
 const apiReceipts = require('./server/routes/api/receipts');
 const auth = require('./server/routes/auth');
 const request = require('request-promise');
+const mongoose = require('mongoose');
+const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
+const PriceModel = require('./server/models/priceModel');
+
+mongoose.connect(mongoDB, {
+  useMongoClient: true
+});
+
+mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// const priceData = {
+//   name: "priceData",
+//   priceString: "update JSON here"
+// }
+
+// const newPrice = new PriceModel(priceData);
+//
+// newPrice.save(function(err) {
+//
+// })
+
 setInterval(function(){
   console.log("interval ran");
-  
+
   const options = {
     method: 'GET',
-    uri: 'ttps://api.coinmarketcap.com/v1/ticker/',
-    // headers: {
-    //   'X-Username': 'stephenhanzlik@gmail.com',
-    //   'X-Api-Key': '/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=',
-    //   'Content-Type': 'application/json'
-    // },
+    uri: 'https://api.coinmarketcap.com/v1/ticker/?limit=200',
   };
 
-  request(options)
-    .then(function(response) {
-      console.log("response in interval");
-      console.log(response)
-      // Handle the response
-    })
-    .catch(function(err) {
-      // Deal with the error
-    })
-}, 330000);
+  // request(options)
+  //   .then(function(response) {
+  let response = "dinky45683";
+
+      const updateObj = {
+        priceString: response
+      };
+
+      PriceModel.
+      find().
+      where('name').
+      equals('priceData').
+      limit(1).
+      select('priceString').
+      exec(function(err, dbPriceString) {
+
+        console.log("dbPriceString");
+        console.log(dbPriceString);
+
+        if (err) {
+          res.status(500).send(err);
+        }
+
+        PriceModel.findOneAndUpdate({ name: 'priceData' }, updateObj, function(err, user) {
+
+          console.log("user");
+          console.log(user);
+          if (err) {
+            throw err;
+          }
+          else {
+            console.log("db updated");
+          }
+
+
+        });
+
+
+      });
+  //  })
+    // .catch(function(err) {
+    //   // Deal with the error
+    // });
+
+}, 5000);
+//330000
 
 const authorize = function(req, res, next) {
   if (req.cookies) {
