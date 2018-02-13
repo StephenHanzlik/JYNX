@@ -72,7 +72,6 @@ export class SharablePortfolioComponent implements OnInit {
       let coinAmts: Array<number> = result['coinAmts'];
       let coins: Array<string> = result['coins'];
       this.portfolioName = result['portfolioName'];
-      console.log("this.portfolioName: " + this.portfolioName);
       for (let l = 0; l < coins.length; l++) {
         if(aggregateTotalsObj[coins[l]])
           aggregateTotalsObj[coins[l]] = aggregateTotalsObj[coins[l]] + coinAmts[l];
@@ -81,6 +80,14 @@ export class SharablePortfolioComponent implements OnInit {
       }
 
       if(coins.length > 0){
+
+        this.jynxPriceService.getPrices().subscribe(result =>{
+          console.log("jynx price in sharable component");
+          console.log(JSON.stringify(result));
+        });
+
+
+
         this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
             apiData = JSON.parse(result._body);
             apiData = apiData.RAW;
@@ -92,10 +99,10 @@ export class SharablePortfolioComponent implements OnInit {
             else
               return;
             keys.forEach(key=> {
-              console.log("Key");
-              console.log(key);
-              console.log("apiData[key]['USD']['CHANGEPCT24HOUR']");
-              console.log(apiData[key]['USD']['CHANGEPCT24HOUR']);
+              // console.log("Key");
+              // console.log(key);
+              // console.log("apiData[key]['USD']['CHANGEPCT24HOUR']");
+              // console.log(apiData[key]['USD']['CHANGEPCT24HOUR']);
               let coinToAdd = {
                  coinColor: colorsArray[iterable],
                  coinColorName: colorNamesArray[iterable],
@@ -140,13 +147,13 @@ export class SharablePortfolioComponent implements OnInit {
   }
 
   public chartCardData(cardTicker: string, cardColor: string): void {
-    console.log("chart card data ran")
+    // console.log("chart card data ran")
     let changedArray = [];
     this.color = cardColor;
     this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
       result = JSON.parse(result._body);
-      console.log("chart card price callback result:");
-      console.log(result._body);
+      // console.log("chart card price callback result:");
+      // console.log(result._body);
       result.Data.forEach(result=>{
         let dataArray = [];
         dataArray.push(result.time);
@@ -197,7 +204,7 @@ export class SharablePortfolioComponent implements OnInit {
     this.totalPortfolioValue = 0;
 
         this.mongoDbService.addCoin(form).subscribe(result=>{
-          console.log("Get User Coin Data about to be called");
+          //console.log("Get User Coin Data about to be called");
           this.getUserCoinData();
         });
   //  })
@@ -208,7 +215,7 @@ export class SharablePortfolioComponent implements OnInit {
     this.totalPortfolioValue = 0;
 
     this.mongoDbService.deleteCoin(form).subscribe(result=>{
-      console.log("result of add coin from mongo db service");
+    //  console.log("result of add coin from mongo db service");
       this.getUserCoinData();
     });
   }
