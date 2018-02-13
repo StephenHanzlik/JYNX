@@ -27,6 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+//use this to create price data entry in Db if Db is deleted
 // const priceData = {
 //   name: "priceData",
 //   priceString: "update JSON here"
@@ -39,7 +40,6 @@ app.use(cookieParser());
 // })
 
 setInterval(function(){
-  console.log("interval ran");
 
   const options = {
     method: 'GET',
@@ -60,28 +60,20 @@ setInterval(function(){
       limit(1).
       select('priceString').
       exec(function(err, dbPriceString) {
-
-        console.log("dbPriceString");
-        console.log(dbPriceString);
-
         if (err) {
           res.status(500).send(err);
         }
-
         PriceModel.findOneAndUpdate({ name: 'priceData' }, updateObj, function(err, user) {
           if (err) {
             throw err;
           }
-
         });
-
-
       });
+      
    })
     .catch(function(err) {
       // Deal with the error
     });
-
 }, 330000);
 
 
