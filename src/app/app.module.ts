@@ -19,6 +19,7 @@ import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 import * as highcharts from 'highcharts/highstock';
 import { SharablePortfolioComponent } from './sharable-portfolio/sharable-portfolio.component';
 import { AdminComponent } from './admin/admin.component';
+import { JynxPriceService } from './services/jynx-price/jynx-price.service';
 
 export function highchartsFactory() {
   return highcharts;
@@ -43,7 +44,7 @@ export function highchartsFactory() {
     AppRoutingModule,
     ChartModule
   ],
-  providers: [CryptoCompareService, TierionService, AuthService, MongoDbService, {provide: HighchartsStatic, useFactory: highchartsFactory}],
+  providers: [CryptoCompareService, TierionService, AuthService, JynxPriceService, MongoDbService, {provide: HighchartsStatic, useFactory: highchartsFactory}],
   bootstrap: [AppComponent, HighChartsComponent]
 })
 

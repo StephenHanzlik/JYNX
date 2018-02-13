@@ -9,11 +9,74 @@ const privateKey = 'xt67rhdk30_cookie_signing_key_1las01103ksd';
 const cookieParser = require('cookie-parser');
 const apiPortfolio = require('./server/routes/api/portfolio');
 const apiReceipts = require('./server/routes/api/receipts');
+const apiPrice = require('./server/routes/api/price');
 const auth = require('./server/routes/auth');
+const request = require('request-promise');
+const mongoose = require('mongoose');
+const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
+const PriceModel = require('./server/models/priceModel');
+
+mongoose.connect(mongoDB, {
+  useMongoClient: true
+});
+
+mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+//use this to create price data entry in Db if Db is deleted
+// const priceData = {
+//   name: "priceData",
+//   priceString: "update JSON here"
+// }
+
+// const newPrice = new PriceModel(priceData);
+//
+// newPrice.save(function(err) {
+//
+// })
+
+setInterval(function(){
+
+  const options = {
+    method: 'GET',
+    uri: 'https://api.coinmarketcap.com/v1/ticker/?limit=0',
+  };
+
+  request(options)
+    .then(function(response) {
+
+      const updateObj = {
+        priceString: response
+      };
+
+      PriceModel.
+      find().
+      where('name').
+      equals('priceData').
+      limit(1).
+      select('priceString').
+      exec(function(err, dbPriceString) {
+        if (err) {
+          res.status(500).send(err);
+        }
+        PriceModel.findOneAndUpdate({ name: 'priceData' }, updateObj, function(err, user) {
+          if (err) {
+            throw err;
+          }
+        });
+      });
+
+   })
+    .catch(function(err) {
+      // Deal with the error
+    });
+}, 330000);
+
 
 const authorize = function(req, res, next) {
   if (req.cookies) {
@@ -46,6 +109,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/auth', auth);
 app.use('/api/portfolio', authorize, apiPortfolio);
 app.use('/api/receipts', authorizeReceipts, apiReceipts);
+app.use('/api/price', apiPrice);
 
 
 // Send all other requests to the Angular app

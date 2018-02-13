@@ -14,15 +14,8 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-router.post('/', function(req, res){
-    console.log("reciepts route hit");
-    res.status(200).send("we got it!");
-});
 
-router.put('/', function(req, res) {
-  const bodyObj = {
-    priceData: req.body,
-  };
+router.get('/', function(req, res){
 
   PriceModel.
   find().
@@ -34,7 +27,6 @@ router.put('/', function(req, res) {
     if (err) {
       res.status(500).send(err);
     }
-    console.log(dbPriceString);
 
     const updateDbObject = {
       //new JSON data goes here
@@ -48,8 +40,46 @@ router.put('/', function(req, res) {
       if (err) throw err;
 
     });
-    res.status(200).send("ok");
-  });
+
+    res.status(200).send(JSON.parse(dbPriceString[0].priceString));
+  })
 });
+
+// router.post('/', function(req, res) {
+//   const bodyObj = {
+//     priceData: req.body,
+//   };
+//
+//   console.log("req.body");
+//   console.log(req.body);
+//   console.log("req.body triggered");
+//
+//   PriceModel.
+//   find().
+//   where('name').
+//   equals('priceData').
+//   limit(1).
+//   select('priceString').
+//   exec(function(err, dbPriceString) {
+//     if (err) {
+//       res.status(500).send(err);
+//     }
+//     //console.log(dbPriceString);
+//
+//     const updateDbObject = {
+//       //new JSON data goes here
+//
+//       //coinAmts: newAmountsArr,
+//       //coins: newCoinsArr,
+//       //datastoreId: 5840
+//     };
+//
+//     PriceModel.findOneAndUpdate({ name: 'priceData' }, updateDbObject, function(err, user) {
+//       if (err) throw err;
+//
+//     });
+//     res.status(200).send("ok");
+//   });
+// });
 
 module.exports = router;
