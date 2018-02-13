@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {SuiModalService, TemplateModalConfig, ModalTemplate, IPopup} from 'ng2-semantic-ui';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { CryptoCompareService } from "../services/crypto-compare/crypto-compare.service";
+import { JynxPriceService } from "../services/jynx-price/jynx-price.service";
 import { MongoDbService } from "../services/mongo-db/mongo-db.service";
 import { ALLCOINDATA } from "../static-data/all-coin-data";
 import { COINOBJECTS } from "../static-data/coin-objects";
@@ -42,7 +43,8 @@ export class SharablePortfolioComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private modalService:SuiModalService,
               private mongoDbService:MongoDbService,
-              private cryptoCompareService: CryptoCompareService) {
+              private cryptoCompareService: CryptoCompareService,
+              private jynxPriceService: JynxPriceService) {
     this.newCoinForm = fb.group({
         "coinName": ['BTC', Validators.required],
         "coinAmt": ['', Validators.required]
