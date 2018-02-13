@@ -46,9 +46,8 @@ setInterval(function(){
     uri: 'https://api.coinmarketcap.com/v1/ticker/?limit=200',
   };
 
-  // request(options)
-  //   .then(function(response) {
-  let response = "dinky45683";
+  request(options)
+    .then(function(response) {
 
       const updateObj = {
         priceString: response
@@ -70,28 +69,21 @@ setInterval(function(){
         }
 
         PriceModel.findOneAndUpdate({ name: 'priceData' }, updateObj, function(err, user) {
-
-          console.log("user");
-          console.log(user);
           if (err) {
             throw err;
           }
-          else {
-            console.log("db updated");
-          }
-
 
         });
 
 
       });
-  //  })
-    // .catch(function(err) {
-    //   // Deal with the error
-    // });
+   })
+    .catch(function(err) {
+      // Deal with the error
+    });
 
-}, 5000);
-//330000
+}, 330000);
+
 
 const authorize = function(req, res, next) {
   if (req.cookies) {
