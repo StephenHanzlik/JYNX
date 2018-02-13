@@ -44,7 +44,7 @@ setInterval(function(){
 
   const options = {
     method: 'GET',
-    uri: 'https://api.coinmarketcap.com/v1/ticker/?limit=200',
+    uri: 'https://api.coinmarketcap.com/v1/ticker/?limit=0',
   };
 
   request(options)
