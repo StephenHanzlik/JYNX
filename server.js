@@ -9,6 +9,7 @@ const privateKey = 'xt67rhdk30_cookie_signing_key_1las01103ksd';
 const cookieParser = require('cookie-parser');
 const apiPortfolio = require('./server/routes/api/portfolio');
 const apiReceipts = require('./server/routes/api/receipts');
+const apiPrice = require('./server/routes/api/price');
 const auth = require('./server/routes/auth');
 const request = require('request-promise');
 const mongoose = require('mongoose');
@@ -69,7 +70,7 @@ setInterval(function(){
           }
         });
       });
-      
+
    })
     .catch(function(err) {
       // Deal with the error
@@ -108,6 +109,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/auth', auth);
 app.use('/api/portfolio', authorize, apiPortfolio);
 app.use('/api/receipts', authorizeReceipts, apiReceipts);
+app.use('/api/price', apiPrice);
 
 
 // Send all other requests to the Angular app

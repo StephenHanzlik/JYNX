@@ -19,6 +19,26 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 //     res.status(200).send("we got it!");
 // });
 
+router.get('/', function(req, res){
+  PriceModel.
+  find().
+  where('name').
+  equals('priceData').
+  limit(1).
+  select('priceString').
+  exec(function(err, dbPriceString) {
+    if (err) {
+      res.status(500).send(err);
+    }
+
+  //  console.log("dbPriceString");
+    //console.log(JSON.parse(dbPriceString[0].priceString));
+    //console.log("dbPriceString end");
+
+    res.status(200).send(JSON.parse(dbPriceString[0].priceString));
+  })
+});
+
 router.post('/', function(req, res) {
   const bodyObj = {
     priceData: req.body,
