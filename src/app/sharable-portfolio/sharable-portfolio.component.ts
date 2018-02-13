@@ -83,7 +83,7 @@ export class SharablePortfolioComponent implements OnInit {
 
         this.jynxPriceService.getPrices().subscribe(result =>{
           console.log("jynx price in sharable component");
-          console.log(JSON.stringify(result._body[0].id));
+          console.log(JSON.stringify(result._body));
         });
 
 
