@@ -16,6 +16,13 @@ const mongoose = require('mongoose');
 const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
 const PriceModel = require('./server/models/priceModel');
 
+//use to prevent cors issues for development
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 mongoose.connect(mongoDB, {
   useMongoClient: true
 });
