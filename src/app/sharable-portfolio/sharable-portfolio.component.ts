@@ -83,10 +83,6 @@ export class SharablePortfolioComponent implements OnInit {
 
         this.jynxPriceService.getPrices().subscribe(result =>{
           apiData = JSON.parse(result._body);
-          // console.log("apiData");
-          // console.log(apiData);
-          // console.log("object keys");
-          // console.log(Object.keys(aggregateTotalsObj));
           let portfolioKeys: Array<any> = [];
           let allCoinData: object = ALLCOINDATA[0];
           let iterable: number = 0;
@@ -97,19 +93,18 @@ export class SharablePortfolioComponent implements OnInit {
 
           apiData.forEach(key=>{
             for(let t = 0; t < portfolioKeys.length; t++){
-              //console.log(portfolioKeys[t]);
-              //console.log(key.symbol);
+
               if(portfolioKeys[t] === key.symbol){
                 console.log("portfolioKeys[t] === key");
                 console.log(portfolioKeys[t]);
-                console.log(key.symbol);
+                console.log(key);
                 let coinToAdd = {
                    coinColor: colorsArray[iterable],
                    coinColorName: colorNamesArray[iterable],
-                   coinTicker: key,
-                   coinName: allCoinData[key].CoinName,
-                   coinPrice: this.addCommas(parseInt(apiData[key]['USD']['PRICE'], 10) * aggregateTotalsObj[key]),
-                   coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
+                   coinTicker: key.symbol,
+                   coinName: key.name,
+                   coinPrice: this.addCommas(parseInt(key.price_usd, 10)),
+                   coin24Percent: Math.round(key.percent_change_24h * 100)/100,
                    coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10)
                   }
 
