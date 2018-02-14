@@ -83,12 +83,31 @@ export class SharablePortfolioComponent implements OnInit {
 
         this.jynxPriceService.getPrices().subscribe(result =>{
           apiData = JSON.parse(result._body);
-          console.log("apidData");
+          console.log("apiData");
           console.log(apiData);
+          console.log("object keys");
+          console.log(Object.keys(aggregateTotalsObj));
+          let keys: Array<string> = [];
+          let allCoinData: object = ALLCOINDATA[0];
+          let iterable: number = 0;
+          if(apiData)
+            keys = Object.keys(aggregateTotalsObj);
+          else
+            return;
+
+          keys.forEach(key=>{
+            let coinToAdd = {
+               coinColor: colorsArray[iterable],
+               coinColorName: colorNamesArray[iterable],
+               coinTicker: key,
+               coinName: allCoinData[key].CoinName,
+               coinPrice: this.addCommas(parseInt(apiData[key]['USD']['PRICE'], 10) * aggregateTotalsObj[key]),
+               coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
+               coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10)
+              }
+          })
 
         });
-
-
 
         this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
             apiData = JSON.parse(result._body);
