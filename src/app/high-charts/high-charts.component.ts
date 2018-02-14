@@ -35,8 +35,8 @@ export class HighChartsComponent implements OnInit, OnChanges{
     private initChart(color: string, data: Array<any>, ticker: string): void {
      // this.http.get('https://cdn.rawgit.com/gevgeny/angular2-highcharts/99c6324d/examples/aapl.json').subscribe(res => {
 
-          console.log("JYNX Data:");
-          console.log(data);
+          // console.log("JYNX Data:");
+          // console.log(data);
             this.options = {
                 title : { text : '' },
                 chart: {type: 'area'},
