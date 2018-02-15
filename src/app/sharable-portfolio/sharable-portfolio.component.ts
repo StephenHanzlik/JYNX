@@ -39,6 +39,7 @@ export class SharablePortfolioComponent implements OnInit {
   color = "#36DBA3";
   coinTicker = "Total";
   chartData = [];
+  pointStart = 1234;
 
   constructor(private fb: FormBuilder,
               private modalService:SuiModalService,

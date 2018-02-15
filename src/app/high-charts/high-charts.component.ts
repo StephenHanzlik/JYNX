@@ -14,12 +14,12 @@ export class HighChartsComponent implements OnInit, OnChanges{
     @Input() color: string;
     @Input() coinTicker: string;
     @Input() chartData: Array<any>;
-
+    @Input() pointStart: number;
 
     constructor(private http: Http) {}
 
     ngOnInit(){
-      this.initChart("#36DBA3", [], this.coinTicker);
+      this.initChart("#36DBA3", [], this.coinTicker, this.pointStart);
     }
 
     ngOnChanges(changes: SimpleChanges){
@@ -29,10 +29,10 @@ export class HighChartsComponent implements OnInit, OnChanges{
         this.chartData = changes.chartData.currentValue;
       if(changes.coinTicker)
         this.coinTicker = changes.coinTicker.currentValue;
-      this.initChart(this.color, this.chartData, this.coinTicker);
+      this.initChart(this.color, this.chartData, this.coinTicker, this.pointStart);
     }
 
-    private initChart(color: string, data: Array<any>, ticker: string): void {
+    private initChart(color: string, data: Array<any>, ticker: string, pointStart: number): void {
      // this.http.get('https://cdn.rawgit.com/gevgeny/angular2-highcharts/99c6324d/examples/aapl.json').subscribe(res => {
 
           let index: number = 0;
@@ -57,7 +57,7 @@ export class HighChartsComponent implements OnInit, OnChanges{
                 },
                 plotOptions: {
                      area: {
-                         pointStart: 1940,
+                         pointStart: pointStart,
                          marker: {
                              enabled: false,
                              symbol: 'circle',
