@@ -35,17 +35,26 @@ export class HighChartsComponent implements OnInit, OnChanges{
     private initChart(color: string, data: Array<any>, ticker: string): void {
      // this.http.get('https://cdn.rawgit.com/gevgeny/angular2-highcharts/99c6324d/examples/aapl.json').subscribe(res => {
 
-          // console.log("JYNX Data:");
-          // console.log(data);
+          let index: number = 0;
+          index = data.length - 1;
+
+          let decimal: number = 2;
+          if(data[index][1] <= 1){
+            decimal = 4;
+          }
+
+          console.log("decimal");
+          console.log(decimal);
+
             this.options = {
                 title : { text : '' },
                 chart: {type: 'area'},
-                // xAxis: {
-                //     type: 'datetime',
-                //     dateTimeLabelFormats: {
-                //         day: '%e of %b'
-                //     }
-                // },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        day: '%e of %b'
+                    }
+                },
                 plotOptions: {
                      area: {
                          pointStart: 1940,
@@ -67,7 +76,7 @@ export class HighChartsComponent implements OnInit, OnChanges{
                     color: color,
                     tooltip: {
                          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
-                         valueDecimals: 2,
+                         valueDecimals: decimal,
                          split: true
                      },
                 }]
