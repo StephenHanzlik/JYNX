@@ -81,51 +81,54 @@ export class SharablePortfolioComponent implements OnInit {
 
       if(coins.length > 0){
 
-        this.jynxPriceService.getPrices().subscribe(result =>{
-          apiData = JSON.parse(result._body);
-          let portfolioKeys: Array<any> = [];
-          let allCoinData: object = ALLCOINDATA[0];
-          let iterable: number = 0;
-          if(apiData)
-            portfolioKeys = Object.keys(aggregateTotalsObj);
-          else
-            return;
-
-          apiData.forEach(key=>{
-            for(let t = 0; t < portfolioKeys.length; t++){
-
-              if(portfolioKeys[t] === key.symbol){
-                console.log("portfolioKeys[t] === key");
-                console.log(portfolioKeys[t]);
-                console.log(key);
-                let coinToAdd = {
-                   coinColor: colorsArray[iterable],
-                   coinColorName: colorNamesArray[iterable],
-                   coinTicker: key.symbol,
-                   coinName: key.name,
-                   coinPrice: this.addCommas(parseInt(key.price_usd, 10)),
-                   coin24Percent: Math.round(key.percent_change_24h * 100)/100,
-                   coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10)
-                  }
-
-                  if(iterable < colorsArray.length)
-                    iterable++;
-                  else
-                    iterable = 0;
-
-                  this.cardsContent.push(coinToAdd);
-
-                  this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
-
-                  this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * aggregateTotalsObj[key];
-              }
-
-            }
-
-
-          })
-
-        });
+        // this.jynxPriceService.getPrices().subscribe(result =>{
+        //   apiData = JSON.parse(result._body);
+        //   let portfolioKeys: Array<any> = [];
+        //   let allCoinData: object = ALLCOINDATA[0];
+        //   let iterable: number = 0;
+        //   if(apiData)
+        //     portfolioKeys = Object.keys(aggregateTotalsObj);
+        //   else
+        //     return;
+        //
+        //   apiData.forEach(key=>{
+        //     for(let t = 0; t < portfolioKeys.length; t++){
+        //
+        //       if(portfolioKeys[t] === key.symbol){
+        //         console.log(key);
+        //         let coinToAdd = {
+        //            coinColor: colorsArray[iterable],
+        //            coinColorName: colorNamesArray[iterable],
+        //            coinTicker: key.symbol,
+        //            coinName: key.name,
+        //            coinPrice: this.addCommas(parseInt(key.price_usd, 10)),
+        //            coin24Percent: Math.round(key.percent_change_24h * 100)/100,
+        //           // coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10)
+        //           }
+        //
+        //         this.cryptoCompareService.getSinglePrice(coinToAdd.coinTicker).subscribe(result=>{
+        //             console.log("cryptocompare result");
+        //             console.log(result);
+        //         });
+        //
+        //           if(iterable < colorsArray.length)
+        //             iterable++;
+        //           else
+        //             iterable = 0;
+        //
+        //           this.cardsContent.push(coinToAdd);
+        //
+        //           // this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
+        //           //
+        //           // this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * aggregateTotalsObj[key];
+        //       }
+        //
+        //     }
+        //
+        //
+        //   })
+        //
+        // });
 
         this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
             apiData = JSON.parse(result._body);
@@ -138,10 +141,6 @@ export class SharablePortfolioComponent implements OnInit {
             else
               return;
             keys.forEach(key=> {
-              // console.log("Key");
-              // console.log(key);
-              // console.log("apiData[key]['USD']['CHANGEPCT24HOUR']");
-              // console.log(apiData[key]['USD']['CHANGEPCT24HOUR']);
               let coinToAdd = {
                  coinColor: colorsArray[iterable],
                  coinColorName: colorNamesArray[iterable],
@@ -191,8 +190,8 @@ export class SharablePortfolioComponent implements OnInit {
     this.color = cardColor;
     this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
       result = JSON.parse(result._body);
-      // console.log("chart card price callback result:");
-      // console.log(result._body);
+      console.log("api data w/ 2000 and getALL")
+      console.log(result.Data);
       result.Data.forEach(result=>{
         let dataArray = [];
         dataArray.push(result.time);
