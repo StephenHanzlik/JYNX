@@ -196,12 +196,13 @@ export class SharablePortfolioComponent implements OnInit {
       result.Data.forEach(result=>{
         let dataArray = [];
         if(result.close > 0 && result.open > 0){
-          dataArray.push(result.time);
+          dataArray.push(result.time * 1000);
           dataArray.push(result.close);
           changedArray.push(dataArray);
         }
       });
       this.chartData = changedArray;
+      this.pointStart = result.Data[0].time * 1000;
       this.coinTicker = cardTicker;
     });
   }
