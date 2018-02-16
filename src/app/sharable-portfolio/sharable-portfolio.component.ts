@@ -93,6 +93,8 @@ export class SharablePortfolioComponent implements OnInit {
               keys = Object.keys(apiData);
             else
               return;
+            let index = 0;
+
             keys.forEach(key=> {
               let coinToAdd = {
                  coinColor: colorsArray[iterable],
@@ -116,7 +118,53 @@ export class SharablePortfolioComponent implements OnInit {
                 this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
 
                 this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * aggregateTotalsObj[key];
-            })
+
+                //totol profolio price data
+                index++
+                let that = this;
+                setTimeout(function(){
+                  that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
+                      if(result._body){
+                        result = JSON.parse(result._body)
+                        // let localHistoricalData: Object = {
+                        //   name: key,
+                        //   data: result.Data
+                        // };
+                        that.masterPortfolioDataArray.push(result.Data);
+
+                        //aggregateTotalsObj[key]
+
+                        if(that.masterPortfolioDataArray.length >= keys.length){
+                          let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
+                          let masterPortGraphObject: any = []
+                          let masterPortGraphData: any = {};
+
+                          flatArray.forEach(masterEntry=>{
+                            if(!masterPortGraphData[masterEntry.time]){
+                              let newNumb: number = masterEntry.close * aggregateTotalsObj[key];
+
+                              masterPortGraphData[masterEntry.time] = {
+                                 data: [masterEntry.time, Math.round(newNumb * 100)/100]
+                               };
+                            }
+                            else if(masterPortGraphData[masterEntry.time]){
+                                Math.round(masterPortGraphData[masterEntry.time].data[1] + masterEntry.close * aggregateTotalsObj[key] * 100)/100
+
+                            }
+
+                          })
+                          console.log("flat array");
+                          console.log(flatArray);
+                          masterPortGraphObject.push(masterPortGraphData);
+                          console.log("masterPortGraphObject");
+                          console.log(masterPortGraphObject);
+                        }
+                      }
+                  });
+                }, 375 * index);
+
+
+            })// end of for each
 
             let change: number = this.totalPortfolioValue24hr - this.totalPortfolioValue;
 
@@ -131,42 +179,42 @@ export class SharablePortfolioComponent implements OnInit {
 
 
             //get historical profile
-            let index = 0;
-            keys.forEach(key=>{
-              index++
-              let that = this;
-              setTimeout(function(){
-                that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
-                    if(result._body){
-                      result = JSON.parse(result._body)
-                      // let localHistoricalData: Object = {
-                      //   name: key,
-                      //   data: result.Data
-                      // };
-                      that.masterPortfolioDataArray.push(result.Data);
-
-                      //aggregateTotalsObj[key]
-
-                      if(that.masterPortfolioDataArray.length >= keys.length){
-                        let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
-                        //let masterPortGraphObject: any = []
-                        let masterPortGraphData: any = {};
-
-                        flatArray.forEach(masterEntry=>{
-                          if(!masterPortGraphData[masterEntry.time]){
-                            masterPortGraphData[masterEntry.time] = {
-                               data: [masterEntry.time, masterEntry.close]
-                             };
-                          }
-                          else if(masterPortGraphData[masterEntry.time]){
-                              masterPortGraphData[masterEntry.time].data[1] + masterEntry.close
-                          }
-                        })
-                      }
-                    }
-                });
-              }, 375 * index);
-
+          //  let index = 0;
+          //  keys.forEach(key=>{
+              // index++
+              // let that = this;
+              // setTimeout(function(){
+              //   that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
+              //       if(result._body){
+              //         result = JSON.parse(result._body)
+              //         // let localHistoricalData: Object = {
+              //         //   name: key,
+              //         //   data: result.Data
+              //         // };
+              //         that.masterPortfolioDataArray.push(result.Data);
+              //
+              //         //aggregateTotalsObj[key]
+              //
+              //         if(that.masterPortfolioDataArray.length >= keys.length){
+              //           let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
+              //           //let masterPortGraphObject: any = []
+              //           let masterPortGraphData: any = {};
+              //
+              //           flatArray.forEach(masterEntry=>{
+              //             if(!masterPortGraphData[masterEntry.time]){
+              //               masterPortGraphData[masterEntry.time] = {
+              //                  data: [masterEntry.time, masterEntry.close]
+              //                };
+              //             }
+              //             else if(masterPortGraphData[masterEntry.time]){
+              //                 masterPortGraphData[masterEntry.time].data[1] + masterEntry.close
+              //             }
+              //           })
+              //         }
+              //       }
+              //   });
+              // }, 375 * index);
+              //
 
 
 
@@ -186,7 +234,7 @@ export class SharablePortfolioComponent implements OnInit {
               //     this.masterPortfolioDataArray.push(localHistoricalData);
               //   }
               // });
-          });
+        //  });
 
 
         })
