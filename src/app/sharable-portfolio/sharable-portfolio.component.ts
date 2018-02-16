@@ -151,7 +151,7 @@ export class SharablePortfolioComponent implements OnInit {
                  coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
                  coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                  coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10),
-                 coinSelected: false
+                 notSelected: true,
                 }
 
                 if(iterable < colorsArray.length)
@@ -264,10 +264,10 @@ export class SharablePortfolioComponent implements OnInit {
     console.log("cardStyleToggle ran!!!");
     console.log(coin);
 
-    if(this.selected)
-      this.selected = false
-    else if(!this.selected)
-      this.selected = true;
+    if(coin.notSelected)
+      coin.notSelected = false
+    else if(!coin.notSelected)
+      coin.notSelected = true;
   }
 
   // private updateCards(newCoin: any, usdAmt: number): void {
