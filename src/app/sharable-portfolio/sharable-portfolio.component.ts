@@ -7,6 +7,9 @@ import { MongoDbService } from "../services/mongo-db/mongo-db.service";
 import { ALLCOINDATA } from "../static-data/all-coin-data";
 import { COINOBJECTS } from "../static-data/coin-objects";
 
+import { Response, Http } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+
 
 export interface IContext {
     data:string;
@@ -34,6 +37,7 @@ export class SharablePortfolioComponent implements OnInit {
   public totalPortfolioValue24hr: any = 0;
   public totalPortfolioPercentageChange: any;
   public totalPortfolioNotSelected: boolean = false;
+  public masterPortfolioDataArray: Array<any> = [];
   public portfolioTotalArray: any = [];
   public portfolioName: string = '';
   public selected = true;
@@ -46,7 +50,8 @@ export class SharablePortfolioComponent implements OnInit {
               private modalService:SuiModalService,
               private mongoDbService:MongoDbService,
               private cryptoCompareService: CryptoCompareService,
-              private jynxPriceService: JynxPriceService) {
+              private jynxPriceService: JynxPriceService,
+              private http: Http) {
     this.newCoinForm = fb.group({
         "coinName": ['BTC', Validators.required],
         "coinAmt": ['', Validators.required]
@@ -177,6 +182,54 @@ export class SharablePortfolioComponent implements OnInit {
             this.totalPortfolioValue24hr = Math.round(percChange * 100)/100;
 
             this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
+
+
+            //get historical profile
+            let index = 0;
+            keys.forEach(key=>{
+              //let http: Http;
+
+              index++
+              let that = this;
+              setTimeout(function(){
+                // that.http.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${key}&tsym=USD&limit=2000&allData=true`)
+                that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
+                    if(result._body){
+                      result = JSON.parse(result._body)
+                      let localHistoricalData: Object = {
+                        name: key,
+                        data: result.Data
+                      };
+                      that.masterPortfolioDataArray.push(localHistoricalData);
+                      console.log("this.masterPortfolioDataArray");
+                      console.log(that.masterPortfolioDataArray);
+                      console.log(JSON.parse(result._body.Data));
+                    }
+                });
+              }, 350 * index);
+
+
+
+
+
+              // .then(result=>
+              //   console.log("result in local http");
+              //   console.log(result._body);
+              // );
+            //  this.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
+              //   console.log(result._body);
+              //   //&& maybe just do http here not use sevice
+              //   if(result._body){
+              //     let localHistoricalData: Object = {
+              //       name: loopCoin.coinTicker,
+              //       data: result._body
+              //     };
+              //     this.masterPortfolioDataArray.push(localHistoricalData);
+              //   }
+              // });
+          });
+
+
         })
       }
 
@@ -184,8 +237,8 @@ export class SharablePortfolioComponent implements OnInit {
     });
   }
 
-  private getHistoricalPorfolioPrice(): void {
-    //need a function to pass through coins tickers
+  private chartHistoricalPorfolioPrice(): void {
+    console.log("chart getHistoricalPrice ran");
   }
 
   public chartCardData(cardTicker: string, cardColor: string): void {
@@ -245,7 +298,6 @@ export class SharablePortfolioComponent implements OnInit {
     this.totalPortfolioValue = 0;
 
         this.mongoDbService.addCoin(form).subscribe(result=>{
-          //console.log("Get User Coin Data about to be called");
           this.getUserCoinData();
         });
   //  })
@@ -256,7 +308,6 @@ export class SharablePortfolioComponent implements OnInit {
     this.totalPortfolioValue = 0;
 
     this.mongoDbService.deleteCoin(form).subscribe(result=>{
-    //  console.log("result of add coin from mongo db service");
       this.getUserCoinData();
     });
   }
@@ -273,21 +324,44 @@ export class SharablePortfolioComponent implements OnInit {
 
   public totalPortfolioToggle(allCoins: any): void {
     this.totalPortfolioNotSelected = false;
+    //let masterPortfolioDataArray: Array<any> = [];
+    //let index: number = 0;
 
-    allCoins.forEach(loopCoin=>{
+    allCoins.forEach((loopCoin, index)=>{
         loopCoin.notSelected = true;
-    })
-  }
+      });
+      //index++;
+      // let newThis = this;
+      //
+      // setTimeout(function(newThis){
+      //   newThis.cryptoCompareService.getHistoricalPrice(loopCoin.coinTicker).subscribe(result=>{
+      //       let localHistoricalData: Object = {
+      //         name: loopCoin.coinTicker,
+      //         data: loopCoin.result._body
+      //       };
+      //       masterPortfolioDataArray.push(localHistoricalData);
+      //   });
+      // }, index * 5000);
 
-  // private updateCards(newCoin: any, usdAmt: number): void {
-  //     let allCoinData = ALLCOINDATA;
-  //     let newCardData: any = {};
-  //     newCardData.qty = Number.parseInt(newCoin.coinAmt);
-  //     newCardData.asset = allCoinData[0][newCoin.coinName].FullName;
-  //     newCardData.lastPrice = usdAmt;
-  //     newCardData.usdValue = newCardData.lastPrice * newCardData.qty
-  //     this.cardsContent.push(newCardData);
-  // }
+      // this.cryptoCompareService.getHistoricalPrice(loopCoin.coinTicker).subscribe(result=>{
+      //   console.log(result._body);
+      //   //&& maybe just do http here not use sevice
+      //   if(result._body){
+      //     let localHistoricalData: Object = {
+      //       name: loopCoin.coinTicker,
+      //       data: result._body
+      //     };
+      //     this.masterPortfolioDataArray.push(localHistoricalData);
+      //   }
+      // });
+      //
+      // console.log("masterPortfolioDataArray");
+      // console.log(this.masterPortfolioDataArray);
+
+  //  });
+
+
+  }
 
   private getDropDownList(): void {
     this.cryptoDropDownList = COINOBJECTS;
