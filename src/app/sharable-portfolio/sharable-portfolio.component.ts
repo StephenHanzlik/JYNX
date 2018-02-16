@@ -276,8 +276,12 @@ export class SharablePortfolioComponent implements OnInit {
     this.totalPortfolioNotSelected = true;
   }
 
-  public totalPortfolioToggle(): void {
+  public totalPortfolioToggle(allCoins: any): void {
     this.totalPortfolioNotSelected = false;
+
+    allCoins.forEach(loopCoin=>{
+        loopCoin.notSelected = true;
+    })
   }
 
   // private updateCards(newCoin: any, usdAmt: number): void {
