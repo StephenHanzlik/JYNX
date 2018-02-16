@@ -39,7 +39,6 @@ export class SharablePortfolioComponent implements OnInit {
   color = "#36DBA3";
   coinTicker = "Total";
   chartData = [];
-  pointStart = 1234;
 
   constructor(private fb: FormBuilder,
               private modalService:SuiModalService,
@@ -186,13 +185,10 @@ export class SharablePortfolioComponent implements OnInit {
   }
 
   public chartCardData(cardTicker: string, cardColor: string): void {
-    // console.log("chart card data ran")
     let changedArray = [];
     this.color = cardColor;
     this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
       result = JSON.parse(result._body);
-      console.log("api data w/ 2000 and getALL")
-      console.log(result.Data);
       result.Data.forEach(result=>{
         let dataArray = [];
         if(result.close > 0 && result.open > 0){
@@ -202,7 +198,6 @@ export class SharablePortfolioComponent implements OnInit {
         }
       });
       this.chartData = changedArray;
-      this.pointStart = result.Data[0].time * 1000;
       this.coinTicker = cardTicker;
     });
   }

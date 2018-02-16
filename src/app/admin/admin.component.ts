@@ -133,19 +133,17 @@ export class AdminComponent implements OnInit {
       }
 
       public chartCardData(cardTicker: string, cardColor: string): void {
-        console.log("chart card data ran for " + cardTicker);
-
         let changedArray = [];
         this.color = cardColor;
         this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
           result = JSON.parse(result._body);
-          console.log("chart card price callback result:");
-          console.log(result);
           result.Data.forEach(result=>{
             let dataArray = [];
-            dataArray.push(result.time);
-            dataArray.push(result.close);
-            changedArray.push(dataArray);
+            if(result.close > 0 && result.open > 0){
+              dataArray.push(result.time * 1000);
+              dataArray.push(result.close);
+              changedArray.push(dataArray);
+            }
           });
           this.chartData = changedArray;
           this.coinTicker = cardTicker;
