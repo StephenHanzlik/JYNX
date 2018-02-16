@@ -152,7 +152,7 @@ export class SharablePortfolioComponent implements OnInit {
                  coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
                  coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                  coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10),
-                 notSelected: true,
+                 notSelected: true
                 }
 
                 if(iterable < colorsArray.length)
@@ -262,11 +262,6 @@ export class SharablePortfolioComponent implements OnInit {
   }
 
   public cardStyleToggle(coin: any, allCoins: any): void {
-    // if(coin.notSelected)
-    //   coin.notSelected = false
-    // else if(!coin.notSelected)
-    //   coin.notSelected = true;
-
     allCoins.forEach(loopCoin=>{
       if(loopCoin.coinTicker === coin.coinTicker)
         loopCoin.notSelected = false;

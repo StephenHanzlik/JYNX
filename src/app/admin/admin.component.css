@@ -57,6 +57,11 @@ body {
         color: #D14836 !important;
       }
 
+      .card-grey{
+        background: lightgrey !important;
+        opacity: 0.79 !important;
+      }
+
       .cards-div{
         padding-left: 46px;
       }

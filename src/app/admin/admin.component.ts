@@ -32,6 +32,7 @@ export class AdminComponent implements OnInit {
       public totalPortfolioValue: any = 0;
       public totalPortfolioValue24hr: any = 0;
       public totalPortfolioPercentageChange: any;
+      public totalPortfolioNotSelected: boolean = false;
       public portfolioTotalArray: any = [];
       public portfolioName: string = '';
 
@@ -97,7 +98,8 @@ export class AdminComponent implements OnInit {
                      coinName: allCoinData[key].CoinName,
                      coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
                      coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
-                     coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10)
+                     coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10),
+                     notSelected: true,
                     }
 
                     if(iterable < colorsArray.length)
@@ -205,6 +207,25 @@ export class AdminComponent implements OnInit {
           this.getUserCoinData();
         });
       }
+
+
+    public cardStyleToggle(coin: any, allCoins: any): void {
+      allCoins.forEach(loopCoin=>{
+        if(loopCoin.coinTicker === coin.coinTicker)
+          loopCoin.notSelected = false;
+        else
+          loopCoin.notSelected = true;
+      })
+      this.totalPortfolioNotSelected = true;
+    }
+
+    public totalPortfolioToggle(allCoins: any): void {
+      this.totalPortfolioNotSelected = false;
+
+      allCoins.forEach(loopCoin=>{
+          loopCoin.notSelected = true;
+      })
+    }
 
       // private updateCards(newCoin: any, usdAmt: number): void {
       //     let allCoinData = ALLCOINDATA;
