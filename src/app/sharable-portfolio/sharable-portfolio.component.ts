@@ -7,10 +7,6 @@ import { MongoDbService } from "../services/mongo-db/mongo-db.service";
 import { ALLCOINDATA } from "../static-data/all-coin-data";
 import { COINOBJECTS } from "../static-data/coin-objects";
 
-import { Response, Http } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-
-
 export interface IContext {
     data:string;
 }
@@ -50,8 +46,7 @@ export class SharablePortfolioComponent implements OnInit {
               private modalService:SuiModalService,
               private mongoDbService:MongoDbService,
               private cryptoCompareService: CryptoCompareService,
-              private jynxPriceService: JynxPriceService,
-              private http: Http) {
+              private jynxPriceService: JynxPriceService) {
     this.newCoinForm = fb.group({
         "coinName": ['BTC', Validators.required],
         "coinAmt": ['', Validators.required]
@@ -87,55 +82,6 @@ export class SharablePortfolioComponent implements OnInit {
       }
 
       if(coins.length > 0){
-
-        // this.jynxPriceService.getPrices().subscribe(result =>{
-        //   apiData = JSON.parse(result._body);
-        //   let portfolioKeys: Array<any> = [];
-        //   let allCoinData: object = ALLCOINDATA[0];
-        //   let iterable: number = 0;
-        //   if(apiData)
-        //     portfolioKeys = Object.keys(aggregateTotalsObj);
-        //   else
-        //     return;
-        //
-        //   apiData.forEach(key=>{
-        //     for(let t = 0; t < portfolioKeys.length; t++){
-        //
-        //       if(portfolioKeys[t] === key.symbol){
-        //         console.log(key);
-        //         let coinToAdd = {
-        //            coinColor: colorsArray[iterable],
-        //            coinColorName: colorNamesArray[iterable],
-        //            coinTicker: key.symbol,
-        //            coinName: key.name,
-        //            coinPrice: this.addCommas(parseInt(key.price_usd, 10)),
-        //            coin24Percent: Math.round(key.percent_change_24h * 100)/100,
-        //           // coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10)
-        //           }
-        //
-        //         this.cryptoCompareService.getSinglePrice(coinToAdd.coinTicker).subscribe(result=>{
-        //             console.log("cryptocompare result");
-        //             console.log(result);
-        //         });
-        //
-        //           if(iterable < colorsArray.length)
-        //             iterable++;
-        //           else
-        //             iterable = 0;
-        //
-        //           this.cardsContent.push(coinToAdd);
-        //
-        //           // this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
-        //           //
-        //           // this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * aggregateTotalsObj[key];
-        //       }
-        //
-        //     }
-        //
-        //
-        //   })
-        //
-        // });
 
         this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
             apiData = JSON.parse(result._body);
@@ -187,26 +133,39 @@ export class SharablePortfolioComponent implements OnInit {
             //get historical profile
             let index = 0;
             keys.forEach(key=>{
-              //let http: Http;
-
               index++
               let that = this;
               setTimeout(function(){
-                // that.http.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${key}&tsym=USD&limit=2000&allData=true`)
                 that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
                     if(result._body){
                       result = JSON.parse(result._body)
-                      let localHistoricalData: Object = {
-                        name: key,
-                        data: result.Data
-                      };
-                      that.masterPortfolioDataArray.push(localHistoricalData);
-                      console.log("this.masterPortfolioDataArray");
-                      console.log(that.masterPortfolioDataArray);
-                      console.log(JSON.parse(result._body.Data));
+                      // let localHistoricalData: Object = {
+                      //   name: key,
+                      //   data: result.Data
+                      // };
+                      that.masterPortfolioDataArray.push(result.Data);
+
+                      //aggregateTotalsObj[key]
+
+                      if(that.masterPortfolioDataArray.length >= keys.length){
+                        let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
+                        //let masterPortGraphObject: any = []
+                        let masterPortGraphData: any = {};
+
+                        flatArray.forEach(masterEntry=>{
+                          if(!masterPortGraphData[masterEntry.time]){
+                            masterPortGraphData[masterEntry.time] = {
+                               data: [masterEntry.time, masterEntry.close]
+                             };
+                          }
+                          else if(masterPortGraphData[masterEntry.time]){
+                              masterPortGraphData[masterEntry.time].data[1] + masterEntry.close
+                          }
+                        })
+                      }
                     }
                 });
-              }, 350 * index);
+              }, 375 * index);
 
 
 
