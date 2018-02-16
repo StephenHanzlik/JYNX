@@ -67,6 +67,9 @@ export class HighChartsComponent implements OnInit, OnChanges{
                          }
                      }
                  },
+                 rangeSelector: {
+                    selected: 2
+                 },
                 series : [{
                     name : ticker,
                     data : data,
