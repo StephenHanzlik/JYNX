@@ -93,6 +93,7 @@ export class AdminComponent implements OnInit {
                      coinColor: colorsArray[iterable],
                      coinColorName: colorNamesArray[iterable],
                      coinTicker: key,
+                     coinAmt: aggregateTotalsObj[key],
                      coinName: allCoinData[key].CoinName,
                      coinPrice: this.addCommas(parseInt(apiData[key]['USD']['PRICE'], 10) * aggregateTotalsObj[key]),
                      coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,

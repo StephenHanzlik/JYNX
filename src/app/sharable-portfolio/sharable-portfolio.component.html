@@ -53,6 +53,7 @@
               <div *ngIf="coin.coin24Percent > 0" class="meta card-24-change green-text">{{coin.coin24Percent}}%</div>
               <div *ngIf="coin.coin24Percent === 0" class="meta card-24-change">{{coin.coin24Percent}}%</div>
               <div class="header card-price">${{coin.coinPrice}}</div>
+              <div class="header card-price">{{coin.coinAmt}}</div>
             </div>
           </div>
         </div>
