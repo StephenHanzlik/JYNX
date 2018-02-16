@@ -36,7 +36,7 @@
         <div class="sixteen wide column">
         <div class="ui cards cards-div">
           <div class="card" >
-            <div class="content">
+            <div class="content" (click)="totalPortfolioToggle()" [ngClass]="{'card-grey': totalPortfolioNotSelected}">
               <div class="portfolio-color"></div>
               <div class="header card-header">Total</div>
               <h4 *ngIf="this.totalPortfolioValue24hr > 0"  class="sub header green-text meta card-24-change">{{this.totalPortfolioValue24hr}}%</h4>
@@ -46,7 +46,7 @@
             </div>
           </div>
           <div class="card" *ngFor="let coin of cardsContent" (click)="chartCardData(coin.coinTicker, coin.coinColor, coin.coinSelected)">
-            <div class="content" (click)="cardStyleToggle(coin)" [ngClass]="{'card-grey': coin.notSelected}">
+            <div class="content" (click)="cardStyleToggle(coin, cardsContent)" [ngClass]="{'card-grey': coin.notSelected}">
               <div [attr.Class]="coin.coinColorName"></div>
               <div class="header card-header">{{coin.coinName}}</div>
               <div *ngIf="coin.coin24Percent < 0" class="meta card-24-change red-text">{{coin.coin24Percent}}%</div>

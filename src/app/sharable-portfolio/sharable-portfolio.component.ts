@@ -33,6 +33,7 @@ export class SharablePortfolioComponent implements OnInit {
   public totalPortfolioValue: any = 0;
   public totalPortfolioValue24hr: any = 0;
   public totalPortfolioPercentageChange: any;
+  public totalPortfolioNotSelected: boolean = false;
   public portfolioTotalArray: any = [];
   public portfolioName: string = '';
   public selected = true;
@@ -260,14 +261,23 @@ export class SharablePortfolioComponent implements OnInit {
     });
   }
 
-  public cardStyleToggle(coin: any): void {
-    console.log("cardStyleToggle ran!!!");
-    console.log(coin);
+  public cardStyleToggle(coin: any, allCoins: any): void {
+    // if(coin.notSelected)
+    //   coin.notSelected = false
+    // else if(!coin.notSelected)
+    //   coin.notSelected = true;
 
-    if(coin.notSelected)
-      coin.notSelected = false
-    else if(!coin.notSelected)
-      coin.notSelected = true;
+    allCoins.forEach(loopCoin=>{
+      if(loopCoin.coinTicker === coin.coinTicker)
+        loopCoin.notSelected = false;
+      else
+        loopCoin.notSelected = true;
+    })
+    this.totalPortfolioNotSelected = true;
+  }
+
+  public totalPortfolioToggle(): void {
+    this.totalPortfolioNotSelected = false;
   }
 
   // private updateCards(newCoin: any, usdAmt: number): void {
