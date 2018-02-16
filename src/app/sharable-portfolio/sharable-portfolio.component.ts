@@ -35,6 +35,7 @@ export class SharablePortfolioComponent implements OnInit {
   public totalPortfolioPercentageChange: any;
   public portfolioTotalArray: any = [];
   public portfolioName: string = '';
+  public selected = true;
 
   color = "#36DBA3";
   coinTicker = "Total";
@@ -149,7 +150,8 @@ export class SharablePortfolioComponent implements OnInit {
                  coinName: allCoinData[key].CoinName,
                  coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
                  coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
-                 coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10)
+                 coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10),
+                 coinSelected: false
                 }
 
                 if(iterable < colorsArray.length)
@@ -256,6 +258,16 @@ export class SharablePortfolioComponent implements OnInit {
     //  console.log("result of add coin from mongo db service");
       this.getUserCoinData();
     });
+  }
+
+  public cardStyleToggle(coin: any): void {
+    console.log("cardStyleToggle ran!!!");
+    console.log(coin);
+
+    if(this.selected)
+      this.selected = false
+    else if(!this.selected)
+      this.selected = true;
   }
 
   // private updateCards(newCoin: any, usdAmt: number): void {

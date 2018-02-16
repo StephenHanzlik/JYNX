@@ -35,7 +35,7 @@
       <!--  <div class="two wide column"></div>-->
         <div class="sixteen wide column">
         <div class="ui cards cards-div">
-          <div class="card">
+          <div class="card" >
             <div class="content">
               <div class="portfolio-color"></div>
               <div class="header card-header">Total</div>
@@ -45,8 +45,8 @@
               <div class="header card-price">${{totalPortfolioValue}}</div>
             </div>
           </div>
-          <div class="card" *ngFor="let coin of cardsContent" (click)="chartCardData(coin.coinTicker, coin.coinColor)">
-            <div class="content">
+          <div class="card" *ngFor="let coin of cardsContent" (click)="chartCardData(coin.coinTicker, coin.coinColor, coin.coinSelected)">
+            <div class="content" (click)="cardStyleToggle(coin)" [ngClass]="{'card-grey': selected}">
               <div [attr.Class]="coin.coinColorName"></div>
               <div class="header card-header">{{coin.coinName}}</div>
               <div *ngIf="coin.coin24Percent < 0" class="meta card-24-change red-text">{{coin.coin24Percent}}%</div>
