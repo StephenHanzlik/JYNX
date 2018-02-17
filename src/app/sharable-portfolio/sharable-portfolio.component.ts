@@ -136,7 +136,7 @@ export class SharablePortfolioComponent implements OnInit {
 
                         if(that.masterPortfolioDataArray.length >= keys.length){
                           let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
-                          let masterPortGraphObject: any = []
+                          let masterPortGraphArray: any = []
                           let masterPortGraphData: any = {};
 
                           flatArray.forEach(masterEntry=>{
@@ -144,20 +144,20 @@ export class SharablePortfolioComponent implements OnInit {
                               let newNumb: number = masterEntry.close * aggregateTotalsObj[key];
 
                               masterPortGraphData[masterEntry.time] = {
-                                 data: [masterEntry.time, Math.round(newNumb * 100)/100]
+                                 data: [masterEntry.time * 1000, Math.round(newNumb * 100)/100]
                                };
                             }
                             else if(masterPortGraphData[masterEntry.time]){
                                 Math.round(masterPortGraphData[masterEntry.time].data[1] + masterEntry.close * aggregateTotalsObj[key] * 100)/100
-
                             }
+                            masterPortGraphArray.push(masterPortGraphData[masterEntry.time].data);
+                          });
 
-                          })
-                          console.log("flat array");
-                          console.log(flatArray);
-                          masterPortGraphObject.push(masterPortGraphData);
                           console.log("masterPortGraphObject");
-                          console.log(masterPortGraphObject);
+                          console.log(masterPortGraphArray);
+                          that.chartData = masterPortGraphArray.sort();
+                          console.log("chartData");
+                          console.log(that.chartData);
                         }
                       }
                   });
