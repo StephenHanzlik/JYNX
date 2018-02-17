@@ -64,7 +64,7 @@
       <!--  <div class="two wide column"></div>-->
         <div class="sixteen wide column">
         <div class="ui cards cards-div">
-          <div class="card">
+          <div class="card" (click)="chartHistoricalPorfolioPrice(cardsContent)">
             <div class="content" (click)="totalPortfolioToggle(cardsContent)" [ngClass]="{'card-grey': totalPortfolioNotSelected}">
               <div class="portfolio-color"></div>
               <div class="header card-header">Total Portfolio</div>

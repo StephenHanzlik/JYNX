@@ -329,7 +329,6 @@ export class SharablePortfolioComponent implements OnInit {
   }
 
   public totalPortfolioToggle(allCoins: any): void {
-    this.cardsContent = [];
     this.color = "#30D699";
     this.totalPortfolioNotSelected = false;
     this.chartData = this.externalMasterPortGraphArray;

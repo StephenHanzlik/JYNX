@@ -33,8 +33,10 @@ export class AdminComponent implements OnInit {
       public totalPortfolioValue24hr: any = 0;
       public totalPortfolioPercentageChange: any;
       public totalPortfolioNotSelected: boolean = false;
+      public masterPortfolioDataArray: Array<any> = [];
       public portfolioTotalArray: any = [];
       public portfolioName: string = '';
+      public externalMasterPortGraphArray: any = [];
 
       color = "#36DBA3";
       coinTicker = "Total";
@@ -89,6 +91,8 @@ export class AdminComponent implements OnInit {
                   keys = Object.keys(apiData);
                 else
                   return;
+                let index = 0;
+
                 keys.forEach(key=> {
                   let coinToAdd = {
                      coinColor: colorsArray[iterable],
@@ -112,6 +116,49 @@ export class AdminComponent implements OnInit {
                     this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
 
                     this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * aggregateTotalsObj[key];
+
+                    //totol profolio price data
+                    index++
+                    let that = this;
+                    setTimeout(function(){
+                      that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
+                          if(result._body){
+                            result = JSON.parse(result._body)
+                            // let localHistoricalData: Object = {
+                            //   name: key,
+                            //   data: result.Data
+                            // };
+                            that.masterPortfolioDataArray.push(result.Data);
+
+                            //aggregateTotalsObj[key]
+
+                            if(that.masterPortfolioDataArray.length >= keys.length){
+                              let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
+                              let masterPortGraphArray: any = []
+                              let masterPortGraphData: any = {};
+                            //  let count = 0;
+
+                              flatArray.forEach(masterEntry=>{
+                              //  count ++
+                                if(!masterPortGraphData[masterEntry.time]){
+                                  let newNumb: number = masterEntry.close * aggregateTotalsObj[key];
+
+                                  masterPortGraphData[masterEntry.time] = {
+                                     data: [masterEntry.time * 1000, Math.round(newNumb * 100)/100]
+                                   };
+                                }
+                                else if(masterPortGraphData[masterEntry.time]){
+                                    Math.round(masterPortGraphData[masterEntry.time].data[1] + masterEntry.close * aggregateTotalsObj[key] * 100)/100
+                                }
+                                masterPortGraphArray.push(masterPortGraphData[masterEntry.time].data);
+                              });
+                            //  if(count >= flatArray.length)
+                                that.chartData = masterPortGraphArray.sort();
+                                that.externalMasterPortGraphArray = masterPortGraphArray.sort();
+                            }
+                          }
+                      });
+                    }, 375 * index);
                 })
 
                 let change: number = this.totalPortfolioValue24hr - this.totalPortfolioValue;
@@ -220,11 +267,13 @@ export class AdminComponent implements OnInit {
     }
 
     public totalPortfolioToggle(allCoins: any): void {
+      this.color = "#30D699";
       this.totalPortfolioNotSelected = false;
+      this.chartData = this.externalMasterPortGraphArray;
 
-      allCoins.forEach(loopCoin=>{
+      allCoins.forEach((loopCoin, index)=>{
           loopCoin.notSelected = true;
-      })
+        });
     }
 
       // private updateCards(newCoin: any, usdAmt: number): void {
