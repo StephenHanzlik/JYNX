@@ -243,10 +243,6 @@ export class SharablePortfolioComponent implements OnInit {
     });
   }
 
-  private chartHistoricalPorfolioPrice(): void {
-    console.log("chart getHistoricalPrice ran");
-  }
-
   public chartCardData(cardTicker: string, cardColor: string): void {
     let changedArray = [];
     this.color = cardColor;
