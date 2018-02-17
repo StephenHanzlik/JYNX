@@ -37,6 +37,7 @@ export class SharablePortfolioComponent implements OnInit {
   public portfolioTotalArray: any = [];
   public portfolioName: string = '';
   public selected = true;
+  public externalMasterPortGraphArray: any = [];
 
   color = "#36DBA3";
   coinTicker = "Total";
@@ -138,8 +139,10 @@ export class SharablePortfolioComponent implements OnInit {
                           let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
                           let masterPortGraphArray: any = []
                           let masterPortGraphData: any = {};
+                        //  let count = 0;
 
                           flatArray.forEach(masterEntry=>{
+                          //  count ++
                             if(!masterPortGraphData[masterEntry.time]){
                               let newNumb: number = masterEntry.close * aggregateTotalsObj[key];
 
@@ -152,8 +155,9 @@ export class SharablePortfolioComponent implements OnInit {
                             }
                             masterPortGraphArray.push(masterPortGraphData[masterEntry.time].data);
                           });
-
-                          that.chartData = masterPortGraphArray.sort();
+                        //  if(count >= flatArray.length)
+                            that.chartData = masterPortGraphArray.sort();
+                            that.externalMasterPortGraphArray = masterPortGraphArray.sort();
                         }
                       }
                   });
@@ -325,8 +329,10 @@ export class SharablePortfolioComponent implements OnInit {
   }
 
   public totalPortfolioToggle(allCoins: any): void {
+    this.cardsContent = [];
+    this.color = "#30D699";
     this.totalPortfolioNotSelected = false;
-    this.getUserCoinData();
+    this.chartData = this.externalMasterPortGraphArray;
 
     allCoins.forEach((loopCoin, index)=>{
         loopCoin.notSelected = true;
