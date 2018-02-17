@@ -153,16 +153,11 @@ export class SharablePortfolioComponent implements OnInit {
                             masterPortGraphArray.push(masterPortGraphData[masterEntry.time].data);
                           });
 
-                          console.log("masterPortGraphObject");
-                          console.log(masterPortGraphArray);
                           that.chartData = masterPortGraphArray.sort();
-                          console.log("chartData");
-                          console.log(that.chartData);
                         }
                       }
                   });
                 }, 375 * index);
-
 
             })// end of for each
 
@@ -331,43 +326,11 @@ export class SharablePortfolioComponent implements OnInit {
 
   public totalPortfolioToggle(allCoins: any): void {
     this.totalPortfolioNotSelected = false;
-    //let masterPortfolioDataArray: Array<any> = [];
-    //let index: number = 0;
+    this.getUserCoinData();
 
     allCoins.forEach((loopCoin, index)=>{
         loopCoin.notSelected = true;
       });
-      //index++;
-      // let newThis = this;
-      //
-      // setTimeout(function(newThis){
-      //   newThis.cryptoCompareService.getHistoricalPrice(loopCoin.coinTicker).subscribe(result=>{
-      //       let localHistoricalData: Object = {
-      //         name: loopCoin.coinTicker,
-      //         data: loopCoin.result._body
-      //       };
-      //       masterPortfolioDataArray.push(localHistoricalData);
-      //   });
-      // }, index * 5000);
-
-      // this.cryptoCompareService.getHistoricalPrice(loopCoin.coinTicker).subscribe(result=>{
-      //   console.log(result._body);
-      //   //&& maybe just do http here not use sevice
-      //   if(result._body){
-      //     let localHistoricalData: Object = {
-      //       name: loopCoin.coinTicker,
-      //       data: result._body
-      //     };
-      //     this.masterPortfolioDataArray.push(localHistoricalData);
-      //   }
-      // });
-      //
-      // console.log("masterPortfolioDataArray");
-      // console.log(this.masterPortfolioDataArray);
-
-  //  });
-
-
   }
 
   private getDropDownList(): void {
