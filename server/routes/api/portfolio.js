@@ -52,7 +52,8 @@ router.put('/', function(req, res) {
       const updateDbObject = {
         hodler: req.token,
         portfolioName: "your portfolio name here",
-        coins: {}
+        coins: {},
+        startTime: Date.now()
       };
       console.log("key");
       console.log(key);
@@ -74,6 +75,7 @@ router.put('/', function(req, res) {
         hodler: req.token,
         portfolioName: "your portfolio name here",
         coins: updateDbObject,
+        startTime: Date.now()
       });
 
       newPortfolio.save(function(err) {

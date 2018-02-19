@@ -9,8 +9,8 @@ const PortfolioSchema = new Schema({
   // coins: [String],
   // coinAmts: [Number],
   coins: Schema.Types.Mixed,
-  startTime: { type: Date, default: Date.now },
-  endTime: { type: Date }
+  startTime: Number,
+  endTime: Number
 });
 
 
