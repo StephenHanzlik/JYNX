@@ -157,6 +157,7 @@ export class SharablePortfolioComponent implements OnInit {
                           });
                         //  if(count >= flatArray.length)
                             that.chartData = masterPortGraphArray.sort();
+                            that.coinTicker = "Total Portfolio";
                             that.externalMasterPortGraphArray = masterPortGraphArray.sort();
                         }
                       }
@@ -326,6 +327,7 @@ export class SharablePortfolioComponent implements OnInit {
 
   public totalPortfolioToggle(allCoins: any): void {
     this.color = "#30D699";
+    this.coinTicker = "Total Portfolio";
     this.totalPortfolioNotSelected = false;
     this.chartData = this.externalMasterPortGraphArray;
 
