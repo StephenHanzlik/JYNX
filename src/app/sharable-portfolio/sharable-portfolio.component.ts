@@ -158,8 +158,7 @@ export class SharablePortfolioComponent implements OnInit {
                         //  if(count >= flatArray.length)
                             that.chartData = masterPortGraphArray.sort();
                             that.coinTicker = "Total Portfolio";
-                            that.externalMasterPortGraphArray = masterPortGraphArray.sort();
-                        }
+                         }
                       }
                   });
                 }, 375 * index);

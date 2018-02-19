@@ -24,53 +24,75 @@ router.put('/', function(req, res) {
     coinAmt: req.body.coinAmt
   };
 
+  // PortfolioModel.
+  // find().
+
   PortfolioModel.
   find().
   where('hodler').
   equals(req.token).
-  limit(1).
-  select('coins coinAmts _id').
   exec(function(err, dbPortfolio) {
     if (err) {
       res.status(500).send(err);
     }
-    let newCoinsArr = dbPortfolio[0].coins;
-    newCoinsArr.push(bodyObj.coinName);
-    let newAmountsArr = dbPortfolio[0].coinAmts;
-    newAmountsArr.push(bodyObj.coinAmt);
 
-    const updateDbObject = {
-      coinAmts: newAmountsArr,
-      coins: newCoinsArr,
-      datastoreId: 5840
-    };
+    // console.log("dbPortfolio before");
+    // console.log(dbPortfolio);
+    // let newCoinsArr = dbPortfolio[0].coins;
+    // newCoinsArr.push(bodyObj.coinName);
+    // let newAmountsArr = dbPortfolio[0].coinAmts;
+    // newAmountsArr.push(bodyObj.coinAmt);
+  //  let newStamp = JSON.stringify(Date.now());
+    let key = bodyObj.coinName;
+    let value = bodyObj.coinAmt;
+  //  dbPortfolio[0].newStamp = {};
+    //dbPortfolio[0].newStamp[key] = value;
 
-    PortfolioModel.findOneAndUpdate({ hodler: req.token }, updateDbObject, function(err, user) {
-      if (err) throw err;
+    if(dbPortfolio[0].coins["no ticker"]){
+      const updateDbObject = {
+        hodler: req.token,
+        portfolioName: "your portfolio name here",
+        coins: {}
+      };
+      console.log("key");
+      console.log(key);
+      console.log("value");
+      console.log(value);
 
-      //Tierion Data API
+      updateDbObject.coins[key] = value;
 
-      // const options = {
-      //   method: 'POST',
-      //   uri: 'https://api.tierion.com/v1/records',
-      //   body: updateDbObject,
-      //   headers: {
-      //     'X-Username': 'stephenhanzlik@gmail.com',
-      //     'X-Api-Key': '/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=',
-      //     'Content-Type': 'application/json'
-      //   },
-      //   json: true
-      // };
-      //
-      // request(options)
-      //   .then(function(response) {
-      //     // Handle the response
-      //   })
-      //   .catch(function(err) {
-      //     // Deal with the error
-      //   })
+      PortfolioModel.findOneAndUpdate({ hodler: req.token, coins: {"no ticker": "no amount"}}, updateDbObject, function(err, user) {
+        if (err) throw err;
 
-    });
+      });
+    }
+    else{
+      let updateDbObject = {};
+      updateDbObject[key] = value;
+
+      const newPortfolio = new PortfolioModel({
+        hodler: req.token,
+        portfolioName: "your portfolio name here",
+        coins: updateDbObject,
+      });
+
+      newPortfolio.save(function(err) {
+        if (err) return console.log(err);
+      });
+
+
+    }
+
+    // console.log("dbPortfolio after");
+    // console.log(dbPortfolio);
+
+    // const updateDbObject = {
+    //   coinAmts: newAmountsArr,
+    //   coins: newCoinsArr,
+    //   datastoreId: 5840
+    // };
+
+
     res.status(200).send("ok");
   });
 });
@@ -147,6 +169,8 @@ router.delete('/:name/:amount', function(req, res) {
   });
 });
 
+
+
 // router.post('/user-hash', function(req, res){
 //
 //   //Tierion Hash API node interface
@@ -210,6 +234,28 @@ router.delete('/:name/:amount', function(req, res) {
 //     });
 //   });
 // });
+
+//Tierion Data API
+
+// const options = {
+//   method: 'POST',
+//   uri: 'https://api.tierion.com/v1/records',
+//   body: updateDbObject,
+//   headers: {
+//     'X-Username': 'stephenhanzlik@gmail.com',
+//     'X-Api-Key': '/dGns7iU5t6j9/78Ld/6miNNMYJn0AlOcLTOK3Mu+5A=',
+//     'Content-Type': 'application/json'
+//   },
+//   json: true
+// };
+//
+// request(options)
+//   .then(function(response) {
+//     // Handle the response
+//   })
+//   .catch(function(err) {
+//     // Deal with the error
+//   })
 //
 // router.post('/log-in', function(req, res) {
 //   const hash = bcrypt.hashSync(req.body.password, 8);
