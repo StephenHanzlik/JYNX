@@ -67,7 +67,9 @@ export class AdminComponent implements OnInit {
         let colorNamesArray: Array<string> = ['color1', 'color2', 'color3', 'color4', 'color5'];
 
         this.mongoDbService.getUserPortfolio().subscribe(result=>{
-          result = JSON.parse((<any>result)._body);
+          //result = JSON.parse((<any>result)._body);
+          //result = (<any>result)._body.json();
+
 
           console.log("get user portfolio");
           console.log(result);
@@ -83,7 +85,13 @@ export class AdminComponent implements OnInit {
           //   else
           //     aggregateTotalsObj[coins[l]] = coinAmts[l];
           // }
+          //for(let j = 0; j <= result.length; )
+          result.forEach(coin=>{
+              console.log("we loopin");
+              console.log(coin);
+          });
 
+          //@@@@
           if(coins.length > 0){
             this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
                 apiData = JSON.parse(result._body);

@@ -12,7 +12,7 @@ export class MongoDbService {
   }
 
   public getUserPortfolio(){
-    return this.http.get('/api/portfolio');
+    return this.http.get('/api/portfolio').map(response => response.json());
   }
 
   public deleteCoin(form: any){
