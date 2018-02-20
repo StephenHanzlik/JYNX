@@ -68,17 +68,21 @@ export class AdminComponent implements OnInit {
 
         this.mongoDbService.getUserPortfolio().subscribe(result=>{
           result = JSON.parse((<any>result)._body);
-          result = result[0];
-          let aggregateTotalsObj: any = {};
-          let coinAmts: Array<number> = result['coinAmts'];
-          let coins: Array<string> = result['coins'];
-          this.portfolioName = result['portfolioName'];
-          for (let l = 0; l < coins.length; l++) {
-            if(aggregateTotalsObj[coins[l]])
-              aggregateTotalsObj[coins[l]] = aggregateTotalsObj[coins[l]] + coinAmts[l];
-            else
-              aggregateTotalsObj[coins[l]] = coinAmts[l];
-          }
+
+          console.log("get user portfolio");
+          console.log(result);
+
+          // let aggregateTotalsObj: any = {};
+          // let coinAmts: Array<number> = result['coinAmts'];
+          // let coins: Array<string> = result['coins'];
+          this.portfolioName = result[0]['portfolioName'];
+
+          // for (let l = 0; l < coins.length; l++) {
+          //   if(aggregateTotalsObj[coins[l]])
+          //     aggregateTotalsObj[coins[l]] = aggregateTotalsObj[coins[l]] + coinAmts[l];
+          //   else
+          //     aggregateTotalsObj[coins[l]] = coinAmts[l];
+          // }
 
           if(coins.length > 0){
             this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
@@ -239,7 +243,7 @@ export class AdminComponent implements OnInit {
         this.totalPortfolioValue = 0;
 
             this.mongoDbService.addCoin(form).subscribe(result=>{
-              console.log("Get User Coin Data about to be called");
+              // console.log("Get User Coin Data about to be called");
               this.getUserCoinData();
             });
       //  })

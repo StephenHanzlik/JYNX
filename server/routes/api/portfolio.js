@@ -111,12 +111,13 @@ router.get('/', function(req, res) {
   find().
   where('hodler').
   equals(req.token).
-  limit(1).
-  select('coins coinAmts portfolioName').
+  select('coins portfolioName startTime endTime').
   exec(function(err, dbPortfolio) {
     if (err) {
       res.status(500).send(err);
     }
+    console.log("dbPortfolio in GET");
+    console.log(dbPortfolio);
     res.status(200).send(dbPortfolio);
   });
 });
