@@ -57,15 +57,7 @@ router.put('/', function(req, res) {
         });
       }
       else{
-        console.log(dbPortfolio);
 
-        // let updateDbObject ={
-        //   hodler: dbPortfolio[dbPortfolio.length - 1].hodler,
-        //   portfolioName: "your portfolio name here",
-        //   coins: dbPortfolio[dbPortfolio.length - 1].coins,
-        //   startTime: dbPortfolio[dbPortfolio.length - 1].startTime,
-        //   endTime: Date.now()
-        // };
         let updateDbObject ={
           hodler: dbPortfolio[0].hodler,
           portfolioName: "your portfolio name here",
@@ -74,16 +66,13 @@ router.put('/', function(req, res) {
           endTime: Date.now()
         };
 
-        console.log("updateDbObject");
-        console.log(updateDbObject);
-
         PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 404}, updateDbObject, function(err, user) {
           if (err) throw err;
 
-          let addDbObject = {};
+          let addDbObject = dbPortfolio[0].coins;
           addDbObject[key] = value;
 
-          const newPortfolio = new PortfolioModel({
+          let newPortfolio = new PortfolioModel({
             hodler: req.token,
             portfolioName: "your portfolio name here",
             coins: addDbObject,
@@ -91,8 +80,7 @@ router.put('/', function(req, res) {
             endTime: 404
           });
 
-          console.log("newPortfolio");
-          console.log(newPortfolio);
+          newPortfolio.coins[bodyObj.coinName] = bodyObj.coinAmt;
 
           newPortfolio.save(function(err) {
             if (err) return console.log(err);

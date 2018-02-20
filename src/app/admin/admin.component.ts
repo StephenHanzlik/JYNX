@@ -70,7 +70,6 @@ export class AdminComponent implements OnInit {
           //result = JSON.parse((<any>result)._body);
           //result = (<any>result)._body.json();
 
-
           console.log("get user portfolio");
           console.log(result);
 
@@ -86,7 +85,7 @@ export class AdminComponent implements OnInit {
           //     aggregateTotalsObj[coins[l]] = coinAmts[l];
           // }
           //for(let j = 0; j <= result.length; )
-          result.forEach(coin=>{
+          result.forEach(coin => {
               console.log("we loopin");
               console.log(coin);
           });
