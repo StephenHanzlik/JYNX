@@ -24,76 +24,83 @@ router.put('/', function(req, res) {
     coinAmt: req.body.coinAmt
   };
 
-  // PortfolioModel.
-  // find().
-
   PortfolioModel.
   find().
   where('hodler').
   equals(req.token).
+  sort({startTime: -1}).
   exec(function(err, dbPortfolio) {
     if (err) {
       res.status(500).send(err);
     }
 
-    // console.log("dbPortfolio before");
-    // console.log(dbPortfolio);
-    // let newCoinsArr = dbPortfolio[0].coins;
-    // newCoinsArr.push(bodyObj.coinName);
-    // let newAmountsArr = dbPortfolio[0].coinAmts;
-    // newAmountsArr.push(bodyObj.coinAmt);
-  //  let newStamp = JSON.stringify(Date.now());
     let key = bodyObj.coinName;
     let value = bodyObj.coinAmt;
-  //  dbPortfolio[0].newStamp = {};
-    //dbPortfolio[0].newStamp[key] = value;
 
-    if(dbPortfolio[0].coins["no ticker"]){
-      const updateDbObject = {
-        hodler: req.token,
-        portfolioName: "your portfolio name here",
-        coins: {},
-        startTime: Date.now()
-      };
-      console.log("key");
-      console.log(key);
-      console.log("value");
-      console.log(value);
+    if(dbPortfolio[0]){
 
-      updateDbObject.coins[key] = value;
+      if(dbPortfolio[0].coins["no ticker"]){
+        console.log("IF TRIGGERED");
+        const updateDbObject = {
+          hodler: req.token,
+          portfolioName: "your portfolio name here",
+          coins: {},
+          startTime: Date.now(),
+          endTime: 404
+        };
 
-      PortfolioModel.findOneAndUpdate({ hodler: req.token, coins: {"no ticker": "no amount"}}, updateDbObject, function(err, user) {
-        if (err) throw err;
+        updateDbObject.coins[key] = value;
 
-      });
+        PortfolioModel.findOneAndUpdate({ hodler: req.token, coins: {"no ticker": "no amount"}}, updateDbObject, function(err, user) {
+          if (err) throw err;
+
+        });
+      }
+      else{
+        console.log(dbPortfolio);
+
+        // let updateDbObject ={
+        //   hodler: dbPortfolio[dbPortfolio.length - 1].hodler,
+        //   portfolioName: "your portfolio name here",
+        //   coins: dbPortfolio[dbPortfolio.length - 1].coins,
+        //   startTime: dbPortfolio[dbPortfolio.length - 1].startTime,
+        //   endTime: Date.now()
+        // };
+        let updateDbObject ={
+          hodler: dbPortfolio[0].hodler,
+          portfolioName: "your portfolio name here",
+          coins: dbPortfolio[0].coins,
+          startTime: dbPortfolio[0].startTime,
+          endTime: Date.now()
+        };
+
+        console.log("updateDbObject");
+        console.log(updateDbObject);
+
+        PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 404}, updateDbObject, function(err, user) {
+          if (err) throw err;
+
+          let addDbObject = {};
+          addDbObject[key] = value;
+
+          const newPortfolio = new PortfolioModel({
+            hodler: req.token,
+            portfolioName: "your portfolio name here",
+            coins: addDbObject,
+            startTime: Date.now(),
+            endTime: 404
+          });
+
+          console.log("newPortfolio");
+          console.log(newPortfolio);
+
+          newPortfolio.save(function(err) {
+            if (err) return console.log(err);
+          });
+
+        });
+      }
     }
-    else{
-      let updateDbObject = {};
-      updateDbObject[key] = value;
-
-      const newPortfolio = new PortfolioModel({
-        hodler: req.token,
-        portfolioName: "your portfolio name here",
-        coins: updateDbObject,
-        startTime: Date.now()
-      });
-
-      newPortfolio.save(function(err) {
-        if (err) return console.log(err);
-      });
-
-
-    }
-
-    // console.log("dbPortfolio after");
-    // console.log(dbPortfolio);
-
-    // const updateDbObject = {
-    //   coinAmts: newAmountsArr,
-    //   coins: newCoinsArr,
-    //   datastoreId: 5840
-    // };
-
 
     res.status(200).send("ok");
   });
