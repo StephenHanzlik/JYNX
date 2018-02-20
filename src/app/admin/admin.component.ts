@@ -69,14 +69,26 @@ export class AdminComponent implements OnInit {
         this.mongoDbService.getUserPortfolio().subscribe(result=>{
           //result = JSON.parse((<any>result)._body);
           //result = (<any>result)._body.json();
+          //
+          // console.log("get user portfolio");
+          // console.log(result);
+          this.portfolioName = result[result.length - 1]['portfolioName'];
 
-          console.log("get user portfolio");
-          console.log(result);
+          let currentPortfolio: Array<string> = [];
+          currentPortfolio = Object.keys(result[result.length - 1].coins);
+          console.log("current portfolio");
+          console.log(currentPortfolio);
+          //get current price of coins
+
+          result.forEach(coin => {
+              // console.log("we loopin");
+              // console.log(coin);
+          });
 
           // let aggregateTotalsObj: any = {};
           // let coinAmts: Array<number> = result['coinAmts'];
           // let coins: Array<string> = result['coins'];
-          this.portfolioName = result[0]['portfolioName'];
+
 
           // for (let l = 0; l < coins.length; l++) {
           //   if(aggregateTotalsObj[coins[l]])
@@ -85,10 +97,7 @@ export class AdminComponent implements OnInit {
           //     aggregateTotalsObj[coins[l]] = coinAmts[l];
           // }
           //for(let j = 0; j <= result.length; )
-          result.forEach(coin => {
-              console.log("we loopin");
-              console.log(coin);
-          });
+
 
           //@@@@
           if(coins.length > 0){

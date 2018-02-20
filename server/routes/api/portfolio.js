@@ -40,7 +40,6 @@ router.put('/', function(req, res) {
     if(dbPortfolio[0]){
 
       if(dbPortfolio[0].coins["no ticker"]){
-        console.log("IF TRIGGERED");
         const updateDbObject = {
           hodler: req.token,
           portfolioName: "your portfolio name here",
@@ -70,7 +69,22 @@ router.put('/', function(req, res) {
           if (err) throw err;
 
           let addDbObject = dbPortfolio[0].coins;
-          addDbObject[key] = value;
+
+          if(addDbObject[key]){
+            console.log("addDbObject[key] TRUE:")
+            console.log(addDbObject[key]);
+            console.log("+");
+            console.log(value);
+            console.log("=");
+            addDbObject[key] = parseInt(addDbObject[key], 10) + parseInt(value, 10);
+            addDbObject[key] = addDbObject[key].toString();
+            console.log(addDbObject[key]);
+          }
+          else{
+            console.log("addDbObject[key] FALSE:")
+            console.log(addDbObject[key])
+            addDbObject[key] = value;
+          }
 
           let newPortfolio = new PortfolioModel({
             hodler: req.token,
@@ -80,7 +94,7 @@ router.put('/', function(req, res) {
             endTime: 404
           });
 
-          newPortfolio.coins[bodyObj.coinName] = bodyObj.coinAmt;
+          //newPortfolio.coins[bodyObj.coinName] = bodyObj.coinAmt;
 
           newPortfolio.save(function(err) {
             if (err) return console.log(err);
@@ -104,8 +118,6 @@ router.get('/', function(req, res) {
     if (err) {
       res.status(500).send(err);
     }
-    console.log("dbPortfolio in GET");
-    console.log(dbPortfolio);
     res.status(200).send(dbPortfolio);
   });
 });
