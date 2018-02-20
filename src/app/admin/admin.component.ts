@@ -61,47 +61,24 @@ export class AdminComponent implements OnInit {
       }
 
       private getUserCoinData(): void {
-        let apiData: any = {};
-        let usdAmt: number = 0;
-        let colorsArray: Array<string> = ['#828A95', '#C98686', '#3C7A89', '#C9B1BD', '#81AE9D'];
-        let colorNamesArray: Array<string> = ['color1', 'color2', 'color3', 'color4', 'color5'];
+          let apiData: any = {};
+          let usdAmt: number = 0;
+          let colorsArray: Array<string> = ['#828A95', '#C98686', '#3C7A89', '#C9B1BD', '#81AE9D'];
+          let colorNamesArray: Array<string> = ['color1', 'color2', 'color3', 'color4', 'color5'];
 
-        this.mongoDbService.getUserPortfolio().subscribe(result=>{
-          //result = JSON.parse((<any>result)._body);
-          //result = (<any>result)._body.json();
-          //
-          // console.log("get user portfolio");
-          // console.log(result);
+          this.mongoDbService.getUserPortfolio().subscribe(result=>{
+
           this.portfolioName = result[result.length - 1]['portfolioName'];
 
-          let currentPortfolio: Array<string> = [];
-          currentPortfolio = Object.keys(result[result.length - 1].coins);
-          console.log("current portfolio");
-          console.log(currentPortfolio);
-          //get current price of coins
-
-          result.forEach(coin => {
-              // console.log("we loopin");
-              // console.log(coin);
-          });
-
-          // let aggregateTotalsObj: any = {};
-          // let coinAmts: Array<number> = result['coinAmts'];
-          // let coins: Array<string> = result['coins'];
+          let currentPortfolio: Object = {};
+          currentPortfolio = result[result.length - 1].coins;
+          let currentPortfolioKeys: Array<string> = Object.keys(currentPortfolio);
+          // console.log("current portfolio");
+          // console.log(currentPortfolio);
 
 
-          // for (let l = 0; l < coins.length; l++) {
-          //   if(aggregateTotalsObj[coins[l]])
-          //     aggregateTotalsObj[coins[l]] = aggregateTotalsObj[coins[l]] + coinAmts[l];
-          //   else
-          //     aggregateTotalsObj[coins[l]] = coinAmts[l];
-          // }
-          //for(let j = 0; j <= result.length; )
-
-
-          //@@@@
-          if(coins.length > 0){
-            this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
+          if(currentPortfolioKeys.length > 0){
+            this.cryptoCompareService.getMultiFullPrice(currentPortfolioKeys.join()).subscribe(result=>{
                 apiData = JSON.parse(result._body);
                 apiData = apiData.RAW;
                 let keys: Array<string> = [];
@@ -118,9 +95,9 @@ export class AdminComponent implements OnInit {
                      coinColor: colorsArray[iterable],
                      coinColorName: colorNamesArray[iterable],
                      coinTicker: key,
-                     coinAmt: aggregateTotalsObj[key],
+                     coinAmt: currentPortfolio[key],
                      coinName: allCoinData[key].CoinName,
-                     coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
+                     coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * currentPortfolio[key]),
                      coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                      coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10),
                      notSelected: true,
@@ -133,52 +110,74 @@ export class AdminComponent implements OnInit {
 
                     this.cardsContent.push(coinToAdd);
 
-                    this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
+                    this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * currentPortfolio[key];
 
-                    this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * aggregateTotalsObj[key];
+                    this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * currentPortfolio[key];
 
                     //totol profolio price data
-                    index++
                     let that = this;
+                    index++;
                     setTimeout(function(){
-                      that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
+                        that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
                           if(result._body){
-                            result = JSON.parse(result._body)
-                            // let localHistoricalData: Object = {
-                            //   name: key,
-                            //   data: result.Data
-                            // };
-                            that.masterPortfolioDataArray.push(result.Data);
+                            result = JSON.parse(result._body);
+                            result = result.Data;
+                            console.log("result for " + key);
+                            console.log(result);
 
-                            //aggregateTotalsObj[key]
-
-                            if(that.masterPortfolioDataArray.length >= keys.length){
-                              let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
-                              let masterPortGraphArray: any = []
-                              let masterPortGraphData: any = {};
-                            //  let count = 0;
-
-                              flatArray.forEach(masterEntry=>{
-                              //  count ++
-                                if(!masterPortGraphData[masterEntry.time]){
-                                  let newNumb: number = masterEntry.close * aggregateTotalsObj[key];
-
-                                  masterPortGraphData[masterEntry.time] = {
-                                     data: [masterEntry.time * 1000, Math.round(newNumb * 100)/100]
-                                   };
-                                }
-                                else if(masterPortGraphData[masterEntry.time]){
-                                    Math.round(masterPortGraphData[masterEntry.time].data[1] + masterEntry.close * aggregateTotalsObj[key] * 100)/100
-                                }
-                                masterPortGraphArray.push(masterPortGraphData[masterEntry.time].data);
-                              });
-                            //  if(count >= flatArray.length)
-                                that.chartData = masterPortGraphArray.sort();
-                                that.externalMasterPortGraphArray = masterPortGraphArray.sort();
-                            }
                           }
-                      });
+                        });
                     }, 375 * index);
+
+
+
+
+
+
+
+
+                    //old total portfolio price data graph
+                  //  index++
+                  //  let that = this;
+                    // setTimeout(function(){
+                    //   that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
+                    //       if(result._body){
+                    //         result = JSON.parse(result._body)
+                    //         // let localHistoricalData: Object = {
+                    //         //   name: key,
+                    //         //   data: result.Data
+                    //         // };
+                    //         that.masterPortfolioDataArray.push(result.Data);
+                    //
+                    //         //aggregateTotalsObj[key]
+                    //
+                    //         if(that.masterPortfolioDataArray.length >= keys.length){
+                    //           let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
+                    //           let masterPortGraphArray: any = []
+                    //           let masterPortGraphData: any = {};
+                    //         //  let count = 0;
+                    //
+                    //           flatArray.forEach(masterEntry=>{
+                    //           //  count ++
+                    //             if(!masterPortGraphData[masterEntry.time]){
+                    //               let newNumb: number = masterEntry.close * currentPortfolio[key];
+                    //
+                    //               masterPortGraphData[masterEntry.time] = {
+                    //                  data: [masterEntry.time * 1000, Math.round(newNumb * 100)/100]
+                    //                };
+                    //             }
+                    //             else if(masterPortGraphData[masterEntry.time]){
+                    //                 Math.round(masterPortGraphData[masterEntry.time].data[1] + masterEntry.close * currentPortfolio[key] * 100)/100
+                    //             }
+                    //             masterPortGraphArray.push(masterPortGraphData[masterEntry.time].data);
+                    //           });
+                    //         //  if(count >= flatArray.length)
+                    //             that.chartData = masterPortGraphArray.sort();
+                    //             that.externalMasterPortGraphArray = masterPortGraphArray.sort();
+                    //         }
+                    //       }
+                    //   });
+                    // }, 375 * index);
                 })
 
                 let change: number = this.totalPortfolioValue24hr - this.totalPortfolioValue;

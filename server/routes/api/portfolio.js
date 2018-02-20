@@ -71,18 +71,10 @@ router.put('/', function(req, res) {
           let addDbObject = dbPortfolio[0].coins;
 
           if(addDbObject[key]){
-            console.log("addDbObject[key] TRUE:")
-            console.log(addDbObject[key]);
-            console.log("+");
-            console.log(value);
-            console.log("=");
             addDbObject[key] = parseInt(addDbObject[key], 10) + parseInt(value, 10);
             addDbObject[key] = addDbObject[key].toString();
-            console.log(addDbObject[key]);
           }
           else{
-            console.log("addDbObject[key] FALSE:")
-            console.log(addDbObject[key])
             addDbObject[key] = value;
           }
 
@@ -93,8 +85,6 @@ router.put('/', function(req, res) {
             startTime: Date.now(),
             endTime: 404
           });
-
-          //newPortfolio.coins[bodyObj.coinName] = bodyObj.coinAmt;
 
           newPortfolio.save(function(err) {
             if (err) return console.log(err);
