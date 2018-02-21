@@ -40,6 +40,7 @@ export class AdminComponent implements OnInit {
       public currentPortfolioData: any = [];
       public historicPortfolio: any;
       public snapshotMasterList: any = {};
+      public totalPortfolioHistoricalData: any = [];
 
       color = "#36DBA3";
       coinTicker = "Total";
@@ -79,8 +80,7 @@ export class AdminComponent implements OnInit {
           currentPortfolio = result[result.length - 1].coins;
           let currentPortfolioKeys: Array<string> = Object.keys(currentPortfolio);
 
-
-          if(currentPortfolioKeys.length > 0){
+          if(currentPortfolioKeys.length > 0 && currentPortfolioKeys[0] !== "no ticker"){
             this.cryptoCompareService.getMultiFullPrice(currentPortfolioKeys.join()).subscribe(result=>{
                 apiData = JSON.parse(result._body);
                 apiData = apiData.RAW;
@@ -133,9 +133,11 @@ export class AdminComponent implements OnInit {
 
                             result = JSON.parse(result._body);
                             result = result.Data;
-                            that.currentPortfolioData.push(result);
+                            let dataObjectToPush = {};
+                            dataObjectToPush[key] = result;
+                            that.currentPortfolioData.push(dataObjectToPush);
 
-                            that.snapshotMasterList[key] = true;
+                            that.snapshotMasterList[key] = key;
 
                             //let historicPortfolioCounter = 0;
 
@@ -232,11 +234,33 @@ export class AdminComponent implements OnInit {
       private processHistorcalList(): void {
         let that = this;
        setTimeout(function(){
-          console.log("currentPortfolioData");
-          console.log(that.currentPortfolioData);
+          // console.log("currentPortfolioData");
+          // console.log(that.currentPortfolioData);
+          console.log("snapshotMasterList");
+          console.log(that.snapshotMasterList);
+          console.log(that.snapshotMasterList.length);
+          let snapShotKeys = Object.keys(that.snapshotMasterList);
+          console.log("snapShotKeys");
+          console.log(snapShotKeys);
+          console.log(snapShotKeys.length);
+          snapShotKeys.forEach(item => {
+                if(!that.currentPortfolioData[item]){
+                    that.cryptoCompareService.getHistoricalPrice(item).subscribe(result =>{
+                      result = JSON.parse(result._body);
+                      that.currentPortfolioData[item] = result.Data;
+                    });
+                }
+          });
+          that.totalPortfolioHistoricalData = that.currentPortfolioData;
+          console.log("that.totalPortfolioHistoricalData");
+          console.log(that.totalPortfolioHistoricalData);
+
         }, 1000)
-        console.log("historicPortfolio");
-        console.log(this.historicPortfolio);
+
+        // console.log("historicPortfolio");
+        // console.log(this.historicPortfolio);
+
+
       }
 
       private getHistoricalPorfolioPrice(): void {
