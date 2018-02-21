@@ -234,32 +234,24 @@ export class AdminComponent implements OnInit {
       private processHistorcalList(): void {
         let that = this;
        setTimeout(function(){
-          // console.log("currentPortfolioData");
-          // console.log(that.currentPortfolioData);
-          console.log("snapshotMasterList");
-          console.log(that.snapshotMasterList);
-          console.log(that.snapshotMasterList.length);
-          let snapShotKeys = Object.keys(that.snapshotMasterList);
-          console.log("snapShotKeys");
-          console.log(snapShotKeys);
-          console.log(snapShotKeys.length);
-          snapShotKeys.forEach(item => {
-                if(!that.currentPortfolioData[item]){
-                    that.cryptoCompareService.getHistoricalPrice(item).subscribe(result =>{
-                      result = JSON.parse(result._body);
-                      that.currentPortfolioData[item] = result.Data;
-                    });
-                }
-          });
+
+          let snapShotMasterKeys = Object.keys(that.snapshotMasterList);
+
+          for(var index in snapShotMasterKeys){
+            console.log("that.currentPortfolioData[index]");
+            console.log(Object.keys(that.currentPortfolioData[index])[0])
+              if(!that.currentPortfolioData[snapShotMasterKeys[index]]){
+                  that.cryptoCompareService.getHistoricalPrice(index).subscribe(result =>{
+                    result = JSON.parse(result._body);
+                    that.currentPortfolioData[index] = result.Data;
+                  });
+              }
+          };
           that.totalPortfolioHistoricalData = that.currentPortfolioData;
-          console.log("that.totalPortfolioHistoricalData");
-          console.log(that.totalPortfolioHistoricalData);
+          // console.log("that.totalPortfolioHistoricalData");
+          // console.log(that.totalPortfolioHistoricalData);
 
         }, 1000)
-
-        // console.log("historicPortfolio");
-        // console.log(this.historicPortfolio);
-
 
       }
 
