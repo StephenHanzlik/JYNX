@@ -72,21 +72,22 @@ export class AdminComponent implements OnInit {
 
           this.mongoDbService.getUserPortfolio().subscribe(result=>{
 
-          this.portfolioName = result[result.length - 1]['portfolioName'];
-
+          this.portfolioName = result[0]['portfolioName'];
+          console.log("result for user profile");
+          console.log(result);
           this.historicPortfolio = result;
           let currentPortfolio: any = {};
           //get current portfolio status for the cards
-          currentPortfolio = result[result.length - 1].coins;
+          currentPortfolio = result[0].coins;
           let currentPortfolioKeys: Array<string> = Object.keys(currentPortfolio);
+          // console.log("join query");
+          // console.log(currentPortfolioKeys.join())
 
           if(currentPortfolioKeys.length > 0 && currentPortfolioKeys[0] !== "no ticker"){
             this.cryptoCompareService.getMultiFullPrice(currentPortfolioKeys.join()).subscribe(result=>{
                 apiData = JSON.parse(result._body);
                 apiData = apiData.RAW;
 
-                console.log("apiData");
-                console.log(apiData);
                 let keys: Array<string> = [];
                 let allCoinData: object = ALLCOINDATA[0];
                 let iterable: number = 0;
@@ -125,6 +126,7 @@ export class AdminComponent implements OnInit {
                     //totol profolio price data
                     index++;
                     let that = this;
+                    that.currentPortfolioData = [];
 
                     setTimeout(function(){
 
@@ -135,14 +137,13 @@ export class AdminComponent implements OnInit {
                             result = result.Data;
                             let dataObjectToPush = {};
                             dataObjectToPush[key] = result;
+                            console.log("dataObjectToPush");
+                            console.log(dataObjectToPush);
                             that.currentPortfolioData.push(dataObjectToPush);
 
                             that.snapshotMasterList[key] = key;
 
-                            //let historicPortfolioCounter = 0;
-
                             that.historicPortfolio.forEach(portfolioSnapshot => {
-                            //historicPortfolioCounter++;
                             let snapshotKeys = Object.keys(portfolioSnapshot.coins);
                             let snapshotKeysCounter = 0;
 
@@ -154,59 +155,10 @@ export class AdminComponent implements OnInit {
                                 that.snapshotMasterList[key] = true;
                               }
                             });
-
-
                           });// end of for forEach
-
-
                           }
                         });//end of multi subscribe
-
                     }, 375 * index);
-
-
-                    //old total portfolio price data graph
-                  //  index++
-                  //  let that = this;
-                    // setTimeout(function(){
-                    //   that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
-                    //       if(result._body){
-                    //         result = JSON.parse(result._body)
-                    //         // let localHistoricalData: Object = {
-                    //         //   name: key,
-                    //         //   data: result.Data
-                    //         // };
-                    //         that.masterPortfolioDataArray.push(result.Data);
-                    //
-                    //         //aggregateTotalsObj[key]
-                    //
-                    //         if(that.masterPortfolioDataArray.length >= keys.length){
-                    //           let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
-                    //           let masterPortGraphArray: any = []
-                    //           let masterPortGraphData: any = {};
-                    //         //  let count = 0;
-                    //
-                    //           flatArray.forEach(masterEntry=>{
-                    //           //  count ++
-                    //             if(!masterPortGraphData[masterEntry.time]){
-                    //               let newNumb: number = masterEntry.close * currentPortfolio[key];
-                    //
-                    //               masterPortGraphData[masterEntry.time] = {
-                    //                  data: [masterEntry.time * 1000, Math.round(newNumb * 100)/100]
-                    //                };
-                    //             }
-                    //             else if(masterPortGraphData[masterEntry.time]){
-                    //                 Math.round(masterPortGraphData[masterEntry.time].data[1] + masterEntry.close * currentPortfolio[key] * 100)/100
-                    //             }
-                    //             masterPortGraphArray.push(masterPortGraphData[masterEntry.time].data);
-                    //           });
-                    //         //  if(count >= flatArray.length)
-                    //             that.chartData = masterPortGraphArray.sort();
-                    //             that.externalMasterPortGraphArray = masterPortGraphArray.sort();
-                    //         }
-                    //       }
-                    //   });
-                    // }, 375 * index);
                 })
 
                 let change: number = this.totalPortfolioValue24hr - this.totalPortfolioValue;
@@ -223,11 +175,8 @@ export class AdminComponent implements OnInit {
                 setTimeout(function(){
                   that.processHistorcalList();
                 }, 500);
-
             })
           }
-
-
         });
       }
 
@@ -237,21 +186,36 @@ export class AdminComponent implements OnInit {
 
           let snapShotMasterKeys = Object.keys(that.snapshotMasterList);
 
+          console.log("that.currentPortfolioData")
+          console.log(that.currentPortfolioData);
+          let currentPortfolioDataCheckObj = {};
+
+          for(var tickerData in that.currentPortfolioData){
+            //console.log("that.currentPortfolioData[tickerData]");
+          //  console.log(Object.keys(that.currentPortfolioData[tickerData])[0]);
+            currentPortfolioDataCheckObj[Object.keys(that.currentPortfolioData[tickerData])[0]] = Object.keys(that.currentPortfolioData[tickerData])[0];
+          }
+
           for(var index in snapShotMasterKeys){
-            console.log("that.currentPortfolioData[index]");
-            console.log(Object.keys(that.currentPortfolioData[index])[0])
-              if(!that.currentPortfolioData[snapShotMasterKeys[index]]){
+
+            // console.log("snapShotMasterKeys[index]");
+            // console.log(snapShotMasterKeys[index])
+            //
+            // console.log("that.currentPortfolioData[index]");
+            // console.log(that.currentPortfolioData[index])
+
+              if(!currentPortfolioDataCheckObj[snapShotMasterKeys[index]]){
                   that.cryptoCompareService.getHistoricalPrice(index).subscribe(result =>{
                     result = JSON.parse(result._body);
-                    that.currentPortfolioData[index] = result.Data;
+                    that.currentPortfolioData[snapShotMasterKeys[index]] = result.Data;
                   });
               }
           };
           that.totalPortfolioHistoricalData = that.currentPortfolioData;
-          // console.log("that.totalPortfolioHistoricalData");
-          // console.log(that.totalPortfolioHistoricalData);
+          console.log("that.totalPortfolioHistoricalData");
+          console.log(that.totalPortfolioHistoricalData);
 
-        }, 1000)
+        }, 1500)
 
       }
 

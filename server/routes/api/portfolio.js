@@ -103,11 +103,13 @@ router.get('/', function(req, res) {
   find().
   where('hodler').
   equals(req.token).
+  sort({startTime: -1}).
   select('coins portfolioName startTime endTime').
   exec(function(err, dbPortfolio) {
     if (err) {
       res.status(500).send(err);
     }
+
     res.status(200).send(dbPortfolio);
   });
 });
@@ -122,48 +124,90 @@ router.delete('/:name/:amount', function(req, res) {
   find().
   where('hodler').
   equals(req.token).
-  limit(1).
-  select('coins coinAmts _id').
+  sort({startTime: -1}).
+  select('coins portfolioName startTime endTime hodler').
   exec(function(err, dbPortfolio) {
     if (err) {
       res.status(500).send(err);
     }
 
-    let newCoinsArr = dbPortfolio[0].coins
-    let newAmountsArr = dbPortfolio[0].coinAmts
-    let difference = 0;
-
-    for(let i = newCoinsArr.length - 1; i >= 0; i--){
-
-      if(bodyObj.coinName === newCoinsArr[i]){
-        if(newAmountsArr[i] - bodyObj.coinAmt > 0){
-          newAmountsArr[i] = newAmountsArr[i] - bodyObj.coinAmt;
-          break;
-        }
-        else if(newAmountsArr[i] - bodyObj.coinAmt === 0){
-          newAmountsArr[i] = newAmountsArr[i] - bodyObj.coinAmt;
-          newAmountsArr.splice(i, 1);
-          newCoinsArr.splice(i, 1);
-          break;
-        }
-        else{
-          difference = newAmountsArr[i] - bodyObj.coinAmt;
-          bodyObj.coinAmt = Math.abs(difference);
-          newAmountsArr.splice(i, 1);
-          newCoinsArr.splice(i, 1);
-        }
-      }
-    }
-
-    const updateDbObject = {
-      coinAmts: newAmountsArr,
-      coins: newCoinsArr,
-      datastoreId: 5840
+    let updateDbObject ={
+      hodler: dbPortfolio[0].hodler,
+      portfolioName: "your portfolio name here",
+      coins: dbPortfolio[0].coins,
+      startTime: dbPortfolio[0].startTime,
+      endTime: Date.now()
     };
 
-    PortfolioModel.findOneAndUpdate({ hodler: req.token }, updateDbObject, function(err, user) {
+    let key = bodyObj.coinName;
+    let value = bodyObj.coinAmt;
+
+    PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 404}, updateDbObject, function(err, user) {
       if (err) throw err;
+
+      let addDbObject = dbPortfolio[0].coins;
+
+      console.log("key");
+      console.log(key);
+
+      if(addDbObject[key]){
+
+        addDbObject[key] = parseInt(addDbObject[key], 10) - parseInt(value, 10);
+        addDbObject[key] = addDbObject[key].toString();
+      }
+      else{
+        addDbObject[key] = value;
+      }
+
+      let newPortfolio = new PortfolioModel({
+        hodler: req.token,
+        portfolioName: "your portfolio name here",
+        coins: addDbObject,
+        startTime: Date.now(),
+        endTime: 404
+      });
+
+      newPortfolio.save(function(err) {
+        if (err) return console.log(err);
+      });
+
     });
+
+    // let newCoinsArr = dbPortfolio[0].coins
+    // let newAmountsArr = dbPortfolio[0].coinAmts
+    // let difference = 0;
+    //
+    // for(let i = newCoinsArr.length - 1; i >= 0; i--){
+    //
+    //   if(bodyObj.coinName === newCoinsArr[i]){
+    //     if(newAmountsArr[i] - bodyObj.coinAmt > 0){
+    //       newAmountsArr[i] = newAmountsArr[i] - bodyObj.coinAmt;
+    //       break;
+    //     }
+    //     else if(newAmountsArr[i] - bodyObj.coinAmt === 0){
+    //       newAmountsArr[i] = newAmountsArr[i] - bodyObj.coinAmt;
+    //       newAmountsArr.splice(i, 1);
+    //       newCoinsArr.splice(i, 1);
+    //       break;
+    //     }
+    //     else{
+    //       difference = newAmountsArr[i] - bodyObj.coinAmt;
+    //       bodyObj.coinAmt = Math.abs(difference);
+    //       newAmountsArr.splice(i, 1);
+    //       newCoinsArr.splice(i, 1);
+    //     }
+    //   }
+    // }
+    //
+    // const updateDbObject = {
+    //   coinAmts: newAmountsArr,
+    //   coins: newCoinsArr,
+    //   datastoreId: 5840
+    // };
+    //
+    // PortfolioModel.findOneAndUpdate({ hodler: req.token }, updateDbObject, function(err, user) {
+    //   if (err) throw err;
+    // });
 
     res.status(200).send("ok");
   });
