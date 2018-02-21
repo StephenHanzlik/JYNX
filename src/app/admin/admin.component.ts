@@ -41,6 +41,7 @@ export class AdminComponent implements OnInit {
       public historicPortfolio: any;
       public snapshotMasterList: any = {};
       public totalPortfolioHistoricalData: any = [];
+      public totalPortfolioHistoricalDataObj: any = {};
 
       color = "#36DBA3";
       coinTicker = "Total";
@@ -73,15 +74,12 @@ export class AdminComponent implements OnInit {
           this.mongoDbService.getUserPortfolio().subscribe(result=>{
 
           this.portfolioName = result[0]['portfolioName'];
-          console.log("result for user profile");
-          console.log(result);
+
           this.historicPortfolio = result;
           let currentPortfolio: any = {};
-          //get current portfolio status for the cards
+
           currentPortfolio = result[0].coins;
           let currentPortfolioKeys: Array<string> = Object.keys(currentPortfolio);
-          // console.log("join query");
-          // console.log(currentPortfolioKeys.join())
 
           if(currentPortfolioKeys.length > 0 && currentPortfolioKeys[0] !== "no ticker"){
             this.cryptoCompareService.getMultiFullPrice(currentPortfolioKeys.join()).subscribe(result=>{
@@ -129,8 +127,6 @@ export class AdminComponent implements OnInit {
                     that.currentPortfolioData = [];
 
                     setTimeout(function(){
-                      console.log("key getting prices");
-                      console.log(key);
 
                         that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
                           if(result._body){
@@ -189,16 +185,12 @@ export class AdminComponent implements OnInit {
           let snapShotMasterKeys = Object.keys(that.snapshotMasterList);
           that.totalPortfolioHistoricalData = that.currentPortfolioData;
 
-          console.log("snapShotMasterKeys")
-          console.log(snapShotMasterKeys);
           let currentPortfolioDataCheckObj = {};
 
           for(var tickerData in that.currentPortfolioData){
 
             currentPortfolioDataCheckObj[Object.keys(that.currentPortfolioData[tickerData])[0]] = Object.keys(that.currentPortfolioData[tickerData])[0];
           }
-          console.log("currentPortfolioDataCheckObj");
-          console.log(currentPortfolioDataCheckObj);
 
           for(var index in snapShotMasterKeys){
 
@@ -217,16 +209,43 @@ export class AdminComponent implements OnInit {
               }
           };
 
-          console.log("that.totalPortfolioHistoricalData");
-          console.log(that.totalPortfolioHistoricalData);
-
-
         }, 1500)
+
+        setTimeout(function(){
+          console.log("totalPortfolioHistoricalData")
+          console.log(that.totalPortfolioHistoricalData);
+          for(let obj of that.totalPortfolioHistoricalData){
+
+            let key = Object.keys(obj)[0];
+            that.totalPortfolioHistoricalDataObj[key] = obj[key];
+          }
+
+
+          that.getHistoricalPorfolioPrice();
+        }, 2000)
 
       }
 
       private getHistoricalPorfolioPrice(): void {
         //need a function to pass through coins tickers
+        console.log("this.historicPortfolio");
+        console.log(this.historicPortfolio);
+        for(let item in this.historicPortfolio){
+        //  console.log("this.historicPortfolio[item].coins")
+          //console.log(this.historicPortfolio[item].coins)
+          let coinsAtPointInTime = this.historicPortfolio[item].coins;
+          let keysofCoins = Object.keys(coinsAtPointInTime);
+
+          for(let coin of keysofCoins){
+            //coinsAtPointInTime[coin]
+          //  console.log("coinsAtPointInTime[coin]")
+          //  console.log(coinsAtPointInTime[coin]);
+          }
+        }
+
+        console.log("this.totalPortfolioHistoricalDataObj");
+        console.log(this.totalPortfolioHistoricalDataObj);
+
       }
 
       public chartCardData(cardTicker: string, cardColor: string): void {
