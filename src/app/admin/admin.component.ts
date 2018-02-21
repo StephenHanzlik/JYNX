@@ -61,7 +61,6 @@ export class AdminComponent implements OnInit {
       }
 
       private getUserCoinData(): void {
-        console.log("get user coin data ran")
           let apiData: any = {};
           let usdAmt: number = 0;
           let colorsArray: Array<string> = ['#828A95', '#C98686', '#3C7A89', '#C9B1BD', '#81AE9D'];
@@ -79,10 +78,11 @@ export class AdminComponent implements OnInit {
 
 
           if(currentPortfolioKeys.length > 0){
-              console.log("current portfolio")
             this.cryptoCompareService.getMultiFullPrice(currentPortfolioKeys.join()).subscribe(result=>{
                 apiData = JSON.parse(result._body);
                 apiData = apiData.RAW;
+                console.log("apiData");
+                console.log(apiData);
                 let keys: Array<string> = [];
                 let allCoinData: object = ALLCOINDATA[0];
                 let iterable: number = 0;
@@ -91,6 +91,7 @@ export class AdminComponent implements OnInit {
                 else
                   return;
                 let index = 0;
+                let snapshotMasterList = {};
 
                 keys.forEach(key=> {
                   let coinToAdd = {
@@ -119,10 +120,10 @@ export class AdminComponent implements OnInit {
                     //totol profolio price data
                     index++;
                     let that = this;
-                    let snapshotMasterList = {};
 
                     setTimeout(function(){
-                        console.log("timeoput")
+                    //  console.log("key")
+                      //console.log(key);
                         that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
                           if(result._body){
                             result = JSON.parse(result._body);
@@ -139,8 +140,8 @@ export class AdminComponent implements OnInit {
                               }
                             });
 
-                            console.log("master snap shot list:");
-                            console.log(snapshotMasterList);
+                          //  console.log("master snap shot list:");
+                          //  console.log(snapshotMasterList);
 
                             //  result.forEach(dataPoint => {
                                 // if(dataPoint[0] > currentPortfolio.startTime){
@@ -280,12 +281,18 @@ export class AdminComponent implements OnInit {
 
       public addCoin(form: any): void {
 
-        this.cardsContent = [];
-        this.totalPortfolioValue = 0;
+
+        let that  = this;
 
             this.mongoDbService.addCoin(form).subscribe(result=>{
               // console.log("Get User Coin Data about to be called");
-              this.getUserCoinData();
+              setTimeout(function(){
+                that.cardsContent = [];
+                that.totalPortfolioValue = 0;
+                that.getUserCoinData();
+              }, 400)
+
+
             });
       //  })
       }
@@ -295,7 +302,7 @@ export class AdminComponent implements OnInit {
         this.totalPortfolioValue = 0;
 
         this.mongoDbService.deleteCoin(form).subscribe(result=>{
-          console.log("result of add coin from mongo db service");
+          //console.log("result of add coin from mongo db service");
           this.getUserCoinData();
         });
       }
