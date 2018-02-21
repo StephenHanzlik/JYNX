@@ -295,6 +295,8 @@ export class AdminComponent implements OnInit {
 
         this.mongoDbService.deleteCoin(form).subscribe(result=>{
           //console.log("result of add coin from mongo db service");
+          console.log("%%%%%%");
+          console.log(result);
           this.getUserCoinData();
         });
       }

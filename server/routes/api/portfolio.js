@@ -147,30 +147,29 @@ router.delete('/:name/:amount', function(req, res) {
 
       let addDbObject = dbPortfolio[0].coins;
 
-      console.log("key");
-      console.log(key);
+      if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) > 0){
 
-      if(addDbObject[key]){
+          addDbObject[key] = parseInt(addDbObject[key], 10) - parseInt(value, 10);
+          addDbObject[key] = addDbObject[key].toString();
 
-        addDbObject[key] = parseInt(addDbObject[key], 10) - parseInt(value, 10);
-        addDbObject[key] = addDbObject[key].toString();
+          let newPortfolio = new PortfolioModel({
+            hodler: req.token,
+            portfolioName: "your portfolio name here",
+            coins: addDbObject,
+            startTime: Date.now(),
+            endTime: 404
+          });
+
+          newPortfolio.save(function(err) {
+            if (err) return console.log(err);
+          });
+          res.status(200).send("ok");
       }
       else{
-        addDbObject[key] = value;
+        res.status(500).send("Youc can't sell more coins then you own");
+        //res.status(500).send("You can't sell more coins then you own");
+        //return console.log("you cant sell more coins then you own");
       }
-
-      let newPortfolio = new PortfolioModel({
-        hodler: req.token,
-        portfolioName: "your portfolio name here",
-        coins: addDbObject,
-        startTime: Date.now(),
-        endTime: 404
-      });
-
-      newPortfolio.save(function(err) {
-        if (err) return console.log(err);
-      });
-
     });
 
     // let newCoinsArr = dbPortfolio[0].coins
@@ -209,7 +208,7 @@ router.delete('/:name/:amount', function(req, res) {
     //   if (err) throw err;
     // });
 
-    res.status(200).send("ok");
+
   });
 });
 
