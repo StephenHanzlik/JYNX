@@ -224,11 +224,8 @@ router.delete('/:name/:amount', function(req, res) {
     //   if (err) throw err;
     // });
 
-
   });
 });
-
-
 
 // router.post('/user-hash', function(req, res){
 //

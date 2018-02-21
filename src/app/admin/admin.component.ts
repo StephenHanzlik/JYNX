@@ -129,6 +129,8 @@ export class AdminComponent implements OnInit {
                     that.currentPortfolioData = [];
 
                     setTimeout(function(){
+                      console.log("key getting prices");
+                      console.log(key);
 
                         that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
                           if(result._body){
@@ -137,13 +139,13 @@ export class AdminComponent implements OnInit {
                             result = result.Data;
                             let dataObjectToPush = {};
                             dataObjectToPush[key] = result;
-                            console.log("dataObjectToPush");
-                            console.log(dataObjectToPush);
+
                             that.currentPortfolioData.push(dataObjectToPush);
 
                             that.snapshotMasterList[key] = key;
 
                             that.historicPortfolio.forEach(portfolioSnapshot => {
+
                             let snapshotKeys = Object.keys(portfolioSnapshot.coins);
                             let snapshotKeysCounter = 0;
 
@@ -151,8 +153,8 @@ export class AdminComponent implements OnInit {
 
                               snapshotKeysCounter++;
 
-                              if(!that.snapshotMasterList[key]){
-                                that.snapshotMasterList[key] = true;
+                              if(!that.snapshotMasterList[snapKey]){
+                                that.snapshotMasterList[snapKey] = snapKey;
                               }
                             });
                           });// end of for forEach
@@ -185,35 +187,39 @@ export class AdminComponent implements OnInit {
        setTimeout(function(){
 
           let snapShotMasterKeys = Object.keys(that.snapshotMasterList);
+          that.totalPortfolioHistoricalData = that.currentPortfolioData;
 
-          console.log("that.currentPortfolioData")
-          console.log(that.currentPortfolioData);
+          console.log("snapShotMasterKeys")
+          console.log(snapShotMasterKeys);
           let currentPortfolioDataCheckObj = {};
 
           for(var tickerData in that.currentPortfolioData){
-            //console.log("that.currentPortfolioData[tickerData]");
-          //  console.log(Object.keys(that.currentPortfolioData[tickerData])[0]);
+
             currentPortfolioDataCheckObj[Object.keys(that.currentPortfolioData[tickerData])[0]] = Object.keys(that.currentPortfolioData[tickerData])[0];
           }
+          console.log("currentPortfolioDataCheckObj");
+          console.log(currentPortfolioDataCheckObj);
 
           for(var index in snapShotMasterKeys){
 
-            // console.log("snapShotMasterKeys[index]");
-            // console.log(snapShotMasterKeys[index])
-            //
-            // console.log("that.currentPortfolioData[index]");
-            // console.log(that.currentPortfolioData[index])
-
               if(!currentPortfolioDataCheckObj[snapShotMasterKeys[index]]){
-                  that.cryptoCompareService.getHistoricalPrice(index).subscribe(result =>{
+
+                let query = snapShotMasterKeys[index];
+
+                  that.cryptoCompareService.getHistoricalPrice(query).subscribe(result =>{
+
                     result = JSON.parse(result._body);
-                    that.currentPortfolioData[snapShotMasterKeys[index]] = result.Data;
+                    let pushObj = {}
+                    pushObj[query] = result.Data;
+
+                    that.totalPortfolioHistoricalData.push(pushObj);
                   });
               }
           };
-          that.totalPortfolioHistoricalData = that.currentPortfolioData;
+
           console.log("that.totalPortfolioHistoricalData");
           console.log(that.totalPortfolioHistoricalData);
+
 
         }, 1500)
 
@@ -275,18 +281,14 @@ export class AdminComponent implements OnInit {
       }
 
       public addCoin(form: any): void {
-
         let that  = this;
-
             this.mongoDbService.addCoin(form).subscribe(result=>{
-              // console.log("Get User Coin Data about to be called");
               setTimeout(function(){
                 that.cardsContent = [];
                 that.totalPortfolioValue = 0;
                 that.getUserCoinData();
               }, 300)
             });
-
       }
 
       public deleteCoin(form: any): void {
@@ -294,9 +296,7 @@ export class AdminComponent implements OnInit {
         this.totalPortfolioValue = 0;
 
         this.mongoDbService.deleteCoin(form).subscribe(result=>{
-          //console.log("result of add coin from mongo db service");
-          console.log("%%%%%%");
-          console.log(result);
+
           this.getUserCoinData();
         });
       }
