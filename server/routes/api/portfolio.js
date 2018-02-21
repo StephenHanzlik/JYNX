@@ -165,10 +165,26 @@ router.delete('/:name/:amount', function(req, res) {
           });
           res.status(200).send("ok");
       }
+      else if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) === 0){
+
+        delete addDbObject[key];
+
+        let newPortfolio = new PortfolioModel({
+          hodler: req.token,
+          portfolioName: "your portfolio name here",
+          coins: addDbObject,
+          startTime: Date.now(),
+          endTime: 404
+        });
+
+        newPortfolio.save(function(err) {
+          if (err) return console.log(err);
+        });
+        res.status(200).send("ok");
+
+      }
       else{
         res.status(500).send("Youc can't sell more coins then you own");
-        //res.status(500).send("You can't sell more coins then you own");
-        //return console.log("you cant sell more coins then you own");
       }
     });
 
