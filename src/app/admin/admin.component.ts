@@ -37,6 +37,9 @@ export class AdminComponent implements OnInit {
       public portfolioTotalArray: any = [];
       public portfolioName: string = '';
       public externalMasterPortGraphArray: any = [];
+      public currentPortfolioData: any = [];
+      public historicPortfolio: any;
+      public snapshotMasterList: any = {};
 
       color = "#36DBA3";
       coinTicker = "Total";
@@ -70,7 +73,7 @@ export class AdminComponent implements OnInit {
 
           this.portfolioName = result[result.length - 1]['portfolioName'];
 
-          let historicPortfolio: Array<any> = result;
+          this.historicPortfolio = result;
           let currentPortfolio: any = {};
           //get current portfolio status for the cards
           currentPortfolio = result[result.length - 1].coins;
@@ -81,6 +84,7 @@ export class AdminComponent implements OnInit {
             this.cryptoCompareService.getMultiFullPrice(currentPortfolioKeys.join()).subscribe(result=>{
                 apiData = JSON.parse(result._body);
                 apiData = apiData.RAW;
+
                 console.log("apiData");
                 console.log(apiData);
                 let keys: Array<string> = [];
@@ -91,9 +95,10 @@ export class AdminComponent implements OnInit {
                 else
                   return;
                 let index = 0;
-                let snapshotMasterList = {};
+                let keysCounter = 0;
 
                 keys.forEach(key=> {
+                  keysCounter++;
                   let coinToAdd = {
                      coinColor: colorsArray[iterable],
                      coinColorName: colorNamesArray[iterable],
@@ -122,45 +127,40 @@ export class AdminComponent implements OnInit {
                     let that = this;
 
                     setTimeout(function(){
-                    //  console.log("key")
-                      //console.log(key);
+
                         that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
                           if(result._body){
+
                             result = JSON.parse(result._body);
                             result = result.Data;
+                            that.currentPortfolioData.push(result);
 
-                            snapshotMasterList[key] = true;
+                            that.snapshotMasterList[key] = true;
 
-                            historicPortfolio.forEach(portfolioSnapshot => {
+                            //let historicPortfolioCounter = 0;
 
+                            that.historicPortfolio.forEach(portfolioSnapshot => {
+                            //historicPortfolioCounter++;
                             let snapshotKeys = Object.keys(portfolioSnapshot.coins);
+                            let snapshotKeysCounter = 0;
+
                             snapshotKeys.forEach(snapKey => {
-                              if(!snapshotMasterList[key]){
-                                snapshotMasterList[key] = true;
+
+                              snapshotKeysCounter++;
+
+                              if(!that.snapshotMasterList[key]){
+                                that.snapshotMasterList[key] = true;
                               }
                             });
 
-                          //  console.log("master snap shot list:");
-                          //  console.log(snapshotMasterList);
 
-                            //  result.forEach(dataPoint => {
-                                // if(dataPoint[0] > currentPortfolio.startTime){
-                                //
-                                // }
-                            //  });
-
-                            });
+                          });// end of for forEach
 
 
                           }
-                        });
+                        });//end of multi subscribe
+
                     }, 375 * index);
-
-
-
-
-
-
 
 
                     //old total portfolio price data graph
@@ -217,11 +217,26 @@ export class AdminComponent implements OnInit {
                 this.totalPortfolioValue24hr = Math.round(percChange * 100)/100;
 
                 this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
+                let that = this;
+                setTimeout(function(){
+                  that.processHistorcalList();
+                }, 500);
+
             })
           }
 
 
         });
+      }
+
+      private processHistorcalList(): void {
+        let that = this;
+       setTimeout(function(){
+          console.log("currentPortfolioData");
+          console.log(that.currentPortfolioData);
+        }, 1000)
+        console.log("historicPortfolio");
+        console.log(this.historicPortfolio);
       }
 
       private getHistoricalPorfolioPrice(): void {
@@ -281,7 +296,6 @@ export class AdminComponent implements OnInit {
 
       public addCoin(form: any): void {
 
-
         let that  = this;
 
             this.mongoDbService.addCoin(form).subscribe(result=>{
@@ -291,10 +305,8 @@ export class AdminComponent implements OnInit {
                 that.totalPortfolioValue = 0;
                 that.getUserCoinData();
               }, 300)
-
-
             });
-      //  })
+
       }
 
       public deleteCoin(form: any): void {
