@@ -290,7 +290,7 @@ export class AdminComponent implements OnInit {
                 that.cardsContent = [];
                 that.totalPortfolioValue = 0;
                 that.getUserCoinData();
-              }, 400)
+              }, 300)
 
 
             });
