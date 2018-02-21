@@ -61,6 +61,7 @@ export class AdminComponent implements OnInit {
       }
 
       private getUserCoinData(): void {
+        console.log("get user coin data ran")
           let apiData: any = {};
           let usdAmt: number = 0;
           let colorsArray: Array<string> = ['#828A95', '#C98686', '#3C7A89', '#C9B1BD', '#81AE9D'];
@@ -70,14 +71,15 @@ export class AdminComponent implements OnInit {
 
           this.portfolioName = result[result.length - 1]['portfolioName'];
 
-          let currentPortfolio: Object = {};
+          let historicPortfolio: Array<any> = result;
+          let currentPortfolio: any = {};
+          //get current portfolio status for the cards
           currentPortfolio = result[result.length - 1].coins;
           let currentPortfolioKeys: Array<string> = Object.keys(currentPortfolio);
-          // console.log("current portfolio");
-          // console.log(currentPortfolio);
 
 
           if(currentPortfolioKeys.length > 0){
+              console.log("current portfolio")
             this.cryptoCompareService.getMultiFullPrice(currentPortfolioKeys.join()).subscribe(result=>{
                 apiData = JSON.parse(result._body);
                 apiData = apiData.RAW;
@@ -115,15 +117,39 @@ export class AdminComponent implements OnInit {
                     this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * currentPortfolio[key];
 
                     //totol profolio price data
-                    let that = this;
                     index++;
+                    let that = this;
+                    let snapshotMasterList = {};
+
                     setTimeout(function(){
+                        console.log("timeoput")
                         that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
                           if(result._body){
                             result = JSON.parse(result._body);
                             result = result.Data;
-                            console.log("result for " + key);
-                            console.log(result);
+
+                            snapshotMasterList[key] = true;
+
+                            historicPortfolio.forEach(portfolioSnapshot => {
+
+                            let snapshotKeys = Object.keys(portfolioSnapshot.coins);
+                            snapshotKeys.forEach(snapKey => {
+                              if(!snapshotMasterList[key]){
+                                snapshotMasterList[key] = true;
+                              }
+                            });
+
+                            console.log("master snap shot list:");
+                            console.log(snapshotMasterList);
+
+                            //  result.forEach(dataPoint => {
+                                // if(dataPoint[0] > currentPortfolio.startTime){
+                                //
+                                // }
+                            //  });
+
+                            });
+
 
                           }
                         });
