@@ -44,7 +44,7 @@ router.post('/sign-up', function(req, res) {
                      portfolioName: "your portfolio name here",
                      coins: {"no ticker": "no amount"},
                      masterPortfolioList: [],
-                     masterCoinList: {},
+                     masterCoinList: {"add keys": true},
                    });
 
                    newPortfolio.save(function(err) {

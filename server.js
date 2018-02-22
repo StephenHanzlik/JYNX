@@ -48,61 +48,63 @@ setInterval(function(){
       res.status(500).send(err);
     }
 
-    let queryList = {};
-
     dbPortfolio.forEach(data=>{
-      if(true){
-        for(let key in data.coins){
-          if(!queryList[key]){
-            queryList[key] = true;
-          }
-        }
-      }
-    });
+        let coinQueryString = Object.keys(data.coins).join();
+        console.log(data.masterCoinList)
 
-    let coinQueryString = Object.keys(queryList).join()
+        //  { _id: 5a8efeb9fe6e060a00833b00,
+        //   portfolioName: 'your portfolio name here',
+        //   coins: { BTC: '1' },
+        //   masterCoinList: { 'add keys': true },
+        //   startTime: 1519320920408,
+        //   endTime: 951926120000000,
+        //   masterPortfolioList: [],
+        //   hodler: [ 5a8efeb9fe6e060a00833aff ] }
 
-    const options = {
-       method: 'GET',
-       uri: `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinQueryString}&tsyms=USD`,
-     };
-
-     request(options)
-       .then(function(response) {
-
-         const updateObj = {
-           priceString: response
+        let options = {
+           method: 'GET',
+           uri: `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinQueryString}&tsyms=USD`,
          };
 
-         // PortfolioModel.
-         // find().
-         // where('endTime').
-         // equals(951926120000000).
-         // select('hodler portfolioName coins masterPortfolioList masterCoinList startTime endTime').
-         // exec(function(err, dbPriceString) {
-         //   if (err) {
-         //     res.status(500).send(err);
-         //   }
-           PriceModel.findOneAndUpdate({ name: 'priceData' }, updateObj, function(err, user) {
-             if (err) {
-               throw err;
-             }
-           });
-        // });
+         request(options)
+           .then(function(response) {
 
-      })
-       .catch(function(err) {
-         // Deal with the error
-       });
-    // PriceModel.findOneAndUpdate({ name: 'priceData' }, updateObj, function(err, user) {
-    //   if (err) {
-    //     throw err;
-    //   }
-    // });
+             response = JSON.parse(response);
+             response = response['RAW'];
+             let dataCoinsKeys = Object.keys(data.coins);
+
+             dataCoinsKeys.forEach(coin => {
+               if(!data.masterCoinList[coin]){
+                 data.masterCoinList[coin] = [];
+               }
+               if(data.masterCoinList['add keys']){
+                 delete data.masterCoinList['add keys'];
+               }
+               let pushArr = [];
+               let coinPriceUSD = response[coin].USD.PRICE * data.coins[coin];
+               let priceTimeStamp = Date.now();
+               pushArr = [priceTimeStamp, coinPriceUSD];
+               data.masterCoinList[coin].push(pushArr);
+
+             });
+
+             let updateObj = data;
+             PortfolioModel.findOneAndUpdate({ endTime: 951926120000000, hodler: data.hodler }, updateObj, function(err, user) {
+              if (err) {
+                throw err;
+              }
+            });
+
+          })
+           .catch(function(err) {
+             // Deal with the error
+           });
+    });
+
   });
 
 //3600000
-}, 8000)
+}, 3000)
 
 //use this to create price data entry in Db if Db is deleted
 // const priceData = {
