@@ -103,6 +103,7 @@ router.post('/log-in', function(req, res) {
     email: req.body.email,
     password: hash,
   };
+  
 
   UserModel.
   find().
