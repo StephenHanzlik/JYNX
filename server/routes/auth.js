@@ -75,7 +75,7 @@ router.post('/sign-up', function(req, res) {
                    newPortfolio.save(function(err) {
                      if (err) return console.log(err);
                    });
-                   // 
+                   //
                    // const newSettings = new SettingsModel({
                    //   hodler: newUser._id,
                    //   setting1: [],
@@ -92,8 +92,7 @@ router.post('/sign-up', function(req, res) {
 
     //     }
     // });
-
-
+    res.status(200).send("ok");
 
 });
 

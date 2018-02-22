@@ -40,12 +40,17 @@ router.put('/', function(req, res) {
     if(dbPortfolio[0]){
 
       if(dbPortfolio[0].coins["no ticker"]){
+        let shortDate = Date.now();
+        shortDate = shortDate.toString();
+        shortDate = parseInt(shortDate.slice(0, 10), 10);
+
+
         const updateDbObject = {
           hodler: req.token,
           portfolioName: "your portfolio name here",
           coins: {},
-          startTime: Date.now(),
-          endTime: 404
+          startTime: shortDate,
+          endTime: 951926120000000
         };
 
         updateDbObject.coins[key] = value;
@@ -57,15 +62,20 @@ router.put('/', function(req, res) {
       }
       else{
 
+        let shortDate = Date.now();
+        shortDate = shortDate.toString();
+        shortDate = parseInt(shortDate.slice(0, 10), 10);
+
+
         let updateDbObject ={
           hodler: dbPortfolio[0].hodler,
           portfolioName: "your portfolio name here",
           coins: dbPortfolio[0].coins,
           startTime: dbPortfolio[0].startTime,
-          endTime: Date.now()
+          endTime: shortDate
         };
 
-        PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 404}, updateDbObject, function(err, user) {
+        PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
           if (err) throw err;
 
           let addDbObject = dbPortfolio[0].coins;
@@ -77,13 +87,17 @@ router.put('/', function(req, res) {
           else{
             addDbObject[key] = value;
           }
+          let shortDate = Date.now();
+          shortDate = shortDate.toString();
+          shortDate = parseInt(shortDate.slice(0, 10), 10);
+
 
           let newPortfolio = new PortfolioModel({
             hodler: req.token,
             portfolioName: "your portfolio name here",
             coins: addDbObject,
-            startTime: Date.now(),
-            endTime: 404
+            startTime: shortDate,
+            endTime: 951926120000000
           });
 
           newPortfolio.save(function(err) {
@@ -131,18 +145,22 @@ router.delete('/:name/:amount', function(req, res) {
       res.status(500).send(err);
     }
 
+    let shortDate = Date.now();
+    shortDate = shortDate.toString();
+    shortDate = parseInt(shortDate.slice(0, 10), 10);
+
     let updateDbObject ={
       hodler: dbPortfolio[0].hodler,
       portfolioName: "your portfolio name here",
       coins: dbPortfolio[0].coins,
       startTime: dbPortfolio[0].startTime,
-      endTime: Date.now()
+      endTime: shortDate
     };
 
     let key = bodyObj.coinName;
     let value = bodyObj.coinAmt;
 
-    PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 404}, updateDbObject, function(err, user) {
+    PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
       if (err) throw err;
 
       let addDbObject = dbPortfolio[0].coins;
@@ -152,12 +170,16 @@ router.delete('/:name/:amount', function(req, res) {
           addDbObject[key] = parseInt(addDbObject[key], 10) - parseInt(value, 10);
           addDbObject[key] = addDbObject[key].toString();
 
+          let shortDate = Date.now();
+          shortDate = shortDate.toString();
+          shortDate = parseInt(shortDate.slice(0, 10), 10);
+
           let newPortfolio = new PortfolioModel({
             hodler: req.token,
             portfolioName: "your portfolio name here",
             coins: addDbObject,
-            startTime: Date.now(),
-            endTime: 404
+            startTime: shortDate,
+            endTime: 951926120000000
           });
 
           newPortfolio.save(function(err) {
@@ -168,13 +190,16 @@ router.delete('/:name/:amount', function(req, res) {
       else if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) === 0){
 
         delete addDbObject[key];
+        let shortDate = Date.now();
+        shortDate = shortDate.toString();
+        shortDate = parseInt(shortDate.slice(0, 10), 10);
 
         let newPortfolio = new PortfolioModel({
           hodler: req.token,
           portfolioName: "your portfolio name here",
           coins: addDbObject,
-          startTime: Date.now(),
-          endTime: 404
+          startTime: shortDate,
+          endTime: 951926120000000
         });
 
         newPortfolio.save(function(err) {
@@ -184,7 +209,7 @@ router.delete('/:name/:amount', function(req, res) {
 
       }
       else{
-        res.status(500).send("Youc can't sell more coins then you own");
+        res.status(500).send("You can't sell more coins then you own");
       }
     });
 
