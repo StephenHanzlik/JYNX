@@ -57,10 +57,55 @@ router.put('/', function(req, res) {
             }
             let indHoldingsValue = value * currPrice;
             let currentCoinValue = existingHoldings + indHoldingsValue;
-            let pushArr = [Date.now(), currentCoinValue];
+            let date = Date.now();
+            let pushArr = [date, currentCoinValue];
+            let masterPortPushArr = []
 
-            console.log("pushArr");
-            console.log(pushArr);
+            let queryCoins = Object.keys(dbPortfolio[0].coins)
+            queryCoins = queryCoins.join();
+            console.log("dbPortfolio[0].coins");
+            //{ LTC: '3', BTC: '36' }
+            let totalPortfolioAggrObj = {};
+
+            let options = {
+               method: 'GET',
+               uri: `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${queryCoins}&tsyms=USD`,
+             };
+            request(options)
+              .then(function(response) {
+                response = JSON.parse(response);
+
+                let masterPortPushArr = [date, ]
+
+                for(let coin in dbPortfolio[0].coins){
+                  let currPrice = response['RAW'][coin]['USD']['PRICE'];
+                  totalPortfolioAggrObj[coin] = currPrice * dbPortfolio[0].coins[coin];
+                }
+                dbPortfolio[0][key] = currentCoinValue;
+
+                let accum = 0;
+                for(let coin in totalPortfolioAggrObj){
+                  accum += totalPortfolioAggrObj[coin];
+                }
+
+                masterPortPushArr = [date, accum];
+
+
+
+
+
+
+
+
+
+              })
+              .catch(function(err){
+
+              });
+
+
+            // console.log("pushArr");
+            // console.log(pushArr);
 
 
             if(dbPortfolio[0].coins["no ticker"]){
@@ -167,12 +212,10 @@ router.put('/', function(req, res) {
                 if(updateDbObject.masterCoinList[key]){
                   updateDbObject.masterCoinList[key].pop();
                   updateDbObject.masterCoinList[key].push(pushArr);
-                  console.log("Alpha")
                 }
                 else{
                   updateDbObject.masterCoinList[key] = []
                   updateDbObject.masterCoinList[key].push(pushArr);
-                  console.log("charly")
                 }
 
 
@@ -190,7 +233,7 @@ router.put('/', function(req, res) {
 
     })
     .catch(function(err){
-
+        res.status(500).send("Something went wrong adding your coin");
     });
 
 });
