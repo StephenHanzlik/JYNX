@@ -41,8 +41,8 @@ router.put('/', function(req, res) {
 
       if(dbPortfolio[0].coins["no ticker"]){
         let shortDate = Date.now();
-        shortDate = shortDate.toString();
-        shortDate = parseInt(shortDate.slice(0, 10), 10);
+        // shortDate = shortDate.toString();
+        // shortDate = parseInt(shortDate.slice(0, 10), 10);
 
 
         const updateDbObject = {
@@ -63,21 +63,49 @@ router.put('/', function(req, res) {
       else{
 
         let shortDate = Date.now();
-        shortDate = shortDate.toString();
-        shortDate = parseInt(shortDate.slice(0, 10), 10);
+        // shortDate = shortDate.toString();
+        // shortDate = parseInt(shortDate.slice(0, 10), 10);
 
+        if(Date.now() > dbPortfolio[0].startTime + 3600000){
+          let updateDbObject ={
+            hodler: dbPortfolio[0].hodler,
+            portfolioName: "your portfolio name here",
+            coins: dbPortfolio[0].coins,
+            startTime: dbPortfolio[0].startTime,
+            endTime: shortDate
+          };
 
-        let updateDbObject ={
-          hodler: dbPortfolio[0].hodler,
-          portfolioName: "your portfolio name here",
-          coins: dbPortfolio[0].coins,
-          startTime: dbPortfolio[0].startTime,
-          endTime: shortDate
-        };
+          PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
+            if (err) throw err;
 
-        PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
-          if (err) throw err;
+            let addDbObject = dbPortfolio[0].coins;
 
+            if(addDbObject[key]){
+              addDbObject[key] = parseInt(addDbObject[key], 10) + parseInt(value, 10);
+              addDbObject[key] = addDbObject[key].toString();
+            }
+            else{
+              addDbObject[key] = value;
+            }
+            let shortDate = Date.now();
+            // shortDate = shortDate.toString();
+            // shortDate = parseInt(shortDate.slice(0, 10), 10);
+
+            let newPortfolio = new PortfolioModel({
+              hodler: req.token,
+              portfolioName: "your portfolio name here",
+              coins: addDbObject,
+              startTime: shortDate,
+              endTime: 951926120000000
+            });
+
+            newPortfolio.save(function(err) {
+              if (err) return console.log(err);
+            });
+
+          });
+        }// end of if
+        else{
           let addDbObject = dbPortfolio[0].coins;
 
           if(addDbObject[key]){
@@ -87,24 +115,20 @@ router.put('/', function(req, res) {
           else{
             addDbObject[key] = value;
           }
-          let shortDate = Date.now();
-          shortDate = shortDate.toString();
-          shortDate = parseInt(shortDate.slice(0, 10), 10);
 
-
-          let newPortfolio = new PortfolioModel({
-            hodler: req.token,
+          let updateDbObject ={
+            hodler: dbPortfolio[0].hodler,
             portfolioName: "your portfolio name here",
-            coins: addDbObject,
-            startTime: shortDate,
-            endTime: 951926120000000
-          });
+            coins: dbPortfolio[0].coins,
+            startTime: dbPortfolio[0].startTime,
+            endTime: shortDate
+          };
 
-          newPortfolio.save(function(err) {
-            if (err) return console.log(err);
-          });
+          PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
+            if (err) throw err;
 
-        });
+          });
+        }
       }
     }
 
@@ -146,33 +170,55 @@ router.delete('/:name/:amount', function(req, res) {
     }
 
     let shortDate = Date.now();
-    shortDate = shortDate.toString();
-    shortDate = parseInt(shortDate.slice(0, 10), 10);
-
-    let updateDbObject ={
-      hodler: dbPortfolio[0].hodler,
-      portfolioName: "your portfolio name here",
-      coins: dbPortfolio[0].coins,
-      startTime: dbPortfolio[0].startTime,
-      endTime: shortDate
-    };
+    // shortDate = shortDate.toString();
+    // shortDate = parseInt(shortDate.slice(0, 10), 10);
 
     let key = bodyObj.coinName;
     let value = bodyObj.coinAmt;
 
-    PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
-      if (err) throw err;
+    if(Date.now() > dbPortfolio[0].startTime + 3600000){
 
-      let addDbObject = dbPortfolio[0].coins;
+      let updateDbObject ={
+        hodler: dbPortfolio[0].hodler,
+        portfolioName: "your portfolio name here",
+        coins: dbPortfolio[0].coins,
+        startTime: dbPortfolio[0].startTime,
+        endTime: shortDate
+      };
 
-      if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) > 0){
+      PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
+        if (err) throw err;
 
-          addDbObject[key] = parseInt(addDbObject[key], 10) - parseInt(value, 10);
-          addDbObject[key] = addDbObject[key].toString();
+        let addDbObject = dbPortfolio[0].coins;
 
+        if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) > 0){
+
+            addDbObject[key] = parseInt(addDbObject[key], 10) - parseInt(value, 10);
+            addDbObject[key] = addDbObject[key].toString();
+
+            let shortDate = Date.now();
+            // shortDate = shortDate.toString();
+            // shortDate = parseInt(shortDate.slice(0, 10), 10);
+
+            let newPortfolio = new PortfolioModel({
+              hodler: req.token,
+              portfolioName: "your portfolio name here",
+              coins: addDbObject,
+              startTime: shortDate,
+              endTime: 951926120000000
+            });
+
+            newPortfolio.save(function(err) {
+              if (err) return console.log(err);
+            });
+            res.status(200).send("ok");
+        }
+        else if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) === 0){
+
+          delete addDbObject[key];
           let shortDate = Date.now();
-          shortDate = shortDate.toString();
-          shortDate = parseInt(shortDate.slice(0, 10), 10);
+          // shortDate = shortDate.toString();
+          // shortDate = parseInt(shortDate.slice(0, 10), 10);
 
           let newPortfolio = new PortfolioModel({
             hodler: req.token,
@@ -186,32 +232,78 @@ router.delete('/:name/:amount', function(req, res) {
             if (err) return console.log(err);
           });
           res.status(200).send("ok");
-      }
-      else if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) === 0){
 
-        delete addDbObject[key];
-        let shortDate = Date.now();
-        shortDate = shortDate.toString();
-        shortDate = parseInt(shortDate.slice(0, 10), 10);
+        }
+        else{
+          res.status(500).send("You can't sell more coins then you own");
+        }
+      });
+    }
+    else{
 
-        let newPortfolio = new PortfolioModel({
-          hodler: req.token,
-          portfolioName: "your portfolio name here",
-          coins: addDbObject,
-          startTime: shortDate,
-          endTime: 951926120000000
-        });
+      let updateDbObject ={
+        hodler: dbPortfolio[0].hodler,
+        portfolioName: "your portfolio name here",
+        coins: dbPortfolio[0].coins,
+        startTime: dbPortfolio[0].startTime,
+        endTime: dbPortfolio[0].endTime
+      };
 
-        newPortfolio.save(function(err) {
-          if (err) return console.log(err);
-        });
-        res.status(200).send("ok");
+      PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
+        if (err) throw err;
 
-      }
-      else{
-        res.status(500).send("You can't sell more coins then you own");
-      }
-    });
+        let addDbObject = dbPortfolio[0].coins;
+
+        if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) > 0){
+
+            addDbObject[key] = parseInt(addDbObject[key], 10) - parseInt(value, 10);
+            addDbObject[key] = addDbObject[key].toString();
+
+            let shortDate = Date.now();
+            // shortDate = shortDate.toString();
+            // shortDate = parseInt(shortDate.slice(0, 10), 10);
+
+            let newPortfolio = new PortfolioModel({
+              hodler: req.token,
+              portfolioName: "your portfolio name here",
+              coins: addDbObject,
+              startTime: shortDate,
+              endTime: 951926120000000
+            });
+
+            newPortfolio.save(function(err) {
+              if (err) return console.log(err);
+            });
+            res.status(200).send("ok");
+        }
+        else if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) === 0){
+
+          delete addDbObject[key];
+          let shortDate = Date.now();
+          // shortDate = shortDate.toString();
+          // shortDate = parseInt(shortDate.slice(0, 10), 10);
+
+          let newPortfolio = new PortfolioModel({
+            hodler: req.token,
+            portfolioName: "your portfolio name here",
+            coins: addDbObject,
+            startTime: shortDate,
+            endTime: 951926120000000
+          });
+
+          newPortfolio.save(function(err) {
+            if (err) return console.log(err);
+          });
+          res.status(200).send("ok");
+
+        }
+        else{
+          res.status(500).send("You can't sell more coins then you own");
+        }
+      });
+    }
+
+
 
     // let newCoinsArr = dbPortfolio[0].coins
     // let newAmountsArr = dbPortfolio[0].coinAmts
