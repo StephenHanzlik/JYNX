@@ -121,7 +121,7 @@ router.put('/', function(req, res) {
             portfolioName: "your portfolio name here",
             coins: dbPortfolio[0].coins,
             startTime: dbPortfolio[0].startTime,
-            endTime: shortDate
+            endTime: 951926120000000
           };
 
           PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
@@ -177,6 +177,8 @@ router.delete('/:name/:amount', function(req, res) {
     let value = bodyObj.coinAmt;
 
     if(Date.now() > dbPortfolio[0].startTime + 3600000){
+
+      console.log("1")
 
       let updateDbObject ={
         hodler: dbPortfolio[0].hodler,
@@ -240,7 +242,7 @@ router.delete('/:name/:amount', function(req, res) {
       });
     }
     else{
-
+      console.log("2")
       let addDbObject = dbPortfolio[0].coins;
       let shortDate = Date.now();
       // shortDate = shortDate.toString();
@@ -255,24 +257,21 @@ router.delete('/:name/:amount', function(req, res) {
       };
 
       if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) > 0){
+        console.log("a")
 
           addDbObject[key] = parseInt(addDbObject[key], 10) - parseInt(value, 10);
+          console.log("addDbObject[key]");
+          console.log(addDbObject[key]);
           addDbObject[key] = addDbObject[key].toString();
 
-          // let newPortfolio = new PortfolioModel({
-          //   hodler: req.token,
-          //   portfolioName: "your portfolio name here",
-          //   coins: addDbObject,
-          //   startTime: shortDate,
-          //   endTime: 951926120000000
-          // });
+          PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
+            if (err) throw err;
 
-          // newPortfolio.save(function(err) {
-          //   if (err) return console.log(err);
-          // });
-          res.status(200).send("ok");
+            res.status(200).send("ok");
+          });
       }
       else if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) === 0){
+        console.log("b")
 
         delete addDbObject[key];
         let shortDate = Date.now();
@@ -290,7 +289,12 @@ router.delete('/:name/:amount', function(req, res) {
         // newPortfolio.save(function(err) {
         //   if (err) return console.log(err);
         // });
-        res.status(200).send("ok");
+        PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
+          if (err) throw err;
+
+          res.status(200).send("ok");
+        });
+
 
       }
       else{
@@ -299,14 +303,7 @@ router.delete('/:name/:amount', function(req, res) {
 
 
 
-      PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
-        if (err) throw err;
 
-        res.status(200).send("ok");
-
-
-
-      });
     }
 
 
