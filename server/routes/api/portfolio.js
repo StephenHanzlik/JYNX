@@ -48,7 +48,13 @@ router.put('/', function(req, res) {
 
             let key = bodyObj.coinName;
             let value = bodyObj.coinAmt;
-            let existingHoldings = dbPortfolio[0].coins[key] * currPrice;
+            let existingHoldings
+            if(dbPortfolio[0].coins[key]){
+              existingHoldings = dbPortfolio[0].coins[key] * currPrice;
+            }
+            else{
+              existingHoldings = 0;
+            }
             let indHoldingsValue = value * currPrice;
             let currentCoinValue = existingHoldings + indHoldingsValue;
             let pushArr = [Date.now(), currentCoinValue];
@@ -72,6 +78,9 @@ router.put('/', function(req, res) {
               };
 
               updateDbObject.coins[key] = value;
+              updateDbObject.masterCoinList = {};
+              updateDbObject.masterCoinList[key] = []
+              updateDbObject.masterCoinList[key].push(pushArr);
 
               PortfolioModel.findOneAndUpdate({ hodler: req.token, coins: {"no ticker": "no amount"}}, updateDbObject, function(err, user) {
                 if (err) throw err;
