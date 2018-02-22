@@ -7,6 +7,8 @@ const PortfolioSchema = new Schema({
   hodler: [{ type: Schema.Types.ObjectId, ref: 'UserSchema' }],
   portfolioName: String,
   coins: Schema.Types.Mixed,
+  masterPortfolioList: Array,
+  masterCoinList: Schema.Types.Mixed,
   startTime: Number,
   endTime: Number
 });

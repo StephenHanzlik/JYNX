@@ -14,7 +14,7 @@ const auth = require('./server/routes/auth');
 const request = require('request-promise');
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds245548.mlab.com:45548/jynx';
-const PriceModel = require('./server/models/priceModel');
+const PortfolioModel = require('./server/models/portfolioModel');
 
 //use to prevent cors issues for development
 app.use(function(req, res, next) {
@@ -35,6 +35,75 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+
+setInterval(function(){
+
+  PortfolioModel.
+  find().
+  where('endTime').
+  equals(951926120000000).
+  select('hodler portfolioName coins masterPortfolioList masterCoinList startTime endTime').
+  exec(function(err, dbPortfolio) {
+    if (err) {
+      res.status(500).send(err);
+    }
+
+    let queryList = {};
+
+    dbPortfolio.forEach(data=>{
+      if(true){
+        for(let key in data.coins){
+          if(!queryList[key]){
+            queryList[key] = true;
+          }
+        }
+      }
+    });
+
+    let coinQueryString = Object.keys(queryList).join()
+
+    const options = {
+       method: 'GET',
+       uri: `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinQueryString}&tsyms=USD`,
+     };
+
+     request(options)
+       .then(function(response) {
+
+         const updateObj = {
+           priceString: response
+         };
+
+         // PortfolioModel.
+         // find().
+         // where('endTime').
+         // equals(951926120000000).
+         // select('hodler portfolioName coins masterPortfolioList masterCoinList startTime endTime').
+         // exec(function(err, dbPriceString) {
+         //   if (err) {
+         //     res.status(500).send(err);
+         //   }
+           PriceModel.findOneAndUpdate({ name: 'priceData' }, updateObj, function(err, user) {
+             if (err) {
+               throw err;
+             }
+           });
+        // });
+
+      })
+       .catch(function(err) {
+         // Deal with the error
+       });
+    // PriceModel.findOneAndUpdate({ name: 'priceData' }, updateObj, function(err, user) {
+    //   if (err) {
+    //     throw err;
+    //   }
+    // });
+  });
+
+//3600000
+}, 8000)
+
 //use this to create price data entry in Db if Db is deleted
 // const priceData = {
 //   name: "priceData",
@@ -47,42 +116,42 @@ app.use(cookieParser());
 //
 // })
 
-setInterval(function(){
-
-  const options = {
-    method: 'GET',
-    uri: 'https://api.coinmarketcap.com/v1/ticker/?limit=0',
-  };
-
-  request(options)
-    .then(function(response) {
-
-      const updateObj = {
-        priceString: response
-      };
-
-      PriceModel.
-      find().
-      where('name').
-      equals('priceData').
-      limit(1).
-      select('priceString').
-      exec(function(err, dbPriceString) {
-        if (err) {
-          res.status(500).send(err);
-        }
-        PriceModel.findOneAndUpdate({ name: 'priceData' }, updateObj, function(err, user) {
-          if (err) {
-            throw err;
-          }
-        });
-      });
-
-   })
-    .catch(function(err) {
-      // Deal with the error
-    });
-}, 330000);
+// setInterval(function(){
+//
+//   const options = {
+//     method: 'GET',
+//     uri: 'https://api.coinmarketcap.com/v1/ticker/?limit=0',
+//   };
+//
+//   request(options)
+//     .then(function(response) {
+//
+//       const updateObj = {
+//         priceString: response
+//       };
+//
+//       PriceModel.
+//       find().
+//       where('name').
+//       equals('priceData').
+//       limit(1).
+//       select('priceString').
+//       exec(function(err, dbPriceString) {
+//         if (err) {
+//           res.status(500).send(err);
+//         }
+//         PriceModel.findOneAndUpdate({ name: 'priceData' }, updateObj, function(err, user) {
+//           if (err) {
+//             throw err;
+//           }
+//         });
+//       });
+//
+//    })
+//     .catch(function(err) {
+//       // Deal with the error
+//     });
+// }, 330000);
 
 
 const authorize = function(req, res, next) {

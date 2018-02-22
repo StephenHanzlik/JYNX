@@ -35,63 +35,24 @@ router.post('/sign-up', function(req, res) {
     datastoreId: 5841
   };
 
-  //Hash to Tierion API
-    // hashClient.authenticate(username, password,   function(err, authToken){
-    //     if(err) {
-    //       console.log("there was an error with hash client");
-    //         // handle the error
-    //     } else {
-    //       console.log("no error with hash client");
-    //
-    //
-            // const hashTarget = JSON.stringify(bodyObj);
-            // const crypto = require('crypto');
-            // let hash = crypto.createHash('sha256')
-            //   .update(hashTarget)
-            //
-            // let hex = hash.digest('hex');
-            //
-            // hashClient.submitHashItem(hex, function(err, result) {
-            //    if (err) {
-            //      console.log("error in submit hash: " + JSON.stringify(err));
-            //    } else {
-            //      console.log("Succes!!! result: ");
-            //      console.log(typeof result);
-            //      console.log(result);
-            //
-            //      bodyObj.tierionReceipt = result.receiptId;
-            //      bodyObj.tierionTimeStamp = result.timestamp;
-            //
                  const newUser = new UserModel(bodyObj);
-            //
+
                  newUser.save(function(err) {
 
                    const newPortfolio = new PortfolioModel({
                      hodler: newUser._id,
                      portfolioName: "your portfolio name here",
                      coins: {"no ticker": "no amount"},
+                     masterPortfolioList: [],
+                     masterCoinList: {},
                    });
 
                    newPortfolio.save(function(err) {
                      if (err) return console.log(err);
                    });
-                   //
-                   // const newSettings = new SettingsModel({
-                   //   hodler: newUser._id,
-                   //   setting1: [],
-                   //   setting2: []
-                   // });
-                   //
-                   // newSettings.save(function(err) {
-                   //   if (err) return console.log(err);
-                   // });
-                 });
-            //
-            //   }
-            // });
 
-    //     }
-    // });
+                 });
+
     res.status(200).send("ok");
 
 });
