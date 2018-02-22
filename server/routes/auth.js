@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const privateKey = 'xt67rhdk30_cookie_signing_key_1las01103ksd';
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
+const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds245548.mlab.com:45548/jynx';
 const UserModel = require('../models/userModel');
 const PortfolioModel = require('../models/portfolioModel');
 const SettingsModel = require('../models/settingsModel');
@@ -103,7 +103,7 @@ router.post('/log-in', function(req, res) {
     email: req.body.email,
     password: hash,
   };
-  
+
 
   UserModel.
   find().

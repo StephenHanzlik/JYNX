@@ -2,8 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds151207.mlab.com:51207/jynx';
-const PortfolioModel = require('../../models/portfolioModel');
+const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds245548.mlab.com:45548/jynx';const PortfolioModel = require('../../models/portfolioModel');
 //const request = require('request-promise');
 const hashclient = require('hashapi-lib-node');
 const username = 'stephenhanzlik@gmail.com';
