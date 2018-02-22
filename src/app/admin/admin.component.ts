@@ -226,6 +226,8 @@ export class AdminComponent implements OnInit {
 
       private getHistoricalPorfolioPrice(): void {
 
+        this.historicPortfolio = this.historicPortfolio.reverse();
+
         for(let historicItem of this.historicPortfolio){
 
 
@@ -236,20 +238,35 @@ export class AdminComponent implements OnInit {
 
             for(let dataPoint of this.totalPortfolioHistoricalDataObj[coinName]){
               coinCounter++
-              console.log(coinCounter);
-              console.log( this.totalPortfolioHistoricalDataObj[coinName].length);
+              // console.log(coinCounter);
+              // console.log( this.totalPortfolioHistoricalDataObj[coinName].length);
               // console.log("this.totalPortfolioHistoricalDataObj[coinName]");
               //console.log(this.totalPortfolioHistoricalDataObj[coinName]);
-
+              // console.log("dataPoint.time");
+              // console.log(dataPoint)
+              // console.log("historicItem.endTime");
+              // console.log(historicItem.endTime)
               if(dataPoint.time <= historicItem.endTime && dataPoint.time >= historicItem.startTime){
                     let pushArr = []
                     let usdAmount = dataPoint.close * historicItem.coins[coinName];
+
                     pushArr = [dataPoint.time, usdAmount];
+                    console.log("pushArr");
+                    console.log(pushArr);
                     this.coinsGraphHistoryObj[coinName].push(pushArr);
-              }else if (this.coinsGraphHistoryObj[coinName].length < 1 && coinCounter >= this.totalPortfolioHistoricalDataObj[coinName].length){
+              }else if (this.coinsGraphHistoryObj[coinName].length < 1 && coinCounter <= this.totalPortfolioHistoricalDataObj[coinName].length){
+
                 let pushArr = []
                 let usdAmount = this.totalPortfolioHistoricalDataObj[coinName][this.totalPortfolioHistoricalDataObj[coinName].length - 1].close * historicItem.coins[coinName];
                 pushArr = [this.totalPortfolioHistoricalDataObj[coinName][this.totalPortfolioHistoricalDataObj[coinName].length - 1].time, usdAmount];
+                // console.log("this.totalPortfolioHistoricalDataObj");
+                // console.log(this.totalPortfolioHistoricalDataObj);
+                // console.log("this.totalPortfolioHistoricalDataObj[coinName].length - 1")
+                // console.log(this.totalPortfolioHistoricalDataObj[coinName].length - 1)
+                // console.log("historicItem.coins");
+                // console.log(historicItem.coins);
+                console.log("pushArr 2");
+                console.log(pushArr);
 
                 this.coinsGraphHistoryObj[coinName].push(pushArr);
               }
