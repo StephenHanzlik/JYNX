@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
-setInterval(function(){
+setInterval(function(req, res){
 
   PortfolioModel.
   find().
@@ -49,9 +49,9 @@ setInterval(function(){
     }
 
     dbPortfolio.forEach(data=>{
+      //console.log(data);
         let coinQueryString = Object.keys(data.coins).join();
-        console.log(data.masterCoinList)
-
+        let totalPortfolioValue = [];
         //  { _id: 5a8efeb9fe6e060a00833b00,
         //   portfolioName: 'your portfolio name here',
         //   coins: { BTC: '1' },
@@ -72,6 +72,7 @@ setInterval(function(){
              response = JSON.parse(response);
              response = response['RAW'];
              let dataCoinsKeys = Object.keys(data.coins);
+             let priceTimeStamp = Date.now();
 
              dataCoinsKeys.forEach(coin => {
                if(!data.masterCoinList[coin]){
@@ -82,13 +83,24 @@ setInterval(function(){
                }
                let pushArr = [];
                let coinPriceUSD = response[coin].USD.PRICE * data.coins[coin];
-               let priceTimeStamp = Date.now();
+
                pushArr = [priceTimeStamp, coinPriceUSD];
                data.masterCoinList[coin].push(pushArr);
-
+               totalPortfolioValue.push(pushArr);
              });
 
+             let totalValue = 0;
+             totalPortfolioValue.forEach(item =>{
+                totalValue += item[1];
+             });
+
+             totalValue = Math.round(totalValue * 100)/100
+             //console.log(totalValue);
+             let pushToMaster = [priceTimeStamp, totalValue];
+             data.masterPortfolioList.push(pushToMaster);
              let updateObj = data;
+             //console.log(updateObj.masterPortfolioList)
+
              PortfolioModel.findOneAndUpdate({ endTime: 951926120000000, hodler: data.hodler }, updateObj, function(err, user) {
               if (err) {
                 throw err;
@@ -103,8 +115,10 @@ setInterval(function(){
 
   });
 
-//3600000
-}, 3000)
+//3600000 hour
+//86400000 day
+//10000 10 sec
+}, 10000);
 
 //use this to create price data entry in Db if Db is deleted
 // const priceData = {
