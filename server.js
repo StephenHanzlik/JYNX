@@ -118,7 +118,7 @@ setInterval(function(req, res){
 //3600000 hour
 //86400000 day
 //10000 10 sec
-}, 10000);
+}, 86400000);
 
 //use this to create price data entry in Db if Db is deleted
 // const priceData = {
