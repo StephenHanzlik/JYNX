@@ -163,17 +163,16 @@ router.put('/', function(req, res) {
                   endTime: 951926120000000
                 };
 
-              
+
                 if(updateDbObject.masterCoinList[key]){
                   updateDbObject.masterCoinList[key].pop();
-                }
-                if(updateDbObject.masterCoinList[key]){
                   updateDbObject.masterCoinList[key].push(pushArr);
+                  console.log("Alpha")
                 }
                 else{
-                  updateDbObject.masterCoinList = {};
                   updateDbObject.masterCoinList[key] = []
                   updateDbObject.masterCoinList[key].push(pushArr);
+                  console.log("charly")
                 }
 
 
