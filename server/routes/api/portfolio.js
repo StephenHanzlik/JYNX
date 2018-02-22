@@ -105,7 +105,7 @@ router.put('/', function(req, res) {
                   endTime: shortDate
                 };
 
-                updateDbObject.coins[key] = value;
+                updateDbObject.coins[key] += value;
                 updateDbObject.masterCoinList[key].push(pushArr);
 
                 PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
@@ -134,7 +134,6 @@ router.put('/', function(req, res) {
                     endTime: 951926120000000
                   });
 
-                  newPortfolio.coins[key] = value;
                   newPortfolio.masterCoinList[key].push(pushArr);
 
                   newPortfolio.save(function(err) {
@@ -157,15 +156,27 @@ router.put('/', function(req, res) {
                 let updateDbObject ={
                   hodler: dbPortfolio[0].hodler,
                   portfolioName: "your portfolio name here",
-                  coins: dbPortfolio[0].coins,
+                  coins: addDbObject,
                   masterCoinList: dbPortfolio[0].masterCoinList,
                   masterPortfolioList: dbPortfolio[0].masterPortfolioList,
                   startTime: dbPortfolio[0].startTime,
                   endTime: 951926120000000
                 };
 
-                updateDbObject.coins[key] = value;
-                updateDbObject.masterCoinList[key].push(pushArr);
+              
+                if(updateDbObject.masterCoinList[key]){
+                  updateDbObject.masterCoinList[key].pop();
+                }
+                if(updateDbObject.masterCoinList[key]){
+                  updateDbObject.masterCoinList[key].push(pushArr);
+                }
+                else{
+                  updateDbObject.masterCoinList = {};
+                  updateDbObject.masterCoinList[key] = []
+                  updateDbObject.masterCoinList[key].push(pushArr);
+                }
+
+
 
                 PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
                   if (err) throw err;
