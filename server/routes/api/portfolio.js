@@ -54,6 +54,7 @@ router.put('/', function(req, res) {
         };
 
         updateDbObject.coins[key] = value;
+        console.log("1")
 
         PortfolioModel.findOneAndUpdate({ hodler: req.token, coins: {"no ticker": "no amount"}}, updateDbObject, function(err, user) {
           if (err) throw err;
@@ -74,7 +75,7 @@ router.put('/', function(req, res) {
             startTime: dbPortfolio[0].startTime,
             endTime: shortDate
           };
-
+          console.log("2")
           PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
             if (err) throw err;
 
@@ -98,6 +99,7 @@ router.put('/', function(req, res) {
               startTime: shortDate,
               endTime: 951926120000000
             });
+            console.log("3")
 
             newPortfolio.save(function(err) {
               if (err) return console.log(err);
@@ -123,6 +125,7 @@ router.put('/', function(req, res) {
             startTime: dbPortfolio[0].startTime,
             endTime: 951926120000000
           };
+          console.log("4")
 
           PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
             if (err) throw err;

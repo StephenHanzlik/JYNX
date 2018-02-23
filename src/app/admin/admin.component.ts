@@ -82,8 +82,8 @@ export class AdminComponent implements OnInit {
           let currentPortfolio: any = {};
           currentPortfolio = result[0].coins;
 
-          console.log("this.chartData");
-          console.log(this.chartData);
+          console.log("ourApiResult");
+          console.log(ourApiResult);
 
           //old method below
 
@@ -99,8 +99,6 @@ export class AdminComponent implements OnInit {
                 apiData = apiData.RAW;
                 console.log("apiData")
                 console.log(apiData);
-                console.log("ourApiResult[0].masterCoinList")
-                console.log(ourApiResult[0].masterCoinList);
 
                 let keys: Array<string> = [];
                 let allCoinData: object = ALLCOINDATA[0];
@@ -111,6 +109,31 @@ export class AdminComponent implements OnInit {
                   return;
                 let index = 0;
                 let keysCounter = 0;
+
+                let mostRecentTotal = ourApiResult[0].masterPortfolioList.pop();
+                mostRecentTotal = mostRecentTotal[1]
+
+
+                console.log("mostRecentTotal");
+                console.log(mostRecentTotal);
+
+                this.totalPortfolioValue = mostRecentTotal;
+                if(ourApiResult[0].masterPortfolioList.length > 0){
+
+                  let secondMostRecentTotal = ourApiResult[0].masterPortfolioList.pop();
+                  mostRecentTotal = mostRecentTotal[1];
+
+                  this.totalPortfolioValue = mostRecentTotal[1];
+                  this.totalPortfolioValue24hr = secondMostRecentTotal[1];
+
+                  ourApiResult[0].masterPortfolioList.push(secondMostRecentTotal);
+                }
+                else{
+                  this.totalPortfolioValue = mostRecentTotal;
+                  this.totalPortfolioValue24hr = 0;
+                }
+
+                ourApiResult[0].masterPortfolioList.push(mostRecentTotal);
 
                 keys.forEach(key=> {
 
@@ -135,11 +158,11 @@ export class AdminComponent implements OnInit {
                     else
                       iterable = 0;
 
+                      console.log
+
                     this.cardsContent.push(coinToAdd);
 
-                    this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * currentPortfolio[key];
 
-                    this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * currentPortfolio[key];
 
                     //totol profolio price data
                     index++;
@@ -179,7 +202,7 @@ export class AdminComponent implements OnInit {
                     }, 375 * index);
                 })
 
-                let change: number = this.totalPortfolioValue24hr - this.totalPortfolioValue;
+                let change: number = this.totalPortfolioValue - this.totalPortfolioValue24hr;
 
                 let percChange: any = (change / this.totalPortfolioValue) *
                  100;
