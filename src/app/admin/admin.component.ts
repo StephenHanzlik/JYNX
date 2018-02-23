@@ -113,7 +113,6 @@ export class AdminComponent implements OnInit {
                 let mostRecentTotal = ourApiResult[0].masterPortfolioList.pop();
                 mostRecentTotal = mostRecentTotal[1]
 
-
                 console.log("mostRecentTotal");
                 console.log(mostRecentTotal);
 
@@ -162,44 +161,6 @@ export class AdminComponent implements OnInit {
 
                     this.cardsContent.push(coinToAdd);
 
-
-
-                    //totol profolio price data
-                    index++;
-                    let that = this;
-                    that.currentPortfolioData = [];
-
-                    setTimeout(function(){
-
-                        that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
-                          if(result._body){
-
-                            result = JSON.parse(result._body);
-                            result = result.Data;
-                            let dataObjectToPush = {};
-                            dataObjectToPush[key] = result;
-
-                            that.currentPortfolioData.push(dataObjectToPush);
-
-                            that.snapshotMasterList[key] = key;
-
-                            that.historicPortfolio.forEach(portfolioSnapshot => {
-
-                            let snapshotKeys = Object.keys(portfolioSnapshot.coins);
-                            let snapshotKeysCounter = 0;
-
-                            snapshotKeys.forEach(snapKey => {
-
-                              snapshotKeysCounter++;
-
-                              if(!that.snapshotMasterList[snapKey]){
-                                that.snapshotMasterList[snapKey] = snapKey;
-                              }
-                            });
-                          });// end of for forEach
-                          }
-                        });//end of multi subscribe
-                    }, 375 * index);
                 })
 
                 let change: number = this.totalPortfolioValue - this.totalPortfolioValue24hr;
@@ -221,125 +182,6 @@ export class AdminComponent implements OnInit {
         });
       }
 
-      // private processHistorcalList(): void {
-      //   let that = this;
-      //  setTimeout(function(){
-      //
-      //     let snapShotMasterKeys = Object.keys(that.snapshotMasterList);
-      //     that.totalPortfolioHistoricalData = that.currentPortfolioData;
-      //
-      //     let currentPortfolioDataCheckObj = {};
-      //
-      //     for(var tickerData in that.currentPortfolioData){
-      //
-      //       currentPortfolioDataCheckObj[Object.keys(that.currentPortfolioData[tickerData])[0]] = Object.keys(that.currentPortfolioData[tickerData])[0];
-      //     }
-      //
-      //     for(var index in snapShotMasterKeys){
-      //
-      //         if(!currentPortfolioDataCheckObj[snapShotMasterKeys[index]]){
-      //
-      //           let query = snapShotMasterKeys[index];
-      //
-      //             that.cryptoCompareService.getHistoricalPrice(query).subscribe(result =>{
-      //
-      //               result = JSON.parse(result._body);
-      //               let pushObj = {}
-      //               pushObj[query] = result.Data;
-      //
-      //               that.totalPortfolioHistoricalData.push(pushObj);
-      //             });
-      //         }
-      //     };
-      //
-      //   }, 1500)
-      //
-      //   setTimeout(function(){
-      //     for(let obj of that.totalPortfolioHistoricalData){
-      //
-      //       let key = Object.keys(obj)[0];
-      //       that.totalPortfolioHistoricalDataObj[key] = obj[key];
-      //     }
-      //
-      //     that.getHistoricalPorfolioPrice();
-      //   }, 2000)
-      //
-      // }
-
-      // private getHistoricalPorfolioPrice(): void {
-      //
-      //   this.historicPortfolio = this.historicPortfolio.reverse();
-      //   this.coinsGraphHistoryObj = {}
-      //
-      //   console.log("this.historicPortfolio");
-      //   console.log(this.historicPortfolio);
-      //
-      //   for(let historicItem of this.historicPortfolio){
-      //
-      //     for(let coinName in historicItem.coins){
-      //       this.coinsGraphHistoryObj[coinName] = [];
-      //
-      //       let coinCounter = 1;
-      //
-      //       for(let dataPoint of this.totalPortfolioHistoricalDataObj[coinName]){
-      //         coinCounter++
-      //         // console.log(coinCounter);
-      //         // console.log( this.totalPortfolioHistoricalDataObj[coinName].length);
-      //         // console.log("this.totalPortfolioHistoricalDataObj[coinName]");
-      //         //console.log(this.totalPortfolioHistoricalDataObj[coinName]);
-      //         // console.log("dataPoint.time");
-      //         // console.log(dataPoint)
-      //         // console.log("historicItem.endTime");
-      //         // console.log(historicItem.endTime)
-      //         if(dataPoint.time <= historicItem.endTime && dataPoint.time >= historicItem.startTime){
-      //               let pushArr = []
-      //               let usdAmount = dataPoint.close * historicItem.coins[coinName];
-      //
-      //               pushArr = [dataPoint.time, usdAmount];
-      //               console.log("pushArr");
-      //               console.log(pushArr);
-      //               if(this.coinsGraphHistoryObj[coinName].length > 0){
-      //                 if(this.coinsGraphHistoryObj[coinName].reverse()[0] !== dataPoint.time){
-      //                   this.coinsGraphHistoryObj[coinName].push(pushArr);
-      //                 }
-      //               }
-      //               else{
-      //                 this.coinsGraphHistoryObj[coinName].push(pushArr);
-      //               }
-      //
-      //         }else if (this.coinsGraphHistoryObj[coinName].length < 1 && coinCounter <= this.totalPortfolioHistoricalDataObj[coinName].length){
-      //
-      //           let pushArr = []
-      //           let usdAmount = this.totalPortfolioHistoricalDataObj[coinName][this.totalPortfolioHistoricalDataObj[coinName].length - 1].close * historicItem.coins[coinName];
-      //
-      //           if(this.coinsGraphHistoryObj[coinName].length > 0){
-      //             if(this.coinsGraphHistoryObj[coinName].reverse()[0] !== dataPoint.time){
-      //               pushArr = [this.totalPortfolioHistoricalDataObj[coinName][this.totalPortfolioHistoricalDataObj[coinName].length - 1].time, usdAmount];
-      //             }
-      //           }else{
-      //             pushArr = [this.totalPortfolioHistoricalDataObj[coinName][this.totalPortfolioHistoricalDataObj[coinName].length - 1].time, usdAmount];
-      //           }
-      //
-      //
-      //           // console.log("this.totalPortfolioHistoricalDataObj");
-      //           // console.log(this.totalPortfolioHistoricalDataObj);
-      //           // console.log("this.totalPortfolioHistoricalDataObj[coinName].length - 1")
-      //           // console.log(this.totalPortfolioHistoricalDataObj[coinName].length - 1)
-      //           // console.log("historicItem.coins");
-      //           // console.log(historicItem.coins);
-      //           console.log("pushArr 2");
-      //           console.log(pushArr);
-      //
-      //           this.coinsGraphHistoryObj[coinName].push(pushArr);
-      //         }
-      //       }
-      //      }
-      //   }
-      //
-      //   console.log("this.coinsGraphHistoryObj");
-      //   console.log(this.coinsGraphHistoryObj);
-      //
-      // }
 
       public chartCardData(cardTicker: string, cardColor: string): void {
         let changedArray = [];
@@ -399,7 +241,7 @@ export class AdminComponent implements OnInit {
                 that.cardsContent = [];
                 that.totalPortfolioValue = 0;
                 that.getUserCoinData();
-              }, 300)
+              }, 800)
             });
       }
 
