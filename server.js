@@ -114,11 +114,12 @@ setInterval(function(req, res){
     });
 
   });
+  console.log("updated")
 
 //3600000 hour
 //86400000 day
 //10000 10 sec
-}, 86400000);
+}, 30000);
 
 //use this to create price data entry in Db if Db is deleted
 // const priceData = {

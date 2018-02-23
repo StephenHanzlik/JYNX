@@ -28,11 +28,11 @@ router.put('/', function(req, res) {
      method: 'GET',
      uri: `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${bodyObj.coinName}&tsyms=USD`,
    };
+
   request(options)
     .then(function(response) {
       response = JSON.parse(response);
       let currPrice = response['RAW'][bodyObj.coinName]['USD']['PRICE'];
-
 
         PortfolioModel.
         find().
@@ -77,9 +77,6 @@ router.put('/', function(req, res) {
             request(options)
               .then(function(response) {
                 response = JSON.parse(response);
-
-
-
 
 
                 if(dbPortfolio[0].coins["no ticker"]){
@@ -130,14 +127,12 @@ router.put('/', function(req, res) {
 
                   masterPortPushArr = [date, accum];
 
-                  console.log("masterPortPushArr");
-                  console.log(masterPortPushArr);
-
                   let shortDate = Date.now();
                   // shortDate = shortDate.toString();
                   // shortDate = parseInt(shortDate.slice(0, 10), 10);
 
-                  if(Date.now() > dbPortfolio[0].startTime + 3600000){
+                  //if(Date.now() > dbPortfolio[0].startTime + 3600000){
+                  if(Date.now() > dbPortfolio[0].startTime + 30000){
 
                     let updateDbObject ={
                       hodler: dbPortfolio[0].hodler,
@@ -148,22 +143,37 @@ router.put('/', function(req, res) {
                       masterPortfolioList: dbPortfolio[0].masterPortfolioList,
                       endTime: shortDate
                     };
-
-                    updateDbObject.coins[key] += value;
+                    // console.log("dbPortfolio[0].coins outside");
+                    // console.log(dbPortfolio[0].coins);
+                    // let numberToParse = parseInt(updateDbObject.coins[key], 10);
+                    // value = parseInt(value, 10);
+                    //
+                    // updateDbObject.coins[key] = numberToParse + value;
                     updateDbObject.masterCoinList[key].push(pushArr);
                     updateDbObject.masterPortfolioList.push(masterPortPushArr);
 
+                    // console.log("updatae DB obj");
+                    // console.log(updateDbObject)
+
                     PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
                       if (err) throw err;
+
+                      console.log("dbPortfolio[0].coins in find on update");
+                      console.log(dbPortfolio[0].coins);
 
                       let addDbObject = dbPortfolio[0].coins;
 
                       if(addDbObject[key]){
                         addDbObject[key] = parseInt(addDbObject[key], 10) + parseInt(value, 10);
                         addDbObject[key] = addDbObject[key].toString();
+                        console.log("addDbObject[key] in else");
+                        console.log(addDbObject[key])
                       }
                       else{
+
                         addDbObject[key] = value;
+                         console.log("addDbObject[key] in else");
+                         console.log(addDbObject[key])
                       }
                       let shortDate = Date.now();
                       // shortDate = shortDate.toString();
@@ -181,6 +191,8 @@ router.put('/', function(req, res) {
 
                       newPortfolio.masterCoinList[key].push(pushArr);
                       updateDbObject.masterPortfolioList.push(masterPortPushArr);
+                      // console.log("newPortfolio");
+                      // console.log(newPortfolio);
 
                       newPortfolio.save(function(err) {
                         if (err) return console.log(err);
@@ -222,7 +234,7 @@ router.put('/', function(req, res) {
                     updateDbObject.masterPortfolioList.push(masterPortPushArr);
 
                     PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
-                      if (err) throw err;
+                      if (err) return console.log(err);
 
                     });
                   }
@@ -241,7 +253,7 @@ router.put('/', function(req, res) {
 
     })
     .catch(function(err){
-        res.status(500).send("Something went wrong adding your coin");
+      res.status(500).send("Something went wrong adding your coin");
     });
 
 });
@@ -286,10 +298,8 @@ router.delete('/:name/:amount', function(req, res) {
     let key = bodyObj.coinName;
     let value = bodyObj.coinAmt;
 
+
     if(Date.now() > dbPortfolio[0].startTime + 3600000){
-
-      console.log("1")
-
       let updateDbObject ={
         hodler: dbPortfolio[0].hodler,
         portfolioName: "your portfolio name here",

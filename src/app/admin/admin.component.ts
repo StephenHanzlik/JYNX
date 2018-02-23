@@ -120,9 +120,9 @@ export class AdminComponent implements OnInit {
                 if(ourApiResult[0].masterPortfolioList.length > 0){
 
                   let secondMostRecentTotal = ourApiResult[0].masterPortfolioList.pop();
-                  mostRecentTotal = mostRecentTotal[1];
-
-                  this.totalPortfolioValue = mostRecentTotal[1];
+                  // mostRecentTotal = mostRecentTotal[1];
+                  //
+                  // this.totalPortfolioValue = mostRecentTotal[1];
                   this.totalPortfolioValue24hr = secondMostRecentTotal[1];
 
                   ourApiResult[0].masterPortfolioList.push(secondMostRecentTotal);
@@ -241,7 +241,7 @@ export class AdminComponent implements OnInit {
                 that.cardsContent = [];
                 that.totalPortfolioValue = 0;
                 that.getUserCoinData();
-              }, 800)
+              }, 1200)
             });
       }
 
