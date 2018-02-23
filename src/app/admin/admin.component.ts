@@ -43,6 +43,8 @@ export class AdminComponent implements OnInit {
       public totalPortfolioHistoricalData: any = [];
       public totalPortfolioHistoricalDataObj: any = {};
       public coinsGraphHistoryObj: any = {};
+      public ourOuterApiResult: any = {};
+      public totalPortChartData: any = {};
 
       color = "#36DBA3";
       coinTicker = "Total";
@@ -74,16 +76,17 @@ export class AdminComponent implements OnInit {
 
           this.mongoDbService.getUserPortfolio().subscribe(result=>{
           let ourApiResult = result;
+          this.ourOuterApiResult= result;
 
           this.portfolioName = result[0]['portfolioName'];
 
-          this.chartData = result[0].masterPortfolioList
+          this.chartData = result[0].masterPortfolioList;
+          this.totalPortChartData = result[0].masterPortfolioList;
+          console.log("this.totalPortChartData after assignment");
+          console.log(this.totalPortChartData)
 
           let currentPortfolio: any = {};
           currentPortfolio = result[0].coins;
-
-          console.log("ourApiResult");
-          console.log(ourApiResult);
 
           //old method below
 
@@ -182,23 +185,32 @@ export class AdminComponent implements OnInit {
         });
       }
 
+      public chartTotalPortfolio(): void{
+         this.color = "#36DBA3";
+         this.chartData = this.ourOuterApiResult[0].masterPortfolioList;
+         this.coinTicker = "Total";
+      }
 
       public chartCardData(cardTicker: string, cardColor: string): void {
         let changedArray = [];
         this.color = cardColor;
-        this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
-          result = JSON.parse(result._body);
-          result.Data.forEach(result=>{
-            let dataArray = [];
-            if(result.close > 0 && result.open > 0){
-              dataArray.push(result.time * 1000);
-              dataArray.push(result.close);
-              changedArray.push(dataArray);
-            }
-          });
-          this.chartData = changedArray;
-          this.coinTicker = cardTicker;
-        });
+
+        this.chartData = this.ourOuterApiResult[0].masterCoinList[cardTicker];
+        this.coinTicker = cardTicker;
+
+        //this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
+          //result = JSON.parse(result);
+          // result.Data.forEach(result=>{
+          //   let dataArray = [];
+          //   if(result.close > 0 && result.open > 0){
+          //     dataArray.push(result.time * 1000);
+          //     dataArray.push(result.close);
+          //     changedArray.push(dataArray);
+          //   }
+          // });
+        //  this.chartData = changedArray;
+        //  this.coinTicker = cardTicker;
+        //});
       }
 
       private addCommas(usdValue: any): string {
@@ -267,9 +279,23 @@ export class AdminComponent implements OnInit {
     }
 
     public totalPortfolioToggle(allCoins: any): void {
-      this.color = "#30D699";
+      //alert("total portfolio toggle triggered");
+      // this.color = "#30D699";
+
+      // this.chartData = this.externalMasterPortGraphArray;
+      // console.log("this.totalPortChartData &&&&& TOtal toggle");
+      // console.log(this.totalPortChartData)
+      if(!Array.isArray(this.totalPortChartData[this.totalPortChartData.length - 1])){
+        this.totalPortChartData.pop();
+      }
       this.totalPortfolioNotSelected = false;
-      this.chartData = this.externalMasterPortGraphArray;
+      console.log("this.totalPortChartData &&&&& TOtal toggle");
+      console.log(this.totalPortChartData)
+
+      this.color = "#36DBA3";
+      this.chartData = [];
+      this.chartData = this.totalPortChartData;
+      this.coinTicker = "Total";
 
       allCoins.forEach((loopCoin, index)=>{
           loopCoin.notSelected = true;

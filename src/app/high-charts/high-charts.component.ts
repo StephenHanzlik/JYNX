@@ -74,7 +74,7 @@ export class HighChartsComponent implements OnInit, OnChanges{
                     data : data,
                     color: color,
                     tooltip: {
-                         pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+                         pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>${point.y}</b>',
                          valueDecimals: decimal,
                          split: true
                      },
