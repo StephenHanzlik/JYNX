@@ -73,31 +73,50 @@ export class AdminComponent implements OnInit {
           let colorNamesArray: Array<string> = ['color1', 'color2', 'color3', 'color4', 'color5'];
 
           this.mongoDbService.getUserPortfolio().subscribe(result=>{
+          let ourApiResult = result;
 
           this.portfolioName = result[0]['portfolioName'];
 
-          this.historicPortfolio = result;
-          let currentPortfolio: any = {};
+          this.chartData = result[0].masterPortfolioList
 
+          let currentPortfolio: any = {};
           currentPortfolio = result[0].coins;
+
+          console.log("this.chartData");
+          console.log(this.chartData);
+
+          //old method below
+
+         this.historicPortfolio = result;
+        //  let currentPortfolio: any = {};
+
+        //  currentPortfolio = result[0].coins;
           let currentPortfolioKeys: Array<string> = Object.keys(currentPortfolio);
 
           if(currentPortfolioKeys.length > 0 && currentPortfolioKeys[0] !== "no ticker"){
             this.cryptoCompareService.getMultiFullPrice(currentPortfolioKeys.join()).subscribe(result=>{
                 apiData = JSON.parse(result._body);
                 apiData = apiData.RAW;
+                console.log("apiData")
+                console.log(apiData);
+                console.log("ourApiResult[0].masterCoinList")
+                console.log(ourApiResult[0].masterCoinList);
 
                 let keys: Array<string> = [];
                 let allCoinData: object = ALLCOINDATA[0];
                 let iterable: number = 0;
-                if(apiData)
-                  keys = Object.keys(apiData);
+                if(ourApiResult[0].masterCoinList)
+                  keys = Object.keys(ourApiResult[0].masterCoinList);
                 else
                   return;
                 let index = 0;
                 let keysCounter = 0;
 
                 keys.forEach(key=> {
+
+                  let mostRecent = ourApiResult[0].masterCoinList[key].pop();
+                  ourApiResult[0].masterCoinList[key].push(mostRecent);
+
                   keysCounter++;
                   let coinToAdd = {
                      coinColor: colorsArray[iterable],
@@ -105,7 +124,7 @@ export class AdminComponent implements OnInit {
                      coinTicker: key,
                      coinAmt: currentPortfolio[key],
                      coinName: allCoinData[key].CoinName,
-                     coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * currentPortfolio[key]),
+                     coinPrice: this.addCommas(mostRecent[1]),
                      coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                      coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10),
                      notSelected: true,

@@ -33,7 +33,8 @@ export class HighChartsComponent implements OnInit, OnChanges{
     }
 
     private initChart(color: string, data: Array<any>, ticker: string): void {
-
+          console.log("data in high charts");
+          console.log(data);
           let index: number = 0;
           index = data.length - 1;
 
@@ -41,9 +42,6 @@ export class HighChartsComponent implements OnInit, OnChanges{
           if(data[index][1] <= 1){
             decimal = 4;
           }
-
-          console.log("decimal");
-          console.log(decimal);
 
             this.options = {
                 title : { text : '' },
