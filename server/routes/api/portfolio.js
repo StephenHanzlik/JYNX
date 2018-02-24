@@ -132,7 +132,7 @@ router.put('/', function(req, res) {
                   // shortDate = parseInt(shortDate.slice(0, 10), 10);
 
                   //if(Date.now() > dbPortfolio[0].startTime + 3600000){
-                  if(Date.now() > dbPortfolio[0].startTime + 30000){
+                  if(Date.now() > dbPortfolio[0].startTime + 2300000){
 
                     let updateDbObject ={
                       hodler: dbPortfolio[0].hodler,
