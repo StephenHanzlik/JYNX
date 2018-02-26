@@ -67,9 +67,10 @@ body {
       }
 
       .card-header{
-        margin-top: -20px !important;
+        margin-top: -10px;
         float: left;
-        padding-left: 40px;
+        font-weight: 700;
+        font-size: 18px;
       }
 
       .card-24-change{
