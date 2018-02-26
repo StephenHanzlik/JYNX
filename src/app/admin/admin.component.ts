@@ -197,20 +197,6 @@ export class AdminComponent implements OnInit {
 
         this.chartData = this.ourOuterApiResult[0].masterCoinList[cardTicker];
         this.coinTicker = cardTicker;
-
-        //this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
-          //result = JSON.parse(result);
-          // result.Data.forEach(result=>{
-          //   let dataArray = [];
-          //   if(result.close > 0 && result.open > 0){
-          //     dataArray.push(result.time * 1000);
-          //     dataArray.push(result.close);
-          //     changedArray.push(dataArray);
-          //   }
-          // });
-        //  this.chartData = changedArray;
-        //  this.coinTicker = cardTicker;
-        //});
       }
 
       private addCommas(usdValue: any): string {
@@ -279,12 +265,7 @@ export class AdminComponent implements OnInit {
     }
 
     public totalPortfolioToggle(allCoins: any): void {
-      //alert("total portfolio toggle triggered");
-      // this.color = "#30D699";
 
-      // this.chartData = this.externalMasterPortGraphArray;
-      // console.log("this.totalPortChartData &&&&& TOtal toggle");
-      // console.log(this.totalPortChartData)
       if(!Array.isArray(this.totalPortChartData[this.totalPortChartData.length - 1])){
         this.totalPortChartData.pop();
       }

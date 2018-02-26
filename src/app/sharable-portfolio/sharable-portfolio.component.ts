@@ -38,6 +38,14 @@ export class SharablePortfolioComponent implements OnInit {
   public portfolioName: string = '';
   public selected = true;
   public externalMasterPortGraphArray: any = [];
+  public currentPortfolioData: any = [];
+  public historicPortfolio: any;
+  public snapshotMasterList: any = {};
+  public totalPortfolioHistoricalData: any = [];
+  public totalPortfolioHistoricalDataObj: any = {};
+  public coinsGraphHistoryObj: any = {};
+  public ourOuterApiResult: any = {};
+  public totalPortChartData: any = {};
 
   color = "#36DBA3";
   coinTicker = "Total";
@@ -63,50 +71,90 @@ export class SharablePortfolioComponent implements OnInit {
   }
 
   private getUserCoinData(): void {
-    let apiData: any = {};
-    let usdAmt: number = 0;
-    let colorsArray: Array<string> = ['#828A95', '#C98686', '#3C7A89', '#C9B1BD', '#81AE9D'];
-    let colorNamesArray: Array<string> = ['color1', 'color2', 'color3', 'color4', 'color5'];
+      let apiData: any = {};
+      let usdAmt: number = 0;
+      let colorsArray: Array<string> = ['#828A95', '#C98686', '#3C7A89', '#C9B1BD', '#81AE9D'];
+      let colorNamesArray: Array<string> = ['color1', 'color2', 'color3', 'color4', 'color5'];
 
-    this.mongoDbService.getUserPortfolio().subscribe(result=>{
-      result = JSON.parse((<any>result)._body);
-      result = result[0];
-      let aggregateTotalsObj: any = {};
-      let coinAmts: Array<number> = result['coinAmts'];
-      let coins: Array<string> = result['coins'];
-      this.portfolioName = result['portfolioName'];
-      for (let l = 0; l < coins.length; l++) {
-        if(aggregateTotalsObj[coins[l]])
-          aggregateTotalsObj[coins[l]] = aggregateTotalsObj[coins[l]] + coinAmts[l];
-        else
-          aggregateTotalsObj[coins[l]] = coinAmts[l];
-      }
+      this.mongoDbService.getUserPortfolio().subscribe(result=>{
+      let ourApiResult = result;
+      this.ourOuterApiResult= result;
 
-      if(coins.length > 0){
+      this.portfolioName = result[0]['portfolioName'];
 
-        this.cryptoCompareService.getMultiFullPrice(Object.keys(aggregateTotalsObj).join()).subscribe(result=>{
+      this.chartData = result[0].masterPortfolioList;
+      this.totalPortChartData = result[0].masterPortfolioList;
+      console.log("this.totalPortChartData after assignment");
+      console.log(this.totalPortChartData)
+
+      let currentPortfolio: any = {};
+      currentPortfolio = result[0].coins;
+
+      //old method below
+
+     this.historicPortfolio = result;
+    //  let currentPortfolio: any = {};
+
+    //  currentPortfolio = result[0].coins;
+      let currentPortfolioKeys: Array<string> = Object.keys(currentPortfolio);
+
+      if(currentPortfolioKeys.length > 0 && currentPortfolioKeys[0] !== "no ticker"){
+        this.cryptoCompareService.getMultiFullPrice(currentPortfolioKeys.join()).subscribe(result=>{
             apiData = JSON.parse(result._body);
             apiData = apiData.RAW;
+            console.log("apiData")
+            console.log(apiData);
+
             let keys: Array<string> = [];
             let allCoinData: object = ALLCOINDATA[0];
             let iterable: number = 0;
-            if(apiData)
-              keys = Object.keys(apiData);
+            if(ourApiResult[0].masterCoinList)
+              keys = Object.keys(ourApiResult[0].masterCoinList);
             else
               return;
             let index = 0;
+            let keysCounter = 0;
+
+            let mostRecentTotal = ourApiResult[0].masterPortfolioList.pop();
+            mostRecentTotal = mostRecentTotal[1]
+
+            console.log("mostRecentTotal");
+            console.log(mostRecentTotal);
+
+            this.totalPortfolioValue = mostRecentTotal;
+            if(ourApiResult[0].masterPortfolioList.length > 0){
+
+              let secondMostRecentTotal = ourApiResult[0].masterPortfolioList.pop();
+              // mostRecentTotal = mostRecentTotal[1];
+              //
+              // this.totalPortfolioValue = mostRecentTotal[1];
+              this.totalPortfolioValue24hr = secondMostRecentTotal[1];
+
+              ourApiResult[0].masterPortfolioList.push(secondMostRecentTotal);
+            }
+            else{
+              this.totalPortfolioValue = mostRecentTotal;
+              this.totalPortfolioValue24hr = 0;
+            }
+
+            ourApiResult[0].masterPortfolioList.push(mostRecentTotal);
 
             keys.forEach(key=> {
+
+              let mostRecent = ourApiResult[0].masterCoinList[key].pop();
+              ourApiResult[0].masterCoinList[key].push(mostRecent);
+
+              keysCounter++;
               let coinToAdd = {
                  coinColor: colorsArray[iterable],
                  coinColorName: colorNamesArray[iterable],
                  coinTicker: key,
-                 coinAmt: aggregateTotalsObj[key],
+                 coinAmt: currentPortfolio[key],
                  coinName: allCoinData[key].CoinName,
-                 coinPrice: this.addCommas(apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key]),
+                 coinPrice: this.addCommas(mostRecent[1]),
                  coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
                  coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10),
-                 notSelected: true
+                 notSelected: true,
                 }
 
                 if(iterable < colorsArray.length)
@@ -114,58 +162,13 @@ export class SharablePortfolioComponent implements OnInit {
                 else
                   iterable = 0;
 
+                  console.log
+
                 this.cardsContent.push(coinToAdd);
 
-                this.totalPortfolioValue = this.totalPortfolioValue + apiData[key]['USD']['PRICE'] * aggregateTotalsObj[key];
+            })
 
-                this.totalPortfolioValue24hr = this.totalPortfolioValue24hr + apiData[key]['USD']['OPEN24HOUR'] * aggregateTotalsObj[key];
-
-                //totol profolio price data
-                index++
-                let that = this;
-                setTimeout(function(){
-                  that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
-                      if(result._body){
-                        result = JSON.parse(result._body)
-                        // let localHistoricalData: Object = {
-                        //   name: key,
-                        //   data: result.Data
-                        // };
-                        that.masterPortfolioDataArray.push(result.Data);
-
-                        //aggregateTotalsObj[key]
-
-                        if(that.masterPortfolioDataArray.length >= keys.length){
-                          let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
-                          let masterPortGraphArray: any = []
-                          let masterPortGraphData: any = {};
-                        //  let count = 0;
-
-                          flatArray.forEach(masterEntry=>{
-                          //  count ++
-                            if(!masterPortGraphData[masterEntry.time]){
-                              let newNumb: number = masterEntry.close * aggregateTotalsObj[key];
-
-                              masterPortGraphData[masterEntry.time] = {
-                                 data: [masterEntry.time * 1000, Math.round(newNumb * 100)/100]
-                               };
-                            }
-                            else if(masterPortGraphData[masterEntry.time]){
-                                Math.round(masterPortGraphData[masterEntry.time].data[1] + masterEntry.close * aggregateTotalsObj[key] * 100)/100
-                            }
-                            masterPortGraphArray.push(masterPortGraphData[masterEntry.time].data);
-                          });
-                        //  if(count >= flatArray.length)
-                            that.chartData = masterPortGraphArray.sort();
-                            that.coinTicker = "Total Portfolio";
-                         }
-                      }
-                  });
-                }, 375 * index);
-
-            })// end of for each
-
-            let change: number = this.totalPortfolioValue24hr - this.totalPortfolioValue;
+            let change: number = this.totalPortfolioValue - this.totalPortfolioValue24hr;
 
             let percChange: any = (change / this.totalPortfolioValue) *
              100;
@@ -175,90 +178,27 @@ export class SharablePortfolioComponent implements OnInit {
             this.totalPortfolioValue24hr = Math.round(percChange * 100)/100;
 
             this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
-
-
-            //get historical profile
-          //  let index = 0;
-          //  keys.forEach(key=>{
-              // index++
-              // let that = this;
-              // setTimeout(function(){
-              //   that.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
-              //       if(result._body){
-              //         result = JSON.parse(result._body)
-              //         // let localHistoricalData: Object = {
-              //         //   name: key,
-              //         //   data: result.Data
-              //         // };
-              //         that.masterPortfolioDataArray.push(result.Data);
-              //
-              //         //aggregateTotalsObj[key]
-              //
-              //         if(that.masterPortfolioDataArray.length >= keys.length){
-              //           let flatArray = [].concat.apply([], that.masterPortfolioDataArray);
-              //           //let masterPortGraphObject: any = []
-              //           let masterPortGraphData: any = {};
-              //
-              //           flatArray.forEach(masterEntry=>{
-              //             if(!masterPortGraphData[masterEntry.time]){
-              //               masterPortGraphData[masterEntry.time] = {
-              //                  data: [masterEntry.time, masterEntry.close]
-              //                };
-              //             }
-              //             else if(masterPortGraphData[masterEntry.time]){
-              //                 masterPortGraphData[masterEntry.time].data[1] + masterEntry.close
-              //             }
-              //           })
-              //         }
-              //       }
-              //   });
-              // }, 375 * index);
-              //
-
-
-
-
-              // .then(result=>
-              //   console.log("result in local http");
-              //   console.log(result._body);
-              // );
-            //  this.cryptoCompareService.getHistoricalPrice(key).subscribe(result=>{
-              //   console.log(result._body);
-              //   //&& maybe just do http here not use sevice
-              //   if(result._body){
-              //     let localHistoricalData: Object = {
-              //       name: loopCoin.coinTicker,
-              //       data: result._body
-              //     };
-              //     this.masterPortfolioDataArray.push(localHistoricalData);
-              //   }
-              // });
-        //  });
-
-
+            // let that = this;
+            // setTimeout(function(){
+            //   that.processHistorcalList();
+            // }, 500);
         })
       }
-
-
     });
+  }
+
+  public chartTotalPortfolio(): void{
+     this.color = "#36DBA3";
+     this.chartData = this.ourOuterApiResult[0].masterPortfolioList;
+     this.coinTicker = "Total";
   }
 
   public chartCardData(cardTicker: string, cardColor: string): void {
     let changedArray = [];
     this.color = cardColor;
-    this.cryptoCompareService.getHistoricalPrice(cardTicker).subscribe(result=>{
-      result = JSON.parse(result._body);
-      result.Data.forEach(result=>{
-        let dataArray = [];
-        if(result.close > 0 && result.open > 0){
-          dataArray.push(result.time * 1000);
-          dataArray.push(result.close);
-          changedArray.push(dataArray);
-        }
-      });
-      this.chartData = changedArray;
-      this.coinTicker = cardTicker;
-    });
+
+    this.chartData = this.ourOuterApiResult[0].masterCoinList[cardTicker];
+    this.coinTicker = cardTicker;
   }
 
   private addCommas(usdValue: any): string {
@@ -325,10 +265,18 @@ export class SharablePortfolioComponent implements OnInit {
   }
 
   public totalPortfolioToggle(allCoins: any): void {
-    this.color = "#30D699";
-    this.coinTicker = "Total Portfolio";
+
+    if(!Array.isArray(this.totalPortChartData[this.totalPortChartData.length - 1])){
+      this.totalPortChartData.pop();
+    }
     this.totalPortfolioNotSelected = false;
-    this.chartData = this.externalMasterPortGraphArray;
+    console.log("this.totalPortChartData &&&&& TOtal toggle");
+    console.log(this.totalPortChartData)
+
+    this.color = "#36DBA3";
+    this.chartData = [];
+    this.chartData = this.totalPortChartData;
+    this.coinTicker = "Total";
 
     allCoins.forEach((loopCoin, index)=>{
         loopCoin.notSelected = true;
