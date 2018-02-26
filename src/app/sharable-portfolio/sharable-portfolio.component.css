@@ -45,15 +45,34 @@ body {
       }
 
       .card-24-change{
-        margin-top: 12px;
-        float: left;
-        margin-left: -63px;
+        margin-top: -2px;
+        margin-right: 102px;
+        font-size: 15px;
+      }
+
+      .card-24-change-total{
+        margin-top: -2px;
+        margin-right: 94px;
+        font-size: 15px;
+        font-weight: 500;
       }
 
       .card-price{
-        float: right;
-        margin-top: -9px !important;
-        font-size: 17 !important;
+        margin-top: 20px;
+        margin-right: -168px;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .card-amt{
+        margin-top: -19px;
+        margin-right: 186px;
+        font-size: 16px;
+      }
+
+      .custom-card-dem{
+        height: 80px;
+        width: 270px;
       }
 
       .grey-text{

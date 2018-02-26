@@ -31,35 +31,35 @@
         </div>
         <div class="fourteen wide column"></div>
     </div>
-      <div class="row">
-      <!--  <div class="two wide column"></div>-->
-        <div class="sixteen wide column">
-        <div class="ui cards cards-div">
-          <div class="card">
-            <div class="content" (click)="totalPortfolioToggle(cardsContent)" [ngClass]="{'card-grey': totalPortfolioNotSelected}">
-              <div class="portfolio-color"></div>
-              <div class="header card-header">Total</div>
-              <h4 *ngIf="this.totalPortfolioValue24hr > 0"  class="sub header green-text meta card-24-change">{{this.totalPortfolioValue24hr}}%</h4>
-              <h4 *ngIf="this.totalPortfolioValue24hr < 0" class="sub header red-text meta card-24-change">{{this.totalPortfolioValue24hr}}%</h4>
-              <h4 *ngIf="this.totalPortfolioValue24hr === 0" class="sub header meta card-24-change">{{this.totalPortfolioValue24hr}}%</h4>
-              <div class="header card-price">${{totalPortfolioValue}}</div>
-            </div>
-          </div>
-          <div class="card" *ngFor="let coin of cardsContent" (click)="chartCardData(coin.coinTicker, coin.coinColor, coin.coinSelected)">
-            <div class="content" (click)="cardStyleToggle(coin, cardsContent)" [ngClass]="{'card-grey': coin.notSelected}">
-              <div [attr.Class]="coin.coinColorName"></div>
-              <div class="header card-header">{{coin.coinName}}</div>
-              <div *ngIf="coin.coin24Percent < 0" class="meta card-24-change red-text">{{coin.coin24Percent}}%</div>
-              <div *ngIf="coin.coin24Percent > 0" class="meta card-24-change green-text">{{coin.coin24Percent}}%</div>
-              <div *ngIf="coin.coin24Percent === 0" class="meta card-24-change">{{coin.coin24Percent}}%</div>
-              <div class="header card-price">${{coin.coinPrice}}</div>
-              <div class="header card-price">{{coin.coinAmt}}</div>
-            </div>
+    <div class="row">
+    <!--  <div class="two wide column"></div>-->
+      <div class="sixteen wide column">
+      <div class="ui cards cards-div">
+        <div class="card custom-card-dem" (click)="totalPortfolioToggle(cardsContent)" [ngClass]="{'card-grey': totalPortfolioNotSelected}">
+          <div class="content" >
+            <!-- <div class="portfolio-color"></div> -->
+            <div class="card-header">Total Portfolio</div>
+            <h4 *ngIf="this.totalPortfolioValue24hr > 0"  class="card-24-change-total green-text">{{totalPortfolioValue24hr}}%</h4>
+            <h4 *ngIf="this.totalPortfolioValue24hr < 0" class="card-24-change-total red-text">{{totalPortfolioValue24hr}}%</h4>
+            <h4 *ngIf="this.totalPortfolioValue24hr === 0" class="card-24-change-total">{{totalPortfolioValue24hr}}%</h4>
+            <div class="card-price">${{totalPortfolioValue}}</div>
           </div>
         </div>
+        <div class="card custom-card-dem" *ngFor="let coin of cardsContent" (click)="chartCardData(coin.coinTicker, coin.coinColor)"  (click)="cardStyleToggle(coin, cardsContent)" [ngClass]="{'card-grey': coin.notSelected}">
+          <div class="content">
+            <!-- <div [attr.Class]="coin.coinColorName"></div> -->
+            <div class="card-header">{{coin.coinName}} ({{coin.coinTicker}})</div>
+            <div *ngIf="coin.coin24Percent < 0" class="card-24-change red-text">{{coin.coin24Percent}}%</div>
+            <div *ngIf="coin.coin24Percent > 0" class="card-24-change green-text">{{coin.coin24Percent}}%</div>
+            <div *ngIf="coin.coin24Percent === 0" class="card-24-change">{{coin.coin24Percent}}%</div>
+            <div class="card-price">${{coin.coinPrice}}</div>
+            <div class="card-amt">{{coin.coinAmt}}</div>
+          </div>
         </div>
-      <!--  <div class="one wide column"></div>-->
       </div>
+      </div>
+    <!--  <div class="one wide column"></div>-->
+    </div>
       <!-- <div class="row">
         <h1 class="ui huge header">
           Buy/Sell
