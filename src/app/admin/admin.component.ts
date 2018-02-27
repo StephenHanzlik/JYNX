@@ -321,4 +321,8 @@ export class AdminComponent implements OnInit {
             .onDeny(result => { /* deny callback */});
       }
 
+      public shortenUrl(url: string){
+        alert(url);
+      }
+
 }
