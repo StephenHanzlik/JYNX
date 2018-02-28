@@ -39,10 +39,17 @@ export class LogInComponent implements OnInit {
     if(form.email && form.password){
       this.authService.logIn(form).subscribe( res => {
           let result = JSON.parse((<any>res)._body);
-          this.shortenerService.createShortLink(form).subscribe(result =>{
-              alert(result);
+          let req = {
+            id: result.id
+          }
+          this.shortenerService.createShortLink(req).subscribe(res =>{
+            //  console.log("result in create short link")
+
+              let result = JSON.parse((<any>res)._body);
+              console.log(result.shortUrl);
+              this.router.navigate(['/admin/', result.shortUrl]);
           });
-          this.router.navigate(['/admin/', result.id]);
+
       });
     }
   }

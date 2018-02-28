@@ -28,7 +28,12 @@ router.post('/', function(req, res){
   Url.findOne({long_url: longUrl}, function (err, doc){
     if (doc){
       // base58 encode the unique _id of that document and construct the short URL
-      shortUrl = config.webhost + base58.encode(doc._id);
+      let uniqueNum = base58.encode(doc._id);
+      if(uniqueNum.length < 2){
+          uniqueNum = uniqueNum + 'GdF';
+      }
+    //  shortUrl = config.webhost + uniqueNum;
+      shortUrl = uniqueNum;
 
       // since the document exists, we return it without creating a new entry
       res.send({'shortUrl': shortUrl});
@@ -51,7 +56,8 @@ router.post('/', function(req, res){
             uniqueNum = uniqueNum + 'GdF';
         }
 
-        shortUrl = config.webhost + uniqueNum;
+      //  shortUrl = config.webhost + uniqueNum;
+        shortUrl = uniqueNum;
 
         res.send({'shortUrl': shortUrl});
       });
