@@ -36,7 +36,8 @@ export class LogInComponent implements OnInit {
   public logInUser(form: any){
     if(form.email && form.password){
       this.authService.logIn(form).subscribe( res => {
-          this.router.navigateByUrl('/admin');
+          let result = JSON.parse((<any>res)._body);
+          this.router.navigate(['/admin/', result.id]);
       });
     }
   }

@@ -22,6 +22,9 @@ export class AdminComponent implements OnInit {
       @ViewChild('modalDeleteTemplate')
       public modalDeleteTemplate:ModalTemplate<IContext, string, string>
 
+      urlForm: FormGroup;
+      longUrl: AbstractControl;
+
       newCoinForm: FormGroup;
       coinName: AbstractControl;
       coinAmt: AbstractControl;
@@ -61,6 +64,12 @@ export class AdminComponent implements OnInit {
 
         this.coinName = this.newCoinForm.controls['coinName'];
         this.coinAmt = this.newCoinForm.controls['coinAmt'];
+
+        this.urlForm = fb.group({
+            "longUrl": ['', Validators.required]
+        });
+
+        this.longUrl = this.urlForm.controls['longUrl'];
       }
 
       ngOnInit() {

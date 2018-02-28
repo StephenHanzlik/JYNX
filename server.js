@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const apiPortfolio = require('./server/routes/api/portfolio');
 const apiReceipts = require('./server/routes/api/receipts');
 const apiPrice = require('./server/routes/api/price');
+const apiShortener = require('./server/routes/api/shortener');
 const auth = require('./server/routes/auth');
 const request = require('request-promise');
 const mongoose = require('mongoose');
@@ -134,44 +135,6 @@ setInterval(function(req, res){
 //
 // })
 
-// setInterval(function(){
-//
-//   const options = {
-//     method: 'GET',
-//     uri: 'https://api.coinmarketcap.com/v1/ticker/?limit=0',
-//   };
-//
-//   request(options)
-//     .then(function(response) {
-//
-//       const updateObj = {
-//         priceString: response
-//       };
-//
-//       PriceModel.
-//       find().
-//       where('name').
-//       equals('priceData').
-//       limit(1).
-//       select('priceString').
-//       exec(function(err, dbPriceString) {
-//         if (err) {
-//           res.status(500).send(err);
-//         }
-//         PriceModel.findOneAndUpdate({ name: 'priceData' }, updateObj, function(err, user) {
-//           if (err) {
-//             throw err;
-//           }
-//         });
-//       });
-//
-//    })
-//     .catch(function(err) {
-//       // Deal with the error
-//     });
-// }, 330000);
-
-
 const authorize = function(req, res, next) {
   if (req.cookies) {
     const token = req.cookies.token;
@@ -202,6 +165,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 // API location
 app.use('/auth', auth);
 app.use('/api/portfolio', authorize, apiPortfolio);
+app.use('/api/shortener', apiShortener);
 app.use('/api/receipts', authorizeReceipts, apiReceipts);
 app.use('/api/price', apiPrice);
 

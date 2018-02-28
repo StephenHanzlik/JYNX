@@ -2,7 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds245548.mlab.com:45548/jynx';const PriceModel = require('../../models/priceModel');
+const mongoDB = 'mongodb://jynx-db-user:y6t5w8M21@ds245548.mlab.com:45548/jynx';
+const UrlModel = require('../../models/urlModel');
 //const request = require('request-promise');
 
 mongoose.connect(mongoDB, {

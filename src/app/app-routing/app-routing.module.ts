@@ -23,11 +23,11 @@ import { AdminComponent } from '../admin/admin.component';
             component: SignUpComponent,
        },
        {
-            path: 'admin',
+            path: 'admin/:id',
             component: AdminComponent,
        },
        {
-            path: 'sharable-portfolio',
+            path: ':id',
             component: SharablePortfolioComponent,
        }
    ];
