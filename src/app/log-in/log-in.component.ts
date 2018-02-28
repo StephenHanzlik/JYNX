@@ -4,6 +4,7 @@ import { Response, Http } from '@angular/http';
 import {Routes, Router } from '@angular/router';
 
 import { AuthService } from '../services/auth/auth.service';
+import { ShortenerService } from '../services/shortener/shortener.service';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class LogInComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private authService: AuthService,
+              private shortenerService: ShortenerService,
               private http: Http,
               private router: Router) {
 
@@ -37,6 +39,9 @@ export class LogInComponent implements OnInit {
     if(form.email && form.password){
       this.authService.logIn(form).subscribe( res => {
           let result = JSON.parse((<any>res)._body);
+          this.shortenerService.createShortLink(form).subscribe(result =>{
+              alert(result);
+          });
           this.router.navigate(['/admin/', result.id]);
       });
     }

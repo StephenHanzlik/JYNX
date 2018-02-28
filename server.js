@@ -157,7 +157,7 @@ const authorizeReceipts = function(req, res, next){
   console.log("req.body");
   console.log(req.body);
   next();
-}
+};
 
 // Angular DIST output folder
 app.use(express.static(path.join(__dirname, 'dist')));

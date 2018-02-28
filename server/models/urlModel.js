@@ -15,6 +15,7 @@ var Counter = mongoose.model('Counter', CounterSchema);
 var urlSchema = new Schema({
   _id: {type: Number, index: true},
   long_url: String,
+  short_url: String,
   created_at: Date
 });
 
@@ -27,6 +28,7 @@ urlSchema.pre('save', function(next){
       if (error)
           return next(error);
       // set the _id of the urls collection to the incremented value of the counter
+
       doc._id = Counter.seq;
       doc.created_at = new Date();
       next();
