@@ -21,6 +21,7 @@ import { SharablePortfolioComponent } from './sharable-portfolio/sharable-portfo
 import { AdminComponent } from './admin/admin.component';
 import { JynxPriceService } from './services/jynx-price/jynx-price.service';
 import { ShortenerService } from './services/shortener/shortener.service';
+import { AuthGuardService } from './services/auth-guard/auth-guard.service';
 
 export function highchartsFactory() {
   return highcharts;
@@ -45,7 +46,7 @@ export function highchartsFactory() {
     AppRoutingModule,
     ChartModule
   ],
-  providers: [CryptoCompareService, TierionService, AuthService, JynxPriceService, MongoDbService, ShortenerService, {provide: HighchartsStatic, useFactory: highchartsFactory}],
+  providers: [CryptoCompareService, TierionService, AuthService, JynxPriceService, MongoDbService, ShortenerService, AuthGuardService, {provide: HighchartsStatic, useFactory: highchartsFactory}],
   bootstrap: [AppComponent, HighChartsComponent]
 })
 
