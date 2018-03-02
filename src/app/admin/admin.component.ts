@@ -76,9 +76,14 @@ export class AdminComponent implements OnInit {
       }
 
       ngOnInit() {
-        console.log(this.router.url);
         this.getDropDownList();
         this.getUserCoinData();
+        this.getUrl();
+      }
+
+      private getUrl(): void {
+        let string = this.router.url;
+        this.shortenedLink = string.substring(5);
       }
 
       private getUserCoinData(): void {
