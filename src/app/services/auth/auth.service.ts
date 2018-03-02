@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Response, Http } from '@angular/http';
-import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable()
 export class AuthService {
 
-  constructor(private http: Http,
-              public jwtHelper: JwtHelperService) { }
+  constructor(private http: Http) { }
 
   public logIn(form: any){
     return this.http.post('/auth/log-in', form)
