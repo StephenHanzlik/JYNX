@@ -39,6 +39,7 @@ export class LogInComponent implements OnInit {
     if(form.email && form.password){
       this.authService.logIn(form).subscribe( res => {
           let result = JSON.parse((<any>res)._body);
+          localStorage.setItem ('token', result.token);
           let req = {
             id: result.id
           }
@@ -46,7 +47,6 @@ export class LogInComponent implements OnInit {
             //  console.log("result in create short link")
 
               let result = JSON.parse((<any>res)._body);
-              console.log(result.shortUrl);
               this.router.navigate(['/admin/', result.shortUrl]);
           });
 
