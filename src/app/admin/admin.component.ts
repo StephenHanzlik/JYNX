@@ -83,7 +83,7 @@ export class AdminComponent implements OnInit {
 
       private getUrl(): void {
         let string = this.router.url;
-        this.shortenedLink = string.substring(5);
+        this.shortenedLink = string.substring(6);
       }
 
       private getUserCoinData(): void {
