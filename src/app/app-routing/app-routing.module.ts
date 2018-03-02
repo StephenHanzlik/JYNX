@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, CanActivate  } from '@angular/router';
-import { AuthGuardService as AuthGuard } from '../services/auth-guard/auth-guard.service'
+// import { AuthGuardService as AuthGuard } from '../services/auth-guard/auth-guard.service'
 
 import { HomeComponent } from '../home/home.component';
 //import { ChartsComponent } from '../charts/charts.component';
@@ -26,7 +26,7 @@ import { AdminComponent } from '../admin/admin.component';
        {
             path: 'admin/:id',
             component: AdminComponent,
-            //canActivate: [AuthGuard] 
+            //canActivate: [AuthGuard]
        },
        {
             path: ':id',
