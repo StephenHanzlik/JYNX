@@ -26,7 +26,7 @@ import { AdminComponent } from '../admin/admin.component';
        {
             path: 'admin/:id',
             component: AdminComponent,
-            canActivate: [AuthGuard] 
+            //canActivate: [AuthGuard] 
        },
        {
             path: ':id',
