@@ -49,14 +49,14 @@ export function highchartsFactory() {
     AppRoutingModule,
     ChartModule,
     HttpClientModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: () => {
-          return localStorage.getItem('access_token');
-        },
-        whitelistedDomains: ['localhost:3001']
-      }
-    })
+    // JwtModule.forRoot({
+    //   config: {
+    //     tokenGetter: () => {
+    //       return localStorage.getItem('access_token');
+    //     },
+    //     whitelistedDomains: ['localhost:3001']
+    //   }
+    // })
   ],
   providers: [CryptoCompareService, TierionService, AuthService, JynxPriceService, MongoDbService, ShortenerService, AuthGuardService, {provide: HighchartsStatic, useFactory: highchartsFactory}],
   bootstrap: [AppComponent, HighChartsComponent]
