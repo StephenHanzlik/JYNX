@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {SuiModalService, TemplateModalConfig, ModalTemplate, IPopup} from 'ng2-semantic-ui';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { CryptoCompareService } from "../services/crypto-compare/crypto-compare.service";
+import { Router } from '@angular/router';
 import { MongoDbService } from "../services/mongo-db/mongo-db.service";
 import { ALLCOINDATA } from "../static-data/all-coin-data";
 import { COINOBJECTS } from "../static-data/coin-objects";
@@ -48,6 +49,7 @@ export class AdminComponent implements OnInit {
       public coinsGraphHistoryObj: any = {};
       public ourOuterApiResult: any = {};
       public totalPortChartData: any = {};
+      public shortenedLink: any = "";
 
       color = "#36DBA3";
       coinTicker = "Total";
@@ -56,7 +58,8 @@ export class AdminComponent implements OnInit {
       constructor(private fb: FormBuilder,
                   private modalService:SuiModalService,
                   private mongoDbService:MongoDbService,
-                  private cryptoCompareService: CryptoCompareService) {
+                  private cryptoCompareService: CryptoCompareService,
+                  private router: Router) {
         this.newCoinForm = fb.group({
             "coinName": ['BTC', Validators.required],
             "coinAmt": ['', Validators.required]
@@ -73,6 +76,7 @@ export class AdminComponent implements OnInit {
       }
 
       ngOnInit() {
+        console.log(this.router.url);
         this.getDropDownList();
         this.getUserCoinData();
       }
