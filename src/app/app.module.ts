@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { SuiModule } from 'ng2-semantic-ui';
 import { HttpModule } from '@angular/http';
 import { AppRoutingModule } from './app-routing/app-routing.module';
@@ -21,6 +22,9 @@ import { SharablePortfolioComponent } from './sharable-portfolio/sharable-portfo
 import { AdminComponent } from './admin/admin.component';
 import { JynxPriceService } from './services/jynx-price/jynx-price.service';
 import { ShortenerService } from './services/shortener/shortener.service';
+import { AuthGuardService } from './services/auth-guard/auth-guard.service';
+import { JwtModule } from '@auth0/angular-jwt';
+import { HttpClientModule } from '@angular/common/http';
 
 export function highchartsFactory() {
   return highcharts;
@@ -43,9 +47,18 @@ export function highchartsFactory() {
     SuiModule,
     HttpModule,
     AppRoutingModule,
-    ChartModule
+    ChartModule,
+    HttpClientModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => {
+          return localStorage.getItem('access_token');
+        },
+        whitelistedDomains: ['localhost:3001']
+      }
+    })
   ],
-  providers: [CryptoCompareService, TierionService, AuthService, JynxPriceService, MongoDbService, ShortenerService, {provide: HighchartsStatic, useFactory: highchartsFactory}],
+  providers: [CryptoCompareService, TierionService, AuthService, JynxPriceService, MongoDbService, ShortenerService, AuthGuardService, {provide: HighchartsStatic, useFactory: highchartsFactory}],
   bootstrap: [AppComponent, HighChartsComponent]
 })
 

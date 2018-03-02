@@ -17,6 +17,7 @@ export class AuthService {
   }
 
   // ...
+<<<<<<< HEAD
   // public isAuthenticated(): boolean {
   //   let token = localStorage.getItem('token');
   //
@@ -24,5 +25,14 @@ export class AuthService {
   //   // true or false
   //   return !this.jwtHelper.isTokenExpired(token);
   // }
+=======
+  public isAuthenticated(): boolean {
+    let token = localStorage.getItem('token');
+
+    // Check whether the token is expired and return
+    // true or false
+    return !this.jwtHelper.isTokenExpired(token);
+  }
+>>>>>>> auth-guard
 
 }
