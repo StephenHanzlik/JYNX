@@ -19,4 +19,8 @@ export class MongoDbService {
     return this.http.delete(`/api/portfolio/${form.coinName}/${form.coinAmt}`);
   }
 
+  public updatePortfolioName(form: any){
+    return this.http.put('api/portfolio/name', form)
+  }
+
 }

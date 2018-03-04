@@ -96,8 +96,13 @@ export class AdminComponent implements OnInit {
       }
 
       public updatePortfolioName(newName: any): void {
-        console.log("updatePortfolioName RAN");
-        console.log(newName.value);
+        let body = {
+          name: newName.value
+        }
+        JSON.stringify(body)
+        this.mongoDbService.updatePortfolioName(body).subscribe(res=>{
+            console.log(res);
+        });
       }
 
       private getUserCoinData(): void {

@@ -274,6 +274,35 @@ router.get('/', function(req, res) {
   });
 });
 
+router.put('/name', function(req, res) {
+  console.log("update name req:")
+  console.log(req.body.name);
+  PortfolioModel.
+  find().
+  where('hodler').
+  equals(req.token).
+  sort({startTime: -1}).
+  select('coins portfolioName startTime endTime hodler').
+  exec(function(err, dbPortfolio) {
+    if (err) {
+      res.status(500).send(err);
+    }
+
+     console.log("dbPortfolio");
+     console.log(dbPortfolio);
+     dbPortfolio[0].portfolioName = req.body.name;
+     let updateDbObject = dbPortfolio[0];
+
+     PortfolioModel.findOneAndUpdate({ hodler: req.token}, updateDbObject, function(err, user) {
+       if (err) throw err;
+
+       res.status(200).send("ok");
+     });
+     
+  });
+
+});
+
 router.delete('/:name/:amount', function(req, res) {
   const bodyObj = {
     coinName: req.params.name,
