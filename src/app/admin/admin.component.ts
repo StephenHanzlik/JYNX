@@ -26,6 +26,9 @@ export class AdminComponent implements OnInit {
       urlForm: FormGroup;
       longUrl: AbstractControl;
 
+      portNameForm: FormGroup;
+      portName: AbstractControl;
+
       newCoinForm: FormGroup;
       coinName: AbstractControl;
       coinAmt: AbstractControl;
@@ -73,6 +76,12 @@ export class AdminComponent implements OnInit {
         });
 
         this.longUrl = this.urlForm.controls['longUrl'];
+
+        this.portNameForm = fb.group({
+            "portName": ['', Validators.required]
+        });
+
+        this.portName = this.portNameForm.controls['portName'];
       }
 
       ngOnInit() {
@@ -86,8 +95,9 @@ export class AdminComponent implements OnInit {
         this.shortenedLink = string.substring(6);
       }
 
-      public updatePortfolioName(newName: string): void {
-        
+      public updatePortfolioName(newName: any): void {
+        console.log("updatePortfolioName RAN");
+        console.log(newName.value);
       }
 
       private getUserCoinData(): void {
