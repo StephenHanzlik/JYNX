@@ -86,6 +86,10 @@ export class AdminComponent implements OnInit {
         this.shortenedLink = string.substring(6);
       }
 
+      public updatePortfolioName(newName: string): void {
+        
+      }
+
       private getUserCoinData(): void {
           let apiData: any = {};
           let usdAmt: number = 0;
