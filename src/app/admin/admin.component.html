@@ -9,9 +9,9 @@
     </button> -->
     <form class="ui form" [formGroup]="portNameForm" >
         <input class="field ui input" type="text" id="portName" [formControl]="portNameForm.controls['portName']" placeholder="{{portfolioName}}"/>
-        <button class="ui labeled mini icon button edit-buttons" (click)="updatePortfolioName(portName)">
-          <i class="edit icon large"></i>
-          <div class="float-button-text">Edit</div>
+        <button class="ui button compact edit-buttons" (click)="updatePortfolioName(portName)">
+          <!-- <i class="edit icon large"></i> -->
+          <div class="float-button-text">Change Name</div>
         </button>
     </form>
 
