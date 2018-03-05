@@ -8,7 +8,7 @@ export class ShortenerService {
   constructor(private http: Http) { }
 
   public createShortLink(id: any): Observable<any>{
-     return this.http.post(`http://localhost:3000/api/shortener`, id);
+     return this.http.post(`api/shortener`, id);
   }
 
 }
