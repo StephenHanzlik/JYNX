@@ -83,7 +83,7 @@ router.put('/', function(req, res) {
                   console.log("1");
                   let shortDate = Date.now();
                   // shortDate = shortDate.toString();
-                  // shortDate = parseInt(shortDate.slice(0, 10), 10);
+                  // shortDate = parseFloat(shortDate.slice(0, 10), 10);
 
                   let currPrice = response['RAW'][key]['USD']['PRICE'];
                   currPrice = value * currPrice;
@@ -129,7 +129,7 @@ router.put('/', function(req, res) {
 
                   let shortDate = Date.now();
                   // shortDate = shortDate.toString();
-                  // shortDate = parseInt(shortDate.slice(0, 10), 10);
+                  // shortDate = parseFloat(shortDate.slice(0, 10), 10);
 
                   //if(Date.now() > dbPortfolio[0].startTime + 3600000){
                   if(Date.now() > dbPortfolio[0].startTime + 2300000){
@@ -145,8 +145,8 @@ router.put('/', function(req, res) {
                     };
                     // console.log("dbPortfolio[0].coins outside");
                     // console.log(dbPortfolio[0].coins);
-                    // let numberToParse = parseInt(updateDbObject.coins[key], 10);
-                    // value = parseInt(value, 10);
+                    // let numberToParse = parseFloat(updateDbObject.coins[key], 10);
+                    // value = parseFloat(value, 10);
                     //
                     // updateDbObject.coins[key] = numberToParse + value;
                     updateDbObject.masterCoinList[key].push(pushArr);
@@ -164,7 +164,7 @@ router.put('/', function(req, res) {
                       let addDbObject = dbPortfolio[0].coins;
 
                       if(addDbObject[key]){
-                        addDbObject[key] = parseInt(addDbObject[key], 10) + parseInt(value, 10);
+                        addDbObject[key] = parseFloat(addDbObject[key]).toFixed(2) + parseFloat(value).toFixed(2);
                         addDbObject[key] = addDbObject[key].toString();
                         console.log("addDbObject[key] in else");
                         console.log(addDbObject[key])
@@ -177,7 +177,7 @@ router.put('/', function(req, res) {
                       }
                       let shortDate = Date.now();
                       // shortDate = shortDate.toString();
-                      // shortDate = parseInt(shortDate.slice(0, 10), 10);
+                      // shortDate = parseFloat(shortDate.slice(0, 10), 10);
 
                       let newPortfolio = new PortfolioModel({
                         hodler: req.token,
@@ -204,7 +204,7 @@ router.put('/', function(req, res) {
                     let addDbObject = dbPortfolio[0].coins;
 
                     if(addDbObject[key]){
-                      addDbObject[key] = parseInt(addDbObject[key], 10) + parseInt(value, 10);
+                      addDbObject[key] = parseFloat(addDbObject[key]).toFixed(2) + parseFloat(value).toFixed(2);
                       addDbObject[key] = addDbObject[key].toString();
                     }
                     else{
@@ -293,7 +293,7 @@ router.delete('/:name/:amount', function(req, res) {
 
     let shortDate = Date.now();
     // shortDate = shortDate.toString();
-    // shortDate = parseInt(shortDate.slice(0, 10), 10);
+    // shortDate = parseFloat(shortDate.slice(0, 10), 10);
 
     let key = bodyObj.coinName;
     let value = bodyObj.coinAmt;
@@ -313,14 +313,14 @@ router.delete('/:name/:amount', function(req, res) {
 
         let addDbObject = dbPortfolio[0].coins;
 
-        if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) > 0){
+        if(addDbObject[key] && parseFloat(addDbObject[key]).toFixed(2) - parseFloat(value).toFixed(2) > 0){
 
-            addDbObject[key] = parseInt(addDbObject[key], 10) - parseInt(value, 10);
+            addDbObject[key] = parseFloat(addDbObject[key]).toFixed(2) - parseFloat(value).toFixed(2);
             addDbObject[key] = addDbObject[key].toString();
 
             let shortDate = Date.now();
             // shortDate = shortDate.toString();
-            // shortDate = parseInt(shortDate.slice(0, 10), 10);
+            // shortDate = parseFloat(shortDate.slice(0, 10), 10);
 
             let newPortfolio = new PortfolioModel({
               hodler: req.token,
@@ -335,12 +335,12 @@ router.delete('/:name/:amount', function(req, res) {
             });
             res.status(200).send("ok");
         }
-        else if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) === 0){
+        else if(addDbObject[key] && parseFloat(addDbObject[key]).toFixed(2) - parseFloat(value).toFixed(2) === 0){
 
           delete addDbObject[key];
           let shortDate = Date.now();
           // shortDate = shortDate.toString();
-          // shortDate = parseInt(shortDate.slice(0, 10), 10);
+          // shortDate = parseFloat(shortDate.slice(0, 10), 10);
 
           let newPortfolio = new PortfolioModel({
             hodler: req.token,
@@ -366,7 +366,7 @@ router.delete('/:name/:amount', function(req, res) {
       let addDbObject = dbPortfolio[0].coins;
       let shortDate = Date.now();
       // shortDate = shortDate.toString();
-      // shortDate = parseInt(shortDate.slice(0, 10), 10);
+      // shortDate = parseFloat(shortDate.slice(0, 10), 10);
 
       let updateDbObject ={
         hodler: dbPortfolio[0].hodler,
@@ -376,10 +376,10 @@ router.delete('/:name/:amount', function(req, res) {
         endTime: dbPortfolio[0].endTime
       };
 
-      if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) > 0){
+      if(addDbObject[key] && parseFloat(addDbObject[key]).toFixed(2) - parseFloat(value).toFixed(2) > 0){
         console.log("a")
 
-          addDbObject[key] = parseInt(addDbObject[key], 10) - parseInt(value, 10);
+          addDbObject[key] = parseFloat(addDbObject[key]).toFixed(2) - parseFloat(value).toFixed(2);
           console.log("addDbObject[key]");
           console.log(addDbObject[key]);
           addDbObject[key] = addDbObject[key].toString();
@@ -390,13 +390,13 @@ router.delete('/:name/:amount', function(req, res) {
             res.status(200).send("ok");
           });
       }
-      else if(addDbObject[key] && parseInt(addDbObject[key], 10) - parseInt(value, 10) === 0){
+      else if(addDbObject[key] && parseFloat(addDbObject[key]).toFixed(2) - parseFloat(value).toFixed(2) === 0){
         console.log("b")
 
         delete addDbObject[key];
         let shortDate = Date.now();
         // shortDate = shortDate.toString();
-        // shortDate = parseInt(shortDate.slice(0, 10), 10);
+        // shortDate = parseFloat(shortDate.slice(0, 10), 10);
 
         // let newPortfolio = new PortfolioModel({
         //   hodler: req.token,

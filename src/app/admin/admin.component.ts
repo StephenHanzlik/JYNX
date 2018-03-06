@@ -188,7 +188,7 @@ export class AdminComponent implements OnInit {
                      coinName: allCoinData[key].CoinName,
                      coinPrice: this.addCommas(mostRecent[1]),
                      coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
-                     coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10),
+                     coin24Open: parseFloat(apiData[key]['USD']['OPEN24HOUR']),
                      notSelected: true,
                     }
 
