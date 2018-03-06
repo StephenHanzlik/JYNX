@@ -153,17 +153,14 @@ export class AdminComponent implements OnInit {
                 let mostRecentTotal = ourApiResult[0].masterPortfolioList.pop();
                 mostRecentTotal = mostRecentTotal[1]
 
-                console.log("mostRecentTotal");
-                console.log(mostRecentTotal);
-
-                this.totalPortfolioValue = mostRecentTotal;
+                this.totalPortfolioValue = mostRecentTotal.toFixed(2);
                 if(ourApiResult[0].masterPortfolioList.length > 0){
 
                   let secondMostRecentTotal = ourApiResult[0].masterPortfolioList.pop();
                   // mostRecentTotal = mostRecentTotal[1];
                   //
                   // this.totalPortfolioValue = mostRecentTotal[1];
-                  this.totalPortfolioValue24hr = secondMostRecentTotal[1];
+                  this.totalPortfolioValue24hr = secondMostRecentTotal[1].toFixed(2);
 
                   ourApiResult[0].masterPortfolioList.push(secondMostRecentTotal);
                 }
@@ -184,7 +181,7 @@ export class AdminComponent implements OnInit {
                      coinColor: colorsArray[iterable],
                      coinColorName: colorNamesArray[iterable],
                      coinTicker: key,
-                     coinAmt: currentPortfolio[key],
+                     coinAmt: this.addCommasCoinAmt(currentPortfolio[key]),
                      coinName: allCoinData[key].CoinName,
                      coinPrice: this.addCommas(mostRecent[1]),
                      coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
@@ -211,8 +208,12 @@ export class AdminComponent implements OnInit {
                 percChange = percChange.toString();
 
                 this.totalPortfolioValue24hr = Math.round(percChange * 100)/100;
+                this.totalPortfolioValue24hr = this.totalPortfolioValue24hr.toFixed(2);
+                this.totalPortfolioValue24hr = this.numberWithCommas(this.totalPortfolioValue24hr);
+                console.log("totalPortfolioValue24hr after commas ran: "+ this.totalPortfolioValue24hr);
 
-                this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
+                this.totalPortfolioValue = this.numberWithCommas(this.totalPortfolioValue);
+
                 // let that = this;
                 // setTimeout(function(){
                 //   that.processHistorcalList();
@@ -269,6 +270,18 @@ export class AdminComponent implements OnInit {
           return part1;
       }
 
+      private addCommasCoinAmt(usdValue: any): string {
+        usdValue = usdValue.toString();
+        var parts = usdValue.split('.');
+        var part1 = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        var part2 = parts[1];
+        if(part2){
+          return part1.concat('.' + part2);
+        }
+        else
+          return part1;
+      }
+
       public addCoin(form: any): void {
         let that  = this;
             this.mongoDbService.addCoin(form).subscribe(result=>{
@@ -290,6 +303,10 @@ export class AdminComponent implements OnInit {
         });
       }
 
+    public numberWithCommas = (x) => {
+        console.log("x in numberWithCommas: " + x);
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
     public cardStyleToggle(coin: any, allCoins: any): void {
       allCoins.forEach(loopCoin=>{
