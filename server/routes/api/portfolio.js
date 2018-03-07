@@ -236,7 +236,8 @@ router.put('/', function(req, res) {
 
               })
               .catch(function(err){
-                  res.status(500).send("Something went wrong adding your coin");
+                console.log(err);
+                //  res.status(500).send("Something went wrong adding your coin");
               });
 
           }
@@ -286,11 +287,21 @@ router.delete('/:name/:amount', function(req, res) {
     if (err) {
       res.status(500).send(err);
     }
+    console.log("db portfolio");
+    console.log(dbPortfolio);
 
     let coinsToUpdate = dbPortfolio[0].coins;
+    coinsToUpdate[bodyObj.coinName] = coinsToUpdate[bodyObj.coinName] - bodyObj.coinAmt;
+    // if(coinsToUpdate[bodyObj.coinName] === 0){
+    //   delete coinsToUpdate[bodyObj.coinName];
+    // }
     let queryCoins = Object.keys(dbPortfolio[0].coins)
 
     queryCoins = queryCoins.join();
+
+    if(queryCoins === "no ticker" || !queryCoins){
+      queryCoins = "BTC";
+    }
 
     let options = {
        method: 'GET',
@@ -299,9 +310,11 @@ router.delete('/:name/:amount', function(req, res) {
 
     request(options)
       .then(function(response) {
+        console.log("dinky 1");
         response = JSON.parse(response);
-        console.log("JSON Data");
+        console.log("response");
         console.log(response);
+
         queryCoins = Object.keys(dbPortfolio[0].coins)
         let valAccum = 0;
 
@@ -312,149 +325,151 @@ router.delete('/:name/:amount', function(req, res) {
           valAccum += coinVal;
         }
 
+            let key = bodyObj.coinName;
+            let value = bodyObj.coinAmt;
 
+            let date = Date.now();
 
-
-
-
-
-
-
-
-      })
-      .catch(function(err){
-        res.status(500).send("Something went wrong deleting your coin");
-      });
-
-
-
-    if(queryCoins === "no ticker"){
-      queryCoins = "BTC";
-    }
-
-        let key = bodyObj.coinName;
-        let value = bodyObj.coinAmt;
-
-
-        let date = Date.now();
-
-
-        if(Date.now() > dbPortfolio[0].startTime + 3600000){
-          let updateDbObject ={
-            hodler: dbPortfolio[0].hodler,
-            portfolioName: "your portfolio name here",
-            coins: dbPortfolio[0].coins,
-            startTime: dbPortfolio[0].startTime,
-            endTime: date,
-          };
-
-          PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
-            if (err) throw err;
-
-            let addDbObject = dbPortfolio[0].coins;
-
-            if(addDbObject[key] && parseFloat(addDbObject[key]).toFixed(2) - parseFloat(value).toFixed(2) > 0){
-
-                addDbObject[key] = parseFloat(addDbObject[key]).toFixed(2) - parseFloat(value).toFixed(2);
-                addDbObject[key] = addDbObject[key].toString();
-
-                let shortDate = Date.now();
-                // shortDate = shortDate.toString();
-                // shortDate = parseFloat(shortDate.slice(0, 10), 10);
-
-                let newPortfolio = new PortfolioModel({
-                  hodler: req.token,
-                  portfolioName: "your portfolio name here",
-                  coins: addDbObject,
-                  startTime: shortDate,
-                  endTime: 951926120000000
-                });
-
-                newPortfolio.save(function(err) {
-                  if (err) return console.log(err);
-                });
-                res.status(200).send("ok");
-            }
-            else if(addDbObject[key] && parseFloat(addDbObject[key]).toFixed(2) - parseFloat(value).toFixed(2) === 0){
-
-              delete addDbObject[key];
-              let shortDate = Date.now();
-              // shortDate = shortDate.toString();
-              // shortDate = parseFloat(shortDate.slice(0, 10), 10);
-
-              let newPortfolio = new PortfolioModel({
-                hodler: req.token,
-                portfolioName: "your portfolio name here",
-                coins: addDbObject,
-                startTime: shortDate,
-                endTime: 951926120000000
-              });
-
-              newPortfolio.save(function(err) {
-                if (err) return console.log(err);
-              });
-              res.status(200).send("ok");
-
-            }
-            else{
-              res.status(500).send("You can't sell more coins then you own");
-            }
-          });
-        }
-        else{
-          console.log("2")
-          let addDbObject = dbPortfolio[0].coins;
-          let shortDate = Date.now();
-          // shortDate = shortDate.toString();
-          // shortDate = parseFloat(shortDate.slice(0, 10), 10);
-
-          let updateDbObject ={
-            hodler: dbPortfolio[0].hodler,
-            portfolioName: "your portfolio name here",
-            coins: addDbObject,
-            startTime: shortDate,
-            endTime: dbPortfolio[0].endTime
-          };
-
-          if(addDbObject[key] && parseFloat(addDbObject[key]) - parseFloat(value) > 0){
-            console.log("a")
-
-              addDbObject[key] = parseFloat(addDbObject[key]) - parseFloat(value);
-              addDbObject[key] = addDbObject[key].toFixed(8);
-              console.log("addDbObject[key]");
-              console.log(addDbObject[key]);
-              addDbObject[key] = addDbObject[key].toString();
+            if(Date.now() > dbPortfolio[0].startTime + 3600000){
+                console.log("dinky A");
+              let updateDbObject ={
+                hodler: dbPortfolio[0].hodler,
+                portfolioName: dbPortfolio[0].portfolioName,
+                coins: dbPortfolio[0].coins,
+                startTime: dbPortfolio[0].startTime,
+                endTime: date,
+              };
 
               PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
                 if (err) throw err;
 
-                res.status(200).send("ok");
+                let addDbObject = dbPortfolio[0].coins;
+                let newMasterentry = [date, valAccum];
+                let newMasterPortfolioList = dbPortfolio[0];
+                newMasterPortfolioList.push(newMasterentry);
+
+                if(addDbObject[key] > 0){
+
+                    addDbObject[key] = parseFloat(addDbObject[key]).toFixed(2) - parseFloat(value).toFixed(2);
+                    addDbObject[key] = addDbObject[key].toString();
+
+                    let shortDate = Date.now();
+                    // shortDate = shortDate.toString();
+                    // shortDate = parseFloat(shortDate.slice(0, 10), 10);
+
+
+
+                    let newPortfolio = new PortfolioModel({
+                      hodler: dbPortfolio[0].hodler,
+                      portfolioName: dbPortfolio[0].portfolioName,
+                      coins: addDbObject,
+                      startTime: dbPortfolio[0].startTime,
+                      endTime: 951926120000000,
+                      masterPortfolioList: newMasterPortfolioList
+                    });
+
+
+                    newPortfolio.save(function(err) {
+                      if (err) return console.log(err);
+                    });
+                    res.status(200).send("ok");
+                }
+                else if(addDbObject[key] === 0){
+                    console.log("dinky B");
+                  delete addDbObject[key];
+                  let shortDate = Date.now();
+                  // shortDate = shortDate.toString();
+                  // shortDate = parseFloat(shortDate.slice(0, 10), 10);
+
+                  let newPortfolio = new PortfolioModel({
+                    hodler: dbPortfolio[0].hodler,
+                    portfolioName: dbPortfolio[0].portfolioName,
+                    coins: addDbObject,
+                    startTime: dbPortfolio[0].startTime,
+                    endTime: 951926120000000,
+                    masterPortfolioList: newMasterPortfolioList
+                  });
+
+                  newPortfolio.save(function(err) {
+                    if (err) return console.log(err);
+                  });
+                  res.status(200).send("ok");
+
+                }
+                else{
+                  res.status(500).send("You can't sell more coins then you own");
+                }
               });
-          }
-          else if(addDbObject[key] && parseFloat(addDbObject[key]).toFixed(2) - parseFloat(value).toFixed(2) === 0){
-            // console.log("b")
-            // console.log("dbPortfolio[0].masterPortfolioList in delete");
-            // console.log(dbPortfolio[0].masterPortfolioList);
-            //
-            // console.log("updateDbObject in delete");
-            // console.log(updateDbObject);
+            }
+            else{
+                console.log("dinky C");
+              let addDbObject = dbPortfolio[0].coins;
+              let shortDate = Date.now();
 
-            delete addDbObject[key];
-            let shortDate = Date.now();
+              let newMasterentry = [date, valAccum];
+              let newMasterPortfolioList = dbPortfolio[0].masterPortfolioList;
+              newMasterPortfolioList.push(newMasterentry);
 
-            PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
-              if (err) throw err;
+              let updateDbObject ={
+                hodler: dbPortfolio[0].hodler,
+                portfolioName:  dbPortfolio[0].portfolioName,
+                coins: addDbObject,
+                startTime: shortDate,
+                endTime: dbPortfolio[0].endTime,
+                masterPortfolioList: newMasterPortfolioList
+              };
+              console.log("key");
+              console.log(key);
+              console.log("addDbObject");
+              console.log(addDbObject);
+              console.log("addDbObject[key]");
+              console.log(addDbObject[key]);
+              console.log("parseFloat(addDbObject[key]).toFixed(2) ");
+              console.log(parseFloat(addDbObject[key]).toFixed(2));
+              console.log("-");
+              console.log("parseFloat(value).toFixed(2)");
+              console.log(parseFloat(value).toFixed(2));
 
-              res.status(200).send("ok");
-            });
+              if(addDbObject[key] > 0){
+                console.log("dinky D");
 
-          }
-          else{
-            res.status(500).send("You can't sell more coins then you own");
-          }
+                  addDbObject[key] = parseFloat(addDbObject[key]) - parseFloat(value);
+                  addDbObject[key] = addDbObject[key].toFixed(8);
+                  addDbObject[key] = addDbObject[key].toString();
 
-        }
+                  PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
+                    if (err) throw err;
 
+                    res.status(200).send("ok");
+                  });
+              }
+
+
+              else if(addDbObject[key] === 0){
+                  console.log("dinky E");
+
+                delete addDbObject[key];
+                let shortDate = Date.now();
+
+                PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
+                  if (err) throw err;
+
+                  res.status(200).send("ok");
+                });
+
+              }
+              else{
+                console.log("dinky F")
+                res.status(500).send("You can't sell more coins then you own");
+              }
+
+            }
+      })
+      .catch(function(err){
+        console.log("dinky2")
+        console.log(err);
+        res.status(500).send("Something went wrong deleting your coin");
+      });
 
   });
 });
