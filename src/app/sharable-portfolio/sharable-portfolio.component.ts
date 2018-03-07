@@ -84,8 +84,6 @@ export class SharablePortfolioComponent implements OnInit {
 
       this.chartData = result[0].masterPortfolioList;
       this.totalPortChartData = result[0].masterPortfolioList;
-      console.log("this.totalPortChartData after assignment");
-      console.log(this.totalPortChartData)
 
       let currentPortfolio: any = {};
       currentPortfolio = result[0].coins;
@@ -102,8 +100,7 @@ export class SharablePortfolioComponent implements OnInit {
         this.cryptoCompareService.getMultiFullPrice(currentPortfolioKeys.join()).subscribe(result=>{
             apiData = JSON.parse(result._body);
             apiData = apiData.RAW;
-            console.log("apiData")
-            console.log(apiData);
+
 
             let keys: Array<string> = [];
             let allCoinData: object = ALLCOINDATA[0];
@@ -117,9 +114,6 @@ export class SharablePortfolioComponent implements OnInit {
 
             let mostRecentTotal = ourApiResult[0].masterPortfolioList.pop();
             mostRecentTotal = mostRecentTotal[1]
-
-            console.log("mostRecentTotal");
-            console.log(mostRecentTotal);
 
             this.totalPortfolioValue = mostRecentTotal;
             if(ourApiResult[0].masterPortfolioList.length > 0){
@@ -149,11 +143,11 @@ export class SharablePortfolioComponent implements OnInit {
                  coinColor: colorsArray[iterable],
                  coinColorName: colorNamesArray[iterable],
                  coinTicker: key,
-                 coinAmt: currentPortfolio[key],
+                 coinAmt: this.addCommasCoinAmt(currentPortfolio[key]),
                  coinName: allCoinData[key].CoinName,
                  coinPrice: this.addCommas(mostRecent[1]),
                  coin24Percent: Math.round(apiData[key]['USD']['CHANGEPCT24HOUR'] * 100)/100,
-                 coin24Open: parseInt(apiData[key]['USD']['OPEN24HOUR'], 10),
+                 coin24Open: parseFloat(apiData[key]['USD']['OPEN24HOUR']),
                  notSelected: true,
                 }
 
@@ -176,15 +170,33 @@ export class SharablePortfolioComponent implements OnInit {
             percChange = percChange.toString();
 
             this.totalPortfolioValue24hr = Math.round(percChange * 100)/100;
+            this.totalPortfolioValue24hr = this.totalPortfolioValue24hr.toFixed(2);
+            this.totalPortfolioValue24hr = this.numberWithCommas(this.totalPortfolioValue24hr);
 
+
+            this.totalPortfolioValue = this.totalPortfolioValue.toFixed(2);  
             this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
-            // let that = this;
-            // setTimeout(function(){
-            //   that.processHistorcalList();
-            // }, 500);
+
         })
       }
     });
+  }
+
+  private addCommasCoinAmt(usdValue: any): string {
+    usdValue = usdValue.toString();
+    var parts = usdValue.split('.');
+    var part1 = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    var part2 = parts[1];
+    if(part2){
+      return part1.concat('.' + part2);
+    }
+    else
+      return part1;
+  }
+
+  public numberWithCommas = (x) => {
+      console.log("x in numberWithCommas: " + x);
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   public chartTotalPortfolio(): void{

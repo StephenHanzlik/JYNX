@@ -210,14 +210,11 @@ export class AdminComponent implements OnInit {
                 this.totalPortfolioValue24hr = Math.round(percChange * 100)/100;
                 this.totalPortfolioValue24hr = this.totalPortfolioValue24hr.toFixed(2);
                 this.totalPortfolioValue24hr = this.numberWithCommas(this.totalPortfolioValue24hr);
-                console.log("totalPortfolioValue24hr after commas ran: "+ this.totalPortfolioValue24hr);
 
-                this.totalPortfolioValue = this.numberWithCommas(this.totalPortfolioValue);
 
-                // let that = this;
-                // setTimeout(function(){
-                //   that.processHistorcalList();
-                // }, 500);
+                // this.totalPortfolioValue = this.totalPortfolioValue.toFixed(2);    
+                this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
+
             })
           }
         });
