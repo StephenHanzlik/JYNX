@@ -309,8 +309,17 @@ router.delete('/:name/:amount', function(req, res) {
           let coinAmt = coinsToUpdate[coin];
           let coinPrice = response['RAW'][coin]['USD']['PRICE'];
           let coinVal = coinAmt * coinPrice;
-          valAccum += coinVal; 
+          valAccum += coinVal;
         }
+
+
+
+
+
+
+
+
+
 
       })
       .catch(function(err){
