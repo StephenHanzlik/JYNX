@@ -115,12 +115,13 @@ export class AdminComponent implements OnInit {
           let ourApiResult = result;
           this.ourOuterApiResult= result;
 
+          console.log("ourApiResult");
+          console.log(ourApiResult);
+
           this.portfolioName = result[0]['portfolioName'];
 
           this.chartData = result[0].masterPortfolioList;
           this.totalPortChartData = result[0].masterPortfolioList;
-          console.log("this.totalPortChartData after assignment");
-          console.log(this.totalPortChartData)
 
           let currentPortfolio: any = {};
           currentPortfolio = result[0].coins;
@@ -137,18 +138,21 @@ export class AdminComponent implements OnInit {
             this.cryptoCompareService.getMultiFullPrice(currentPortfolioKeys.join()).subscribe(result=>{
                 apiData = JSON.parse(result._body);
                 apiData = apiData.RAW;
-                console.log("apiData")
-                console.log(apiData);
 
                 let keys: Array<string> = [];
                 let allCoinData: object = ALLCOINDATA[0];
                 let iterable: number = 0;
+                console.log("ourApiResult[0].masterCoinList");
+                console.log(ourApiResult[0].masterCoinList)
                 if(ourApiResult[0].masterCoinList)
-                  keys = Object.keys(ourApiResult[0].masterCoinList);
+                  //keys = Object.keys(ourApiResult[0].masterCoinList);
+                  keys = Object.keys(currentPortfolio);
                 else
                   return;
                 let index = 0;
                 let keysCounter = 0;
+                console.log("keys");
+                console.log(keys)
 
                 let mostRecentTotal = ourApiResult[0].masterPortfolioList.pop();
                 mostRecentTotal = mostRecentTotal[1]
@@ -173,6 +177,11 @@ export class AdminComponent implements OnInit {
 
                 keys.forEach(key=> {
 
+                  console.log("key");
+                  console.log(key);
+                  console.log("currentPortfolio");
+                  console.log(currentPortfolio);
+
                   let mostRecent = ourApiResult[0].masterCoinList[key].pop();
                   ourApiResult[0].masterCoinList[key].push(mostRecent);
 
@@ -194,7 +203,8 @@ export class AdminComponent implements OnInit {
                     else
                       iterable = 0;
 
-                      console.log
+                    console.log("coinToAdd")
+                    console.log(coinToAdd);
 
                     this.cardsContent.push(coinToAdd);
 
@@ -268,6 +278,7 @@ export class AdminComponent implements OnInit {
       }
 
       private addCommasCoinAmt(usdValue: any): string {
+        console.log(usdValue);
         if(typeof usdValue === "number"){
           usdValue = usdValue.toString();
         }

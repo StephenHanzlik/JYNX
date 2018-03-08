@@ -39,8 +39,10 @@ export class HighChartsComponent implements OnInit, OnChanges{
           index = data.length - 1;
 
           let decimal: number = 2;
-          if(data[index][1] <= 1){
-            decimal = 4;
+          if(data[index]){
+            if(data[index][1] <= 1){
+              decimal = 4;
+            }
           }
 
             this.options = {
