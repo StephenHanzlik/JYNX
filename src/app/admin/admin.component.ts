@@ -212,7 +212,7 @@ export class AdminComponent implements OnInit {
                 this.totalPortfolioValue24hr = this.numberWithCommas(this.totalPortfolioValue24hr);
 
 
-                // this.totalPortfolioValue = this.totalPortfolioValue.toFixed(2);    
+                // this.totalPortfolioValue = this.totalPortfolioValue.toFixed(2);
                 this.totalPortfolioValue = this.addCommas(this.totalPortfolioValue);
 
             })
@@ -268,7 +268,9 @@ export class AdminComponent implements OnInit {
       }
 
       private addCommasCoinAmt(usdValue: any): string {
-        usdValue = usdValue.toString();
+        if(typeof usdValue === "number"){
+          usdValue = usdValue.toString();
+        }
         var parts = usdValue.split('.');
         var part1 = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         var part2 = parts[1];

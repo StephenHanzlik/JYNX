@@ -282,7 +282,7 @@ router.delete('/:name/:amount', function(req, res) {
   where('hodler').
   equals(req.token).
   sort({startTime: -1}).
-  select('coins portfolioName startTime endTime hodler masterPortfolioList').
+  select('coins portfolioName startTime endTime hodler masterPortfolioList masterCoinList').
   exec(function(err, dbPortfolio) {
     if (err) {
       res.status(500).send(err);
@@ -314,9 +314,15 @@ router.delete('/:name/:amount', function(req, res) {
         response = JSON.parse(response);
         console.log("response");
         console.log(response);
+        let date = Date.now();
 
         queryCoins = Object.keys(dbPortfolio[0].coins)
         let valAccum = 0;
+        let deletedCoinAmt = coinsToUpdate[bodyObj.coinName];
+        let deletedCoinPrice = response['RAW'][bodyObj.coinName]['USD']['PRICE'];
+        let deleteCoinTotal = deletedCoinAmt * deletedCoinPrice;
+        let newCoinMasterPush = [date, deleteCoinTotal];
+
 
         for(let coin of queryCoins){
           let coinAmt = coinsToUpdate[coin];
@@ -328,7 +334,7 @@ router.delete('/:name/:amount', function(req, res) {
             let key = bodyObj.coinName;
             let value = bodyObj.coinAmt;
 
-            let date = Date.now();
+
 
             if(Date.now() > dbPortfolio[0].startTime + 3600000){
                 console.log("dinky A");
@@ -337,7 +343,7 @@ router.delete('/:name/:amount', function(req, res) {
                 portfolioName: dbPortfolio[0].portfolioName,
                 coins: dbPortfolio[0].coins,
                 startTime: dbPortfolio[0].startTime,
-                endTime: date,
+                endTime: date
               };
 
               PortfolioModel.findOneAndUpdate({ hodler: req.token, endTime: 951926120000000}, updateDbObject, function(err, user) {
@@ -345,8 +351,10 @@ router.delete('/:name/:amount', function(req, res) {
 
                 let addDbObject = dbPortfolio[0].coins;
                 let newMasterentry = [date, valAccum];
-                let newMasterPortfolioList = dbPortfolio[0];
+                let newMasterPortfolioList = dbPortfolio[0].masterPortfolioList;
                 newMasterPortfolioList.push(newMasterentry);
+                let newCoinMasterList = dbPortfolio[0].coinMasterList
+                newCoinMasterList[bodyObj.coinName].push(newCoinMasterPush);
 
                 if(addDbObject[key] > 0){
 
@@ -357,17 +365,15 @@ router.delete('/:name/:amount', function(req, res) {
                     // shortDate = shortDate.toString();
                     // shortDate = parseFloat(shortDate.slice(0, 10), 10);
 
-
-
                     let newPortfolio = new PortfolioModel({
                       hodler: dbPortfolio[0].hodler,
                       portfolioName: dbPortfolio[0].portfolioName,
                       coins: addDbObject,
                       startTime: dbPortfolio[0].startTime,
                       endTime: 951926120000000,
-                      masterPortfolioList: newMasterPortfolioList
+                      masterPortfolioList: newMasterPortfolioList,
+                      coinMasterList: newCoinMasterList
                     });
-
 
                     newPortfolio.save(function(err) {
                       if (err) return console.log(err);
@@ -387,7 +393,8 @@ router.delete('/:name/:amount', function(req, res) {
                     coins: addDbObject,
                     startTime: dbPortfolio[0].startTime,
                     endTime: 951926120000000,
-                    masterPortfolioList: newMasterPortfolioList
+                    masterPortfolioList: newMasterPortfolioList,
+                    coinMasterList: newCoinMasterList
                   });
 
                   newPortfolio.save(function(err) {
@@ -409,6 +416,9 @@ router.delete('/:name/:amount', function(req, res) {
               let newMasterentry = [date, valAccum];
               let newMasterPortfolioList = dbPortfolio[0].masterPortfolioList;
               newMasterPortfolioList.push(newMasterentry);
+              newMasterPortfolioList.push(newMasterentry);
+              // let newCoinMasterList = dbPortfolio[0].coinMasterList
+              // newCoinMasterList[bodyObj.coinName].push(newCoinMasterPush);
 
               let updateDbObject ={
                 hodler: dbPortfolio[0].hodler,
@@ -416,24 +426,15 @@ router.delete('/:name/:amount', function(req, res) {
                 coins: addDbObject,
                 startTime: shortDate,
                 endTime: dbPortfolio[0].endTime,
-                masterPortfolioList: newMasterPortfolioList
+                masterPortfolioList: newMasterPortfolioList,
+                // coinMasterList: newCoinMasterList
               };
-              console.log("key");
-              console.log(key);
-              console.log("addDbObject");
-              console.log(addDbObject);
-              console.log("addDbObject[key]");
-              console.log(addDbObject[key]);
-              console.log("parseFloat(addDbObject[key]).toFixed(2) ");
-              console.log(parseFloat(addDbObject[key]).toFixed(2));
-              console.log("-");
-              console.log("parseFloat(value).toFixed(2)");
-              console.log(parseFloat(value).toFixed(2));
+
 
               if(addDbObject[key] > 0){
                 console.log("dinky D");
 
-                  addDbObject[key] = parseFloat(addDbObject[key]) - parseFloat(value);
+                  // addDbObject[key] = parseFloat(addDbObject[key]) - parseFloat(value);
                   addDbObject[key] = addDbObject[key].toFixed(8);
                   addDbObject[key] = addDbObject[key].toString();
 
